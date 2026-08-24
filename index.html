@@ -18,6 +18,7 @@
 <meta content="website" property="og:type"/>
 <link href="assets/logo-motion/suaveforge-logo-motion.css?v=20260728-85" rel="stylesheet"/>
 <link href="styles.css?v=20260728-85" rel="stylesheet"/>
+<link href="assets/revival/diagnosis-entry.css?v=20260824-01" rel="stylesheet"/>
 <script>if(new URLSearchParams(location.search).has("noinfo"))document.documentElement.classList.add("noinfo-mode");</script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"ProfessionalService","name":"SuaveForge","url":"https://suaveforge.com/","email":"project@suaveforge.com","telephone":"+82-10-9966-7177","description":"업무 자동화와 소프트웨어 재구축에 강한 5인 개발팀. Windows, 웹·앱, AI·데이터, 서버·장비 연동 개발."}
@@ -32,6 +33,7 @@
 <span class="brand-word">SuaveForge</span>
 </a>
 <nav aria-label="주요 메뉴" class="desktop-nav">
+<a data-i18n="nav.diagnosis" href="#diagnosis">무료 진단</a>
 <a data-i18n="nav.cases" href="#cases">대표 사례</a>
 <a data-i18n="nav.demos" href="#demos">라이브 데모</a>
 <a data-i18n="nav.portfolio" href="#portfolio">전체 작업</a>
@@ -56,7 +58,7 @@
 <button aria-controls="mobile-menu" aria-expanded="false" aria-label="메뉴 열기" class="menu-button" data-menu-button="" type="button"><span></span><span></span></button>
 </div>
 <nav aria-label="모바일 메뉴" class="mobile-menu" data-mobile-menu="" id="mobile-menu">
-<a data-i18n="nav.cases" href="#cases">대표 사례</a><a data-i18n="nav.demos" href="#demos">라이브 데모</a><a data-i18n="nav.portfolio" href="#portfolio">전체 작업</a><a data-i18n="nav.process" href="#process">진행 방식</a><a data-i18n="nav.team" href="#team">개발팀</a>
+<a data-i18n="nav.diagnosis" href="#diagnosis">무료 진단</a><a data-i18n="nav.cases" href="#cases">대표 사례</a><a data-i18n="nav.demos" href="#demos">라이브 데모</a><a data-i18n="nav.portfolio" href="#portfolio">전체 작업</a><a data-i18n="nav.process" href="#process">진행 방식</a><a data-i18n="nav.team" href="#team">개발팀</a>
 <a class="mobile-menu-cta contact-visible" data-i18n="cta.contact" href="#contact">상담 요청</a>
 </nav>
 </header>
@@ -84,7 +86,7 @@
 <div class="hero-v6-support reveal">
 <p data-i18n="hero.support">소스가 없어도 화면과 동작, 파일과 데이터 흐름을 분석해 새 코드로 재구축합니다. 이후 기능 추가와 업데이트가 가능한 상태로 넘깁니다.</p>
 <div class="hero-actions contact-visible">
-<a class="button button-primary" href="#contact"><span data-i18n="cta.contact">상담 요청</span> <span>↗</span></a>
+<a class="button button-primary" href="#diagnosis"><span data-i18n="cta.diagnosis">무료 사이트 진단</span> <span>↓</span></a>
 <a class="button button-text" href="#cases"><span data-i18n="cta.cases">대표 작업 보기</span> <span>↓</span></a>
 </div>
 </div>
@@ -96,6 +98,43 @@
 <article><strong data-i18n="trust.rebuildTitle">재구축</strong><span data-i18n="trust.rebuildText">소스가 없는 프로그램도 새 코드로 개발</span></article>
 <article><strong data-i18n="trust.realTitle">실제 화면</strong><span data-i18n="trust.realText">작업 화면과 구현 범위를 함께 공개</span></article>
 <article class="trust-quality"><strong data-i18n="trust.monthTitle">3개월</strong><span data-i18n="trust.monthText">실제 운영까지 이어지는 품질보증</span></article>
+</div>
+</section>
+<section class="site-diagnosis-entry" id="diagnosis" aria-labelledby="diagnosis-entry-title">
+<div class="container diagnosis-entry-grid">
+<div class="diagnosis-entry-copy reveal">
+<p class="eyebrow">FREE SITE DIAGNOSIS</p>
+<h2 id="diagnosis-entry-title"><span data-i18n="diagnosis.title1">URL 하나면,</span><br/><span data-i18n="diagnosis.title2">먼저 고칠 순서가 보입니다.</span></h2>
+<p data-i18n="diagnosis.lead">회원가입 없이 공개 페이지를 실제 브라우저로 검사합니다. 성능·모바일·SEO·접근성·기본 보안을 확인하고, 근거가 있는 문제만 우선순위로 정리합니다.</p>
+<div class="diagnosis-entry-points" aria-label="진단 원칙">
+<span data-i18n="diagnosis.point1">가입 없이 URL 하나로 시작</span>
+<span data-i18n="diagnosis.point2">이메일은 결과 확인 뒤 선택</span>
+<span data-i18n="diagnosis.point3">공개 페이지에서 확인한 사실만 사용</span>
+<span data-i18n="diagnosis.point4">전체 재개발보다 먼저 고칠 부분부터</span>
+</div>
+</div>
+<div class="diagnosis-entry-panel reveal">
+<div class="diagnosis-entry-panel-head"><span>01 / URL CHECK</span><b>PUBLIC PAGE AUDIT</b></div>
+<form class="diagnosis-entry-form" data-home-diagnosis-form novalidate>
+<label for="home-diagnosis-url" data-i18n="diagnosis.label">진단할 사이트 주소</label>
+<div class="diagnosis-entry-urlrow">
+<input id="home-diagnosis-url" data-home-diagnosis-url type="text" inputmode="url" autocomplete="url" spellcheck="false" placeholder="example.com 또는 https://example.com" aria-describedby="home-diagnosis-note home-diagnosis-status"/>
+<button data-home-diagnosis-submit type="submit"><span data-i18n="diagnosis.button">무료 진단 시작</span> →</button>
+</div>
+<div class="diagnosis-entry-note" id="home-diagnosis-note">
+<span data-i18n="diagnosis.note1">회원가입 불필요</span><span data-i18n="diagnosis.note2">공개 URL만 검사</span><span data-i18n="diagnosis.note3">내부 기능은 추측하지 않음</span>
+</div>
+<div class="diagnosis-entry-progress" aria-hidden="true"><i></i></div>
+<p class="diagnosis-entry-status" id="home-diagnosis-status" data-home-diagnosis-status aria-live="polite"></p>
+</form>
+<div class="diagnosis-entry-matrix" aria-label="자동 진단 항목">
+<div class="diagnosis-entry-check"><span>01</span><strong>PERFORMANCE</strong><small data-i18n="diagnosis.check1">로딩·렌더링·Core Web Vitals</small></div>
+<div class="diagnosis-entry-check"><span>02</span><strong>MOBILE</strong><small data-i18n="diagnosis.check2">넘침·터치·첫 화면 배치</small></div>
+<div class="diagnosis-entry-check"><span>03</span><strong>SEO</strong><small data-i18n="diagnosis.check3">메타·색인·문서 구조</small></div>
+<div class="diagnosis-entry-check"><span>04</span><strong>ACCESSIBILITY</strong><small data-i18n="diagnosis.check4">라벨·대비·ARIA·키보드</small></div>
+<div class="diagnosis-entry-check"><span>05</span><strong>SECURITY</strong><small data-i18n="diagnosis.check5">HTTPS·헤더·혼합 콘텐츠</small></div>
+</div>
+</div>
 </div>
 </section>
 <section class="case-studies case-studies-v6" id="cases">
@@ -322,6 +361,8 @@
 <script src="data/projects.js?v=20260728-85"></script>
 <script src="config.js?v=20260728-85"></script>
 <script src="assets/logo-motion/suaveforge-logo-motion.js?v=20260728-85"></script>
+<script src="analytics.js?v=20260824-01"></script>
 <script src="app.js?v=20260728-85"></script><script src="motion.js?v=20260728-85"></script>
+<script src="assets/revival/diagnosis-entry.js?v=20260824-01"></script>
 </body>
 </html>
