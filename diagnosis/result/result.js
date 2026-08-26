@@ -15,7 +15,7 @@
   ];
   const signalDefs=[['desktop','DESKTOP','1440px'],['mobile','MOBILE','390×844'],['seo','SEO','STRUCTURE'],['accessibility','A11Y','AXE'],['security','SECURITY','HEADERS'],['lighthouse','LIGHTHOUSE','LAB']];
   const stageOrder={queued:0,prepare:0,browser:0,desktop:1,seo:2,accessibility:3,performance:4,desktop_capture:4,mobile:5,mobile_ux:5,evidence:5,security:6,lighthouse:7,finalize:8,completed:9,failed:9};
-  let viewed=false,lastData=null,ticker=null,charts=[];
+  let viewed=false,lastData=null,ticker=null,charts=[],liveProgressChart=null,liveTraceChart=null,liveSamples=[],liveStageKey='',liveMotionReady=false;
 
   const fmtSec=ms=>Math.max(0,Math.round(ms/1000));
   const statusFor=(signal,current,status)=>{if(status==='completed')return 'done';const target=stages.findIndex(s=>s.key===signal),cur=stageOrder[current]??0;if(target<0)return 'wait';if(cur>target)return 'done';if(cur===target)return 'active';return 'wait'};
@@ -34,19 +34,102 @@
   function progressShell(){
     if(main.querySelector('.audit-live'))return;
     main.innerHTML=`<section class="audit-live" aria-live="polite">
-      <div class="audit-kicker"><span class="live-dot"></span> LIVE DIAGNOSIS <span class="audit-id">#${esc(id.slice(0,8))}</span></div>
+      <div class="audit-kicker"><span class="live-dot"></span><span>LIVE DIAGNOSIS</span><span class="audit-id">#${esc(id.slice(0,8))}</span></div>
       <div class="audit-grid">
         <div class="audit-visual">
-          <div class="audit-orbit" aria-hidden="true"><div class="orbit-core"><strong id="progressNumber">0</strong><span>%</span></div></div>
-          <div class="audit-copy"><h1 id="progressTitle">진단 엔진을 준비하고 있습니다.</h1><p id="progressDetail">실제 브라우저 검사 상태를 불러오는 중입니다.</p><div class="audit-meta"><span id="elapsedText">경과 0초</span><span id="estimateText">서버 활동 확인 중</span></div></div>
-          <div class="scan-stage" aria-hidden="true"><div class="browser-frame"><div class="browser-top"><i></i><i></i><i></i><span id="targetHost">target</span></div><div class="browser-body"><div class="scan-beam"></div><div class="skeleton s1"></div><div class="skeleton s2"></div><div class="skeleton s3"></div><div class="skeleton s4"></div></div></div></div>
+          <div class="audit-command">
+            <div class="audit-orbit" aria-hidden="true"><div id="liveProgressChart" class="live-progress-chart"></div><div class="orbit-core"><strong id="progressNumber">0</strong><span>%</span></div></div>
+            <div class="audit-copy">
+              <div class="audit-state-line"><span class="state-pulse"></span><b id="stageBadge">ENGINE START</b><span id="stageCounter">01 / ${String(stages.length).padStart(2,'0')}</span></div>
+              <h1 id="progressTitle">진단 엔진을 준비하고 있습니다.</h1>
+              <p id="progressDetail">실제 브라우저 검사 상태를 불러오는 중입니다.</p>
+              <div class="audit-meta"><span id="elapsedText">경과 0초</span><span id="estimateText">서버 활동 확인 중</span></div>
+            </div>
+          </div>
+
+          <div class="audit-telemetry">
+            <div class="telemetry-head"><div><span class="telemetry-kicker">LIVE TRACE</span><b>실시간 진단 진행 신호</b></div><code id="targetHost">target</code></div>
+            <div class="telemetry-grid">
+              <div class="trace-panel"><div id="liveTraceChart" class="live-trace-chart" aria-label="진단 진행률 실시간 추적 차트"></div></div>
+              <div class="scan-stage" aria-hidden="true">
+                <div class="browser-frame">
+                  <div class="browser-top"><i></i><i></i><i></i><span id="browserTarget">target</span><em>HEADLESS CHROMIUM</em></div>
+                  <div class="browser-body">
+                    <div class="scan-beam"></div>
+                    <div class="scan-cursor"></div>
+                    <div class="skeleton s1"></div><div class="skeleton s2"></div><div class="skeleton s3"></div><div class="skeleton s4"></div>
+                    <svg class="packet-map" viewBox="0 0 420 160" preserveAspectRatio="none"><path id="packetPath" d="M18,122 C72,30 142,150 205,70 C268,-8 324,108 402,30"/><circle class="data-packet packet-a" r="4"/><circle class="data-packet packet-b" r="3.5"/><circle class="data-packet packet-c" r="3"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="audit-steps">${stages.map((s,i)=>`<div class="audit-step" data-step="${i}"><span class="step-no">${String(i+1).padStart(2,'0')}</span><span class="step-mark"></span><div><b>${s.label}</b><small>${s.sub}</small></div><em></em></div>`).join('')}</div>
+
+        <aside class="audit-pipeline">
+          <div class="pipeline-head"><div><span>PIPELINE</span><b>검사 실행 흐름</b></div><strong><span id="currentStepNo">01</span><small>/${String(stages.length).padStart(2,'0')}</small></strong></div>
+          <div class="audit-steps">${stages.map((s,i)=>`<div class="audit-step" data-step="${i}"><span class="step-no">${String(i+1).padStart(2,'0')}</span><span class="step-mark"></span><div><b>${s.label}</b><small>${s.sub}</small></div><em></em></div>`).join('')}</div>
+          <div class="pipeline-foot"><span class="pipeline-led"></span><div><b id="pipelineState">대기열 확인 중</b><small>서버 진행 신호 기준 · 가짜 타이머 없음</small></div></div>
+        </aside>
       </div>
       <div class="audit-rail"><div id="progressBar"></div></div>
       <div class="signal-row">${signalDefs.map(([k,l,v])=>`<div class="signal" data-signal="${k}"><span></span><div><b>${l}</b><small>${v}</small></div><em>대기</em></div>`).join('')}</div>
-      <p class="audit-note">페이지를 새로고침하지 않아도 실제 서버 작업 단계가 자동으로 반영됩니다. 임의로 시간을 채우는 가짜 진행률이 아닙니다.</p>
+      <p class="audit-note">실제 서버 단계·진행률·마지막 활동 신호를 반영합니다. 화면을 새로고침하지 않아도 자동으로 갱신됩니다.</p>
     </section>`;
+    initLiveMotion();
+  }
+
+  function initLiveMotion(){
+    if(liveMotionReady)return;liveMotionReady=true;
+    if(window.gsap){
+      try{
+        if(window.MotionPathPlugin)window.gsap.registerPlugin(window.MotionPathPlugin);
+        window.gsap.from('.audit-grid',{opacity:0,y:14,scale:.995,duration:.72,ease:'power3.out'});
+        window.gsap.from('.signal-row .signal',{opacity:0,y:8,duration:.5,ease:'power2.out',stagger:.045,delay:.18});
+        if(window.MotionPathPlugin){
+          [['.packet-a',4.6,0],['.packet-b',5.8,.9],['.packet-c',7.2,1.8]].forEach(([sel,dur,delay])=>window.gsap.to(sel,{duration:dur,repeat:-1,ease:'none',delay,motionPath:{path:'#packetPath',align:'#packetPath',alignOrigin:[.5,.5]}}));
+        }
+        window.gsap.to('.scan-cursor',{x:'+=22',opacity:.35,duration:1.1,yoyo:true,repeat:-1,ease:'sine.inOut'});
+      }catch{}
+    }
+  }
+
+  function animateStageTitle(stageKey){
+    if(stageKey===liveStageKey)return;liveStageKey=stageKey;
+    const title=document.getElementById('progressTitle'),detail=document.getElementById('progressDetail');
+    if(!title||!window.gsap)return;
+    try{
+      if(window.SplitType){
+        const split=new window.SplitType(title,{types:'words'});
+        window.gsap.from(split.words,{opacity:0,y:14,filter:'blur(5px)',duration:.48,stagger:.035,ease:'power3.out',onComplete:()=>split.revert()});
+      }else window.gsap.fromTo(title,{opacity:.35,y:8},{opacity:1,y:0,duration:.42,ease:'power3.out'});
+      if(detail)window.gsap.fromTo(detail,{opacity:.35,y:5},{opacity:1,y:0,duration:.48,ease:'power2.out'});
+      const active=main.querySelector('.audit-step.active');if(active)window.gsap.fromTo(active,{x:4},{x:0,duration:.38,ease:'power2.out'});
+    }catch{}
+  }
+
+  function renderLiveTelemetry(pct,current,d){
+    const ech=window.echarts,progressEl=document.getElementById('liveProgressChart'),traceEl=document.getElementById('liveTraceChart');
+    if(ech&&progressEl){
+      try{
+        if(!liveProgressChart){liveProgressChart=ech.init(progressEl);main.querySelector('.audit-orbit')?.classList.add('echarts-ready')}
+        liveProgressChart.setOption({animationDurationUpdate:520,series:[{type:'gauge',startAngle:220,endAngle:-40,min:0,max:100,center:['50%','50%'],radius:'96%',progress:{show:true,width:7,roundCap:true,itemStyle:{color:'#ff4f47',shadowBlur:16,shadowColor:'rgba(255,79,71,.42)'}},axisLine:{lineStyle:{width:7,color:[[1,'#29303a']]}},pointer:{show:false},axisTick:{show:false},splitLine:{show:false},axisLabel:{show:false},anchor:{show:false},title:{show:false},detail:{show:false},data:[{value:pct}]}]},{lazyUpdate:true});
+      }catch{}
+    }
+    const started=Date.parse(d.started_at||d.created_at||Date.now()),elapsed=Math.max(0,Math.round((Date.now()-started)/1000)),last=liveSamples[liveSamples.length-1];
+    if(!last||last.pct!==pct||elapsed-last.t>=2){liveSamples.push({t:elapsed,pct,stage:current});if(liveSamples.length>72)liveSamples.shift()}
+    if(ech&&traceEl){
+      try{
+        if(!liveTraceChart)liveTraceChart=ech.init(traceEl);
+        const data=liveSamples.map(x=>[x.t,x.pct]);
+        liveTraceChart.setOption({animationDurationUpdate:420,grid:{left:6,right:8,top:15,bottom:18,containLabel:true},tooltip:{trigger:'axis',backgroundColor:'rgba(8,11,16,.96)',borderColor:'#394352',borderWidth:1,textStyle:{color:'#fff',fontSize:10},formatter:p=>p?.[0]?`경과 ${p[0].value[0]}초 · 진행 ${p[0].value[1]}%`:''},xAxis:{type:'value',min:Math.max(0,(data.at(-1)?.[0]||0)-90),max:Math.max(30,data.at(-1)?.[0]||30),axisLabel:{color:'#647080',fontSize:8,formatter:v=>`${v}s`},axisLine:{show:false},axisTick:{show:false},splitLine:{show:false}},yAxis:{type:'value',min:0,max:100,interval:25,axisLabel:{color:'#596473',fontSize:8,formatter:v=>`${v}%`},axisLine:{show:false},axisTick:{show:false},splitLine:{lineStyle:{color:'rgba(255,255,255,.055)'}}},series:[{type:'line',data,smooth:.28,showSymbol:false,lineStyle:{width:2,color:'#ff5a51',shadowBlur:12,shadowColor:'rgba(255,90,81,.35)'},areaStyle:{color:new ech.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'rgba(255,82,74,.22)'},{offset:1,color:'rgba(255,82,74,0)'}])},markPoint:{symbol:'circle',symbolSize:9,label:{show:false},itemStyle:{color:'#fff',borderColor:'#ff5a51',borderWidth:3},data:data.length?[{coord:data.at(-1)}]:[]}}]},{lazyUpdate:true});
+      }catch{}
+    }
+  }
+
+  function disposeLiveTelemetry(){
+    try{liveProgressChart?.dispose()}catch{};try{liveTraceChart?.dispose()}catch{};
+    liveProgressChart=null;liveTraceChart=null;liveSamples=[];liveStageKey='';liveMotionReady=false;
   }
 
   function updateClock(){
@@ -58,20 +141,29 @@
 
   function renderProgress(d){
     lastData=d;progressShell();const current=d.progress_stage||d.status||'queued',cur=stageOrder[current]??0,pct=Math.max(2,Math.min(99,Number(d.progress_percent)||2)),idx=Math.min(stages.length-1,cur),stage=stages[idx];
-    document.getElementById('progressNumber').textContent=String(pct);const orbit=main.querySelector('.audit-orbit');if(orbit)orbit.style.setProperty('--angle',(pct*3.6)+'deg');document.getElementById('progressTitle').textContent=d.status==='queued'?'진단 대기열에 등록되었습니다.':stage.label+' 중입니다.';document.getElementById('progressDetail').textContent=d.progress_detail||stage.sub;document.getElementById('progressBar').style.width=pct+'%';document.getElementById('targetHost').textContent=d.hostname||'대상 사이트';
+    const numEl=document.getElementById('progressNumber'),oldPct=Number(numEl?.textContent)||0;
+    if(numEl&&window.gsap){try{const state={v:oldPct};window.gsap.to(state,{v:pct,duration:.55,ease:'power2.out',onUpdate:()=>{numEl.textContent=String(Math.round(state.v))}})}catch{numEl.textContent=String(pct)}}else if(numEl)numEl.textContent=String(pct);
+    const orbit=main.querySelector('.audit-orbit');if(orbit)orbit.style.setProperty('--angle',(pct*3.6)+'deg');
+    const title=document.getElementById('progressTitle'),detail=document.getElementById('progressDetail');
+    if(title)title.textContent=d.status==='queued'?'진단 대기열에 등록되었습니다.':stage.label+' 중입니다.';if(detail)detail.textContent=d.progress_detail||stage.sub;
+    const bar=document.getElementById('progressBar');if(bar)bar.style.width=pct+'%';
+    const host=d.hostname||'대상 사이트';document.getElementById('targetHost').textContent=host;document.getElementById('browserTarget').textContent=host;
+    document.getElementById('stageBadge').textContent=stage.key.toUpperCase().replaceAll('_',' ');document.getElementById('stageCounter').textContent=`${String(idx+1).padStart(2,'0')} / ${String(stages.length).padStart(2,'0')}`;document.getElementById('currentStepNo').textContent=String(idx+1).padStart(2,'0');
     main.querySelectorAll('.audit-step').forEach((el,i)=>{el.classList.toggle('done',i<cur);el.classList.toggle('active',i===idx&&d.status!=='queued');const em=el.querySelector('em');if(em)em.textContent=i<cur?'완료':i===idx?(d.status==='queued'?'대기':'진행 중'):'대기'});
-    main.querySelectorAll('.signal').forEach(el=>{const s=statusFor(el.dataset.signal,current,d.status),em=el.querySelector('em');el.className='signal '+s;if(em)em.textContent=s==='done'?'완료':s==='active'?'검사 중':'대기'});updateClock();if(!ticker)ticker=setInterval(updateClock,1000);
+    main.querySelectorAll('.signal').forEach(el=>{const s=statusFor(el.dataset.signal,current,d.status),em=el.querySelector('em');el.className='signal '+s;if(em)em.textContent=s==='done'?'완료':s==='active'?'검사 중':'대기'});
+    const state=document.getElementById('pipelineState');if(state)state.textContent=d.status==='queued'?'실행 슬롯 대기 중':`${stage.label} · 서버 처리 중`;
+    renderLiveTelemetry(pct,current,d);animateStageTitle(current);updateClock();if(!ticker)ticker=setInterval(updateClock,1000);
   }
 
   async function load(){
     try{
       const r=await fetch(a.API+'/api/v1/diagnoses/'+encodeURIComponent(id),{credentials:'include'}),d=await r.json();if(!r.ok)throw new Error(d.error||'결과를 찾지 못했습니다.');
       if(['queued','running'].includes(d.status)){renderProgress(d);setTimeout(load,1200);return}if(ticker){clearInterval(ticker);ticker=null}
-      if(d.status==='failed'){
+      if(d.status==='failed'){disposeLiveTelemetry();
         const stageKey=d.error_stage||'unknown',stageInfo=stages.find(x=>x.match.includes(stageKey)||x.key===stageKey),stageLabel=stageInfo?.label||stageKey;
         main.innerHTML=`<section class="failure-view"><div class="eyebrow">DIAGNOSIS FAILED</div><h1>진단이 ${esc(stageLabel)} 단계에서 중단됐습니다.</h1><p class="failure-message">${esc(d.error_message||'대상 사이트 응답 또는 검사 환경을 확인해 주세요.')}</p><div class="failure-meta"><span><b>단계</b>${esc(stageKey)}</span><span><b>오류 코드</b>${esc(d.error_code||'DIAGNOSIS_FAILED')}</span><span><b>진단 ID</b>${esc(id)}</span></div><p class="failure-help">이 화면의 단계·오류 코드·진단 ID를 그대로 전달하면 서버 로그와 바로 대조할 수 있습니다.</p><a class="btn" href="../">다시 진단하기</a></section>`;return
       }
-      render(d);if(!viewed){viewed=true;a.event('result_viewed',{diagnosisId:id})}
+      disposeLiveTelemetry();render(d);if(!viewed){viewed=true;a.event('result_viewed',{diagnosisId:id})}
     }catch(e){main.innerHTML='<div class="loading">'+esc(e.message||e)+'</div>'}
   }
 
