@@ -170,7 +170,7 @@
 }
 @media(prefers-reduced-motion:reduce){.audit-step.active:before,.audit-progress-stack .audit-orbit:not(.echarts-ready):after{animation:none}}
 
-/* ===== Dynamic Trace Intelligence 17 ===== */
+/* ===== Dynamic Trace Intelligence 18 ===== */
 .insight-grid{position:relative;isolation:isolate}
 .insight-grid:before{content:"";position:absolute;left:22px;right:22px;top:-1px;height:1px;background:linear-gradient(90deg,transparent,rgba(83,125,255,.2),rgba(255,104,95,.85),rgba(83,125,255,.2),transparent);background-size:220% 100%;animation:traceSweep 4.8s linear infinite;z-index:4;pointer-events:none}
 .insight-card.dark,.metric-cockpit,.evidence-shell{--mx:50%;--my:30%;background-image:radial-gradient(circle at var(--mx) var(--my),rgba(86,124,255,.13),transparent 28%),linear-gradient(145deg,#0d1117,#151b24);transition:border-color .24s ease,box-shadow .24s ease}
