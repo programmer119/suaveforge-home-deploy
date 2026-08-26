@@ -1,6 +1,6 @@
 (()=>{
   'use strict';
-  const API='https://api-suaveforge.suaveforge.com';
+  const API='https://api-suaveforge.suaveforge.com:18454';
   const auth=document.getElementById('auth');
   const setupPanel=document.getElementById('setupPanel');
   const loginPanel=document.getElementById('loginPanel');

@@ -9,7 +9,7 @@ window.SF_CONFIG = Object.freeze({
 (()=>{
   if(window.SF_ANALYTICS||document.querySelector('script[data-sf-analytics]'))return;
   const s=document.createElement('script');
-  s.src='/analytics.js?v=20260824-01';
+  s.src='/analytics.js?v=20260826-07';
   s.defer=true;
   s.dataset.sfAnalytics='';
   document.head.appendChild(s);
