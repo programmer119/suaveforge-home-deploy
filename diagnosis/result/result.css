@@ -190,3 +190,17 @@
 @keyframes spotlightSweep{0%,58%{transform:translateX(-115%)}78%,100%{transform:translateX(115%)}}
 @keyframes signalPulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--spot) 42%,transparent)}70%{box-shadow:0 0 0 12px transparent}100%{box-shadow:0 0 0 0 transparent}}
 @media(prefers-reduced-motion:reduce){.insight-grid:before,.issue-spotlight:before,.issue-spotlight__pulse{animation:none}.evidence-shot{transition:none}}
+
+/* v20 — viewport-timed chart motion + persistent bottom contact */
+.score-orbit-chart,.vital-chart,.impact-chart,.category-chart,.insight-card.dark>.chart{transform-origin:50% 55%}
+.chart-awaiting{opacity:.12;filter:blur(5px);transform:translateY(14px) scale(.975)}
+.chart-entering{will-change:opacity,transform,filter}
+@media(prefers-reduced-motion:reduce){.chart-awaiting,.chart-entering{opacity:1!important;filter:none!important;transform:none!important}}
+.next-contact{opacity:1!important;transform:none!important;visibility:visible!important;margin-bottom:78px}
+.next-contact .forms{position:relative}
+.next-contact .forms:before{content:"RESULT DELIVERY · HUMAN REVIEW";position:absolute;right:4px;top:-28px;font:800 9px ui-monospace,monospace;letter-spacing:.12em;color:#9b958c}
+.next-contact .formbox{position:relative;overflow:hidden;box-shadow:0 18px 50px rgba(24,20,15,.055);transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
+.next-contact .formbox:before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:linear-gradient(90deg,#ed4b43,#f4a12d,#3f6df6);opacity:.9}
+.next-contact .formbox:hover{transform:translateY(-3px);border-color:#bcb6ab;box-shadow:0 24px 65px rgba(24,20,15,.09)}
+.next-contact .formbox button{transition:transform .18s ease,box-shadow .18s ease}
+.next-contact .formbox button:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(16,18,22,.14)}

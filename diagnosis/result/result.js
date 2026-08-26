@@ -199,7 +199,7 @@
       <section class="report-section report-reveal" id="matrix"><div class="section-head"><div><div class="section-kicker">03 · Thematic topology</div><h2>분야별 상태와 영향 밀도</h2></div><p>카테고리별 건수·최고 우선순위·평균 우선순위를 동시에 읽습니다. 차트에서 분야를 누르면 상세 진단 필터와 연결됩니다.</p></div><div class="insight-card dark" style="margin-bottom:14px"><div class="insight-card-head"><div><h3>Category signal galaxy</h3><p>중심=분야 · 바깥 링=대표 이슈 · 크기와 색으로 영향 강도를 동시에 보여줍니다.</p></div><span class="report-version">CLICK TO FILTER</span></div><div class="chart" id="categoryTreemap"></div></div><div class="matrix-card"><table class="matrix-table"><thead><tr><th>분야</th><th>발견</th><th>최고 우선순위</th><th>평균</th><th>상태</th></tr></thead><tbody>${cats.length?cats.map(x=>`<tr data-category-row="${esc(x.category)}"><td>${esc(x.category)}</td><td class="matrix-count">${x.count}</td><td><div class="matrix-bar" aria-label="최고 우선순위 ${x.max}"><i style="width:${Math.max(2,x.max)}%"></i></div></td><td>${x.avg}</td><td><span class="tag ${x.max>=85?'immediate':x.max>=65?'recommended':'reference'}">${x.max>=85?'즉시 수정':x.max>=65?'권장 수정':'참고'}</span></td></tr>`).join(''):'<tr><td colspan="5">발견 항목 없음</td></tr>'}</tbody></table></div></section>
       ${Object.keys(shots).length?`<section class="report-section report-reveal" id="evidence"><div class="section-head"><div><div class="section-kicker">04 · Visual evidence</div><h2>실제 화면을 filmstrip처럼 검증</h2></div><p>정적인 썸네일 나열이 아니라 drag·wheel·keyboard로 탐색하는 증거 스트립입니다. 각 프레임은 원본으로 바로 열립니다.</p></div><div class="evidence-shell"><div class="evidence-toolbar"><h3>Captured evidence</h3><span>DRAG · WHEEL · KEYBOARD · OPEN ORIGINAL</span></div><div class="swiper evidence-swiper"><div class="swiper-wrapper">${[['desktop','데스크톱 전체 캡처'],['mobile','모바일 전체 캡처'],['annotated','문제 위치 표시'],['improvement','개선 예시']].filter(([k])=>shots[k]).map(([k,l],i)=>`<div class="swiper-slide"><a href="${esc(shots[k])}" target="_blank" rel="noopener" class="evidence-shot" data-evidence-index="${i}"><img src="${esc(shots[k])}" alt="${l}" loading="lazy"><span>${l}</span></a></div>`).join('')}</div><div class="swiper-scrollbar"></div></div></div></section>`:''}
       <section class="report-section report-reveal" id="details"><div class="section-head"><div><div class="section-kicker">05 · Findings explorer</div><h2>상세 진단</h2></div><p>차트·분야 필터와 상세 항목을 연결했습니다. 각 항목은 근거 → 사용자/사업 영향 → 수정 방법 순서로 읽힙니다.</p></div><div class="detail-tools">${categoryOptions.map((c,i)=>`<button type="button" class="filter-chip ${i===0?'active':''}" data-filter="${esc(c)}">${esc(c)}</button>`).join('')}</div><div class="details">${all.map((x,i)=>`<details class="detail" id="finding-${i}" data-finding-index="${i}" data-category="${esc(x.category||'기타')}" ${i<3?'open':''}><summary><span class="detail-priority">${Math.round(Number(x.priority)||0)}</span><span class="detail-title"><b>${esc(x.title)}</b><small>${esc(x.category)} · ${priorityLabel(x)} · ${esc(x.confidence)}</small></span></summary><div class="detail-grid"><div><b>실제 근거</b>${esc(x.evidence)}</div><div><b>사용자 영향</b>${esc(x.userImpact)}</div><div><b>사업 영향</b>${esc(x.businessImpact)}</div><div><b>개선 방법</b>${esc(x.improvement)}</div><div><b>수정 난이도</b>${esc(difficulty(x))}</div><div><b>재개발 판단</b>${esc(x.redevelopment)}</div>${Array.isArray(x.locations)&&x.locations.length?`<div class="detail-locations"><b>문제 위치</b>${x.locations.slice(0,12).map(v=>`<code>${esc(v)}</code>`).join('')}</div>`:''}</div></details>`).join('')}</div></section>
-      <section class="report-section report-reveal" id="next"><div class="section-head"><div><div class="section-kicker">06 · Next step</div><h2>결과를 이어서 확인하기</h2></div><p>진단 결과를 보존하거나 공개 페이지 밖의 실제 사용자 흐름까지 직접 확인합니다.</p></div><div class="forms"><form class="formbox" id="mailForm"><h3>이메일로 결과 받기</h3><p>현재 결과 링크와 핵심 문제를 이메일로 보내드립니다.</p><input type="email" name="email" required placeholder="you@example.com" aria-label="결과를 받을 이메일"><label class="check"><input type="checkbox" name="marketing"> SuaveForge 개선 사례 및 서비스 안내도 이메일로 받겠습니다.</label><button type="submit">리포트 받기</button><p class="status"></p></form><form class="formbox" id="consultForm"><h3>무료로 직접 봐달라고 하기</h3><p>로그인·예약·결제·관리자처럼 외부에서 확인할 수 없는 영역은 직접 사용해보고 가장 큰 문제를 찾습니다.</p><input name="name" placeholder="이름 / 회사명" aria-label="이름 또는 회사명"><input name="email" type="email" placeholder="이메일" aria-label="이메일"><input name="phone" placeholder="연락처" aria-label="연락처"><textarea name="message" rows="4" placeholder="특히 확인했으면 하는 흐름이 있다면 적어주세요." aria-label="확인 요청 내용"></textarea><button type="submit">무료 컨설팅 요청</button><p class="status"></p></form></div></section>`;
+      <section class="report-section next-contact" id="next"><div class="section-head"><div><div class="section-kicker">06 · Next step</div><h2>결과를 이어서 확인하기</h2></div><p>진단 결과를 보존하거나 공개 페이지 밖의 실제 사용자 흐름까지 직접 확인합니다.</p></div><div class="forms"><form class="formbox" id="mailForm"><h3>이메일로 결과 받기</h3><p>현재 결과 링크와 핵심 문제를 이메일로 보내드립니다.</p><input type="email" name="email" required placeholder="you@example.com" aria-label="결과를 받을 이메일"><label class="check"><input type="checkbox" name="marketing"> SuaveForge 개선 사례 및 서비스 안내도 이메일로 받겠습니다.</label><button type="submit">리포트 받기</button><p class="status"></p></form><form class="formbox" id="consultForm"><h3>무료로 직접 봐달라고 하기</h3><p>로그인·예약·결제·관리자처럼 외부에서 확인할 수 없는 영역은 직접 사용해보고 가장 큰 문제를 찾습니다.</p><input name="name" placeholder="이름 / 회사명" aria-label="이름 또는 회사명"><input name="email" type="email" placeholder="이메일" aria-label="이메일"><input name="phone" placeholder="연락처" aria-label="연락처"><textarea name="message" rows="4" placeholder="특히 확인했으면 하는 흐름이 있다면 적어주세요." aria-label="확인 요청 내용"></textarea><button type="submit">무료 컨설팅 요청</button><p class="status"></p></form></div></section>`;
     wire();wireFilters();initCharts(all,cats,[['Performance',perf],['SEO',seo],['Accessibility',a11y]],lh);initPremiumMotion();initTooltips();
   }
 
@@ -239,6 +239,34 @@
   function priorityColor(v){return v>=85?'#ed4b43':v>=65?'#d58a13':'#3f6df6'}
   function scoreColor(v){return v===null?'#5e6877':v>=90?'#24b978':v>=50?'#f2a01d':'#ed4b43'}
   function evidenceWeight(x){return Math.max(1,Math.min(8,(Array.isArray(x.locations)?x.locations.length:0)+(x.evidence?1:0)))}
+
+  function armChartEntrance(chart,index=0){
+    const el=chart?.getDom?.();
+    if(!el||el.dataset.viewportMotion==='armed')return;
+    el.dataset.viewportMotion='armed';
+    const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    let option;
+    try{option=chart.getOption();chart.clear()}catch{return}
+    el.classList.add('chart-awaiting');
+    let started=false;
+    const start=()=>{
+      if(started)return;started=true;
+      el.classList.remove('chart-awaiting');
+      el.classList.add('chart-entering');
+      const delay=Math.min(index*55,260);
+      setTimeout(()=>{
+        try{chart.setOption(option,{notMerge:true,lazyUpdate:false})}catch{}
+        if(window.gsap&&!reduced){
+          try{window.gsap.fromTo(el,{opacity:.18,y:18,scale:.965,filter:'blur(7px)'},{opacity:1,y:0,scale:1,filter:'blur(0px)',duration:.78,ease:'power3.out',clearProps:'filter,transform',onComplete:()=>el.classList.remove('chart-entering')})}catch{}
+        }else{el.style.opacity='1';el.classList.remove('chart-entering')}
+      },delay)
+    };
+    if(reduced||!('IntersectionObserver'in window)){start();return}
+    const io=new IntersectionObserver(entries=>{
+      if(entries.some(e=>e.isIntersecting&&e.intersectionRatio>=.12)){io.disconnect();start()}
+    },{rootMargin:'0px 0px -8% 0px',threshold:[.12,.25,.5]});
+    io.observe(el);
+  }
 
   function vitalSpec(key,value){
     const n=num(value);if(n===null)return null;
@@ -282,6 +310,7 @@
       chart.on('mouseover',p=>{const d=p.data||{};if(Number.isInteger(d.findingIndex))updateSpotlight(d.findingIndex)});
       chart.on('click',p=>{const d=p.data||{};if(Number.isInteger(d.findingIndex)&&d.findingIndex>=0)return scrollToFinding(d.findingIndex);if(d.meta?.category||p.name)activateCategory(d.meta?.category||p.name)});
     }
+    charts.forEach((chart,i)=>armChartEntrance(chart,i));
     const resize=()=>charts.forEach(c=>{try{c.resize()}catch{}});window.addEventListener('resize',resize,{passive:true});
   }
 
@@ -298,7 +327,13 @@
     initEvidenceSwiper();
     document.querySelectorAll('.evidence-shot').forEach(card=>{const reset=()=>{card.style.transform='rotateX(0deg) rotateY(0deg) translateY(0)'};card.addEventListener('mousemove',e=>{const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;card.style.transform=`rotateX(${(-y*5).toFixed(2)}deg) rotateY(${(x*7).toFixed(2)}deg) translateY(-3px)`});card.addEventListener('mouseleave',reset)});
     document.querySelectorAll('.metric-cockpit,.insight-card.dark,.evidence-shell').forEach(panel=>{panel.addEventListener('pointermove',e=>{const r=panel.getBoundingClientRect(),x=((e.clientX-r.left)/r.width)*100,y=((e.clientY-r.top)/r.height)*100;panel.style.setProperty('--mx',x+'%');panel.style.setProperty('--my',y+'%')},{passive:true})});
-    if(window.gsap&&window.ScrollTrigger&&!matchMedia('(prefers-reduced-motion: reduce)').matches){document.querySelectorAll('.metric-cockpit,.insight-grid,.evidence-shell').forEach(panel=>window.gsap.fromTo(panel,{y:16},{y:-10,ease:'none',scrollTrigger:{trigger:panel,start:'top bottom',end:'bottom top',scrub:.55}}))}
+    if(window.gsap&&window.ScrollTrigger&&!matchMedia('(prefers-reduced-motion: reduce)').matches){
+      document.querySelectorAll('.metric-cockpit,.insight-grid,.evidence-shell').forEach(panel=>window.gsap.fromTo(panel,{y:16},{y:-10,ease:'none',scrollTrigger:{trigger:panel,start:'top bottom',end:'bottom top',scrub:.55}}));
+      document.querySelectorAll('.matrix-bar i').forEach((bar,i)=>{const width=bar.style.width||'0%';window.gsap.fromTo(bar,{width:'0%'},{width,duration:.95,delay:(i%6)*.06,ease:'power3.out',scrollTrigger:{trigger:bar,start:'top 90%',once:true}})});
+      const next=document.querySelector('.next-contact');
+      if(next){const cards=next.querySelectorAll('.formbox');window.gsap.fromTo(cards,{opacity:0,y:26,scale:.985},{opacity:1,y:0,scale:1,duration:.72,stagger:.12,ease:'power3.out',scrollTrigger:{trigger:next,start:'top 86%',once:true}})}
+      document.querySelectorAll('.action-card').forEach((card,i)=>window.gsap.fromTo(card,{opacity:.25,x:-14},{opacity:1,x:0,duration:.62,delay:(i%4)*.05,ease:'power3.out',scrollTrigger:{trigger:card,start:'top 92%',once:true}}));
+    }
   }
 
   function wire(){
