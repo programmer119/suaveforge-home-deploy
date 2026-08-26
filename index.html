@@ -7,6 +7,8 @@
 <title>SuaveForge | 업무 자동화·소프트웨어 재구축 개발팀</title>
 <meta content="반복 업무 자동화와 소스 없는 프로그램 재구축에 강한 개발팀입니다. 실제 화면과 구현 범위, 작업 방식을 투명하게 공개합니다." name="description"/>
 <meta content="#111318" name="theme-color"/>
+<meta content="strict-origin-when-cross-origin" name="referrer"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://api-suaveforge.suaveforge.com https://formsubmit.co; form-action 'self' https://formsubmit.co; upgrade-insecure-requests"/>
 <link href="favicon.ico" rel="icon" sizes="any"/>
 <link href="assets/favicon/favicon.svg" rel="icon" type="image/svg+xml"/>
 <link href="assets/favicon/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png"/>
@@ -220,7 +222,7 @@
 <div class="container portfolio-search" data-project-search-shell="" role="search">
 <label class="portfolio-search-field" for="project-search">
 <span aria-hidden="true" class="search-glyph"></span>
-<span class="portfolio-search-copy"><b data-i18n="search.label">프로젝트 검색</b><input aria-controls="project-search-results" aria-describedby="project-search-summary" autocomplete="off" data-project-search="" id="project-search" type="search"/></span>
+<span class="portfolio-search-copy"><b data-i18n="search.label">프로젝트 검색</b><input aria-label="프로젝트 검색" aria-controls="project-search-results" aria-describedby="project-search-summary" autocomplete="off" data-project-search="" id="project-search" type="search"/></span>
 <kbd data-search-shortcut="">Ctrl K</kbd>
 </label>
 <button aria-label="검색어 지우기" class="portfolio-search-clear" data-project-search-clear="" hidden="" title="검색어 지우기" type="button">×</button>
@@ -233,7 +235,7 @@
 <dialog aria-labelledby="global-search-title" class="global-search-dialog" data-global-search-dialog="">
 <div class="global-search-panel">
 <div class="global-search-head"><div><span>PROJECT FINDER</span><h2 data-i18n="search.globalTitle" id="global-search-title">필요한 작업을 바로 찾으세요</h2></div><button aria-label="검색 닫기" data-global-search-close="" data-i18n-aria-label="search.close" title="검색 닫기" type="button">×</button></div>
-<label class="global-search-field" for="global-project-search"><span aria-hidden="true" class="search-glyph"></span><input aria-controls="global-search-results" aria-describedby="global-search-summary" autocomplete="off" data-global-search-input="" id="global-project-search" type="search"/><kbd data-search-shortcut="">Ctrl K</kbd></label>
+<label class="global-search-field" for="global-project-search"><span aria-hidden="true" class="search-glyph"></span><input aria-label="프로젝트 검색" aria-controls="global-search-results" aria-describedby="global-search-summary" autocomplete="off" data-global-search-input="" id="global-project-search" type="search"/><kbd data-search-shortcut="">Ctrl K</kbd></label>
 <div class="global-search-quick" data-global-search-quick=""><span data-i18n="search.quick">빠른 검색</span><div><button data-search-suggestion="React" type="button">React</button><button data-search-suggestion="Flutter" type="button">Flutter</button><button data-search-suggestion="AI" type="button">AI</button><button data-search-suggestion="Java" type="button">Java</button><button data-search-suggestion="게임" type="button">GAME</button></div></div>
 <p aria-live="polite" data-global-search-summary="" id="global-search-summary"></p>
 <div class="global-search-results" data-global-search-results="" id="global-search-results"></div>
@@ -345,10 +347,7 @@
 <label><span>답변 받을 이메일</span><input autocomplete="email" name="email" placeholder="답변 받을 이메일을 적어주세요." required="" type="email"/></label>
 <label class="form-wide"><span>현재 업무와 바꾸고 싶은 점</span><textarea name="problem" placeholder="현재 방식과 불편한 점, 만들고 싶은 기능을 적어주세요." required="" rows="5"></textarea></label>
 <label><span>필요한 프로그램</span><select name="type" required=""><option value="">어떤 형태인지 선택해 주세요.</option><option>Windows 프로그램</option><option>웹·앱 서비스</option><option>업무 자동화</option><option>장비·서버 연동</option><option>기존 시스템 개선</option><option>소스 없는 프로그램 재구축</option><option>아직 정확히 모름</option></select></label>
-<label><span>희망 일정</span><select name="timeline"><option>아직 미정</option><option>1개월 이내</option><option>1~3개월</option><option>3개월 이후</option></select></label>
 <label><span>연락처 <i>선택</i></span><input autocomplete="tel" name="phone" placeholder="연락 가능한 번호" type="tel"/></label>
-<label><span>예산 <i>선택</i></span><select name="budget"><option>미정</option><option>300만원 이하</option><option>300만~1,000만원</option><option>1,000만~3,000만원</option><option>3,000만원 이상</option></select></label>
-<label class="form-wide"><span>참고 링크 <i>선택</i></span><input inputmode="url" name="reference" placeholder="관련 문서나 참고 사이트 주소" type="text"/></label>
 <input aria-hidden="true" autocomplete="off" class="form-honey" name="_honey" tabindex="-1" type="text"/>
 <label class="form-consent form-wide"><input name="consent" required="" type="checkbox"/><span>상담 답변을 위해 입력한 정보를 사용하는 데 동의합니다.</span></label>
 <div class="form-actions form-wide"><button class="form-submit" data-submit-button="" type="submit">상담 내용 보내기 <span>↗</span></button><button class="form-copy" data-copy-brief="" type="button">내용 복사</button></div>
@@ -357,7 +356,7 @@
 </div>
 </section>
 </main>
-<footer class="site-footer"><div class="container footer-grid"><a class="brand footer-brand" href="#top"><span class="suaveforge-logo-motion brand-logo" data-static-logo="" data-svg-src="assets/logo-motion/suaveforge-logo-motion.svg"><span class="logo-shell"></span></span><span class="brand-word">SuaveForge</span></a><p>반복 업무를 자동화하고, 소스 없는 프로그램을 새 코드로 재구축합니다.</p><p>© <span data-year=""></span> SuaveForge</p></div></footer>
+<footer class="site-footer"><div class="container footer-grid"><a class="brand footer-brand" href="#top"><span class="suaveforge-logo-motion brand-logo" data-static-logo="" data-svg-src="assets/logo-motion/suaveforge-logo-motion.svg"><span class="logo-shell"></span></span><span class="brand-word">SuaveForge</span></a><p>반복 업무를 자동화하고, 소스 없는 프로그램을 새 코드로 재구축합니다.</p><p>© <span data-year=""></span> SuaveForge · <span class="build-version">Updated 2026.08.26 · Diagnosis Reliability 02</span></p></div></footer>
 <script src="data/projects.js?v=20260728-85"></script>
 <script src="config.js?v=20260824-02"></script>
 <script src="assets/logo-motion/suaveforge-logo-motion.js?v=20260728-85"></script>

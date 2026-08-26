@@ -553,19 +553,6 @@
   const submitButton = qs("[data-submit-button]", projectForm);
   const formLoadedAt = Date.now();
 
-  const normalizeReferenceUrl = (value) => {
-    const raw = String(value || "").trim();
-    if (!raw) return "";
-    if (/^[a-z][a-z0-9+.-]*:\/\//i.test(raw)) return raw;
-    if (/^(localhost|\d{1,3}(?:\.\d{1,3}){3})(?::\d+)?(?:\/|$)/i.test(raw)) return `http://${raw}`;
-    return `https://${raw}`;
-  };
-
-  const referenceInput = projectForm?.querySelector('[name="reference"]');
-  referenceInput?.addEventListener("blur", () => {
-    if (referenceInput.value.trim()) referenceInput.value = normalizeReferenceUrl(referenceInput.value);
-  });
-
   const buildBrief = () => {
     if (!projectForm) return "";
     const data = new FormData(projectForm);
@@ -575,9 +562,6 @@
       `[회신 이메일] ${data.get("email") || ""}`,
       `[연락처] ${data.get("phone") || "미기재"}`,
       `[필요한 프로그램] ${data.get("type") || "미정"}`,
-      `[희망 일정] ${data.get("timeline") || "미정"}`,
-      `[예산 범위] ${data.get("budget") || "미정"}`,
-      `[참고 링크] ${normalizeReferenceUrl(data.get("reference")) || "없음"}`, "",
       `[현재 해결하려는 일]\n${data.get("problem") || ""}`
     ].join("\n");
   };
@@ -607,9 +591,6 @@
       email: formData.get("email"),
       phone: formData.get("phone") || "미기재",
       project_type: formData.get("type"),
-      timeline: formData.get("timeline") || "미정",
-      budget: formData.get("budget") || "미정",
-      reference: normalizeReferenceUrl(formData.get("reference")) || "없음",
       message: formData.get("problem"),
       _replyto: formData.get("email"),
       _subject: `[SuaveForge 프로젝트 상담] ${formData.get("name")} · ${formData.get("type")}`,
