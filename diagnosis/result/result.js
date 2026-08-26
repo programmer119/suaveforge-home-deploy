@@ -36,7 +36,7 @@
       <div class="audit-grid">
         <div class="audit-visual">
           <div class="audit-orbit" aria-hidden="true"><div class="orbit-core"><strong id="progressNumber">0</strong><span>%</span></div></div>
-          <div class="audit-copy"><h1 id="progressTitle">진단 엔진을 준비하고 있습니다.</h1><p id="progressDetail">실제 브라우저 검사 상태를 불러오는 중입니다.</p><div class="audit-meta"><span id="elapsedText">경과 0초</span><span id="estimateText">예상 시간을 계산 중</span></div></div>
+          <div class="audit-copy"><h1 id="progressTitle">진단 엔진을 준비하고 있습니다.</h1><p id="progressDetail">실제 브라우저 검사 상태를 불러오는 중입니다.</p><div class="audit-meta"><span id="elapsedText">경과 0초</span><span id="estimateText">서버 활동 확인 중</span></div></div>
           <div class="scan-stage" aria-hidden="true"><div class="browser-frame"><div class="browser-top"><i></i><i></i><i></i><span id="targetHost">target</span></div><div class="browser-body"><div class="scan-beam"></div><div class="skeleton s1"></div><div class="skeleton s2"></div><div class="skeleton s3"></div><div class="skeleton s4"></div></div></div></div>
         </div>
         <div class="audit-steps">${stages.map((s,i)=>`<div class="audit-step" data-step="${i}"><span class="step-no">${String(i+1).padStart(2,'0')}</span><span class="step-mark"></span><div><b>${s.label}</b><small>${s.sub}</small></div><em></em></div>`).join('')}</div>
@@ -53,10 +53,12 @@
     const elapsed=Date.now()-start;
     const el=document.getElementById('elapsedText'),et=document.getElementById('estimateText');
     if(el)el.textContent=`경과 ${fmtSec(elapsed)}초`;
-    const estimate=Number(lastData.estimated_duration_ms||35000);
     if(et){
-      if(elapsed>estimate*1.35)et.textContent='예상보다 오래 걸리는 중';
-      else et.textContent=`예상 총 ${Math.max(10,Math.round(estimate/1000))}초 안팎`;
+      const last=Date.parse(lastData.last_progress_at||lastData.started_at||Date.now());
+      const idle=Math.max(0,Date.now()-last);
+      if(idle<5000)et.textContent='서버 활동 정상 · 방금 진행 신호 수신';
+      else if(idle<30000)et.textContent=`현재 단계 처리 중 · 마지막 활동 ${fmtSec(idle)}초 전`;
+      else et.textContent=`현재 단계 장기 처리 중 · 마지막 활동 ${fmtSec(idle)}초 전`;
     }
   }
 
