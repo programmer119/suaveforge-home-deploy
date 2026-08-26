@@ -94,31 +94,13 @@
 
     document.getElementById('landings').innerHTML=(d.landingPages||[]).length?(d.landingPages||[]).map(x=>`<tr><td class="path">${esc(x.landing)}</td><td>${num(x.diagnoses)}</td><td>${num(x.completed)}</td><td>${pct(x.completed,x.diagnoses)}%</td></tr>`).join(''):empty(4);
 
-    const adminIp=String(d.adminClientIp||'');
-    document.getElementById('visitors').innerHTML=(d.recentVisitors||[]).length?(d.recentVisitors||[]).map(x=>{
-      const sameIp=adminIp&&x.ip_address&&String(x.ip_address)===adminIp;
-      const geo=[x.country,x.city].filter(Boolean).join(' / ');
-      const env=[x.device_type,x.browser,x.os].filter(Boolean).join(' · ');
-      const display=[x.screen_width,x.screen_height].every(Boolean)?`${x.screen_width}×${x.screen_height}`:'';
-      const source=x.referrer||x.utm_source||'직접 유입';
-      const last=x.last_page||x.landing_page||'-';
-      return `<tr class="${sameIp?'same-ip-row':''}">
-        <td>${date(x.last_seen_at)}<small>${x.last_event?esc(x.last_event):''}</small></td>
-        <td><b class="mono" title="${esc(x.visitor_id)}">${esc(String(x.visitor_id||'').slice(0,8))}</b>${sameIp?'<span class="self-ip">현재 관리자와 동일 IP</span>':''}<small>첫 방문 ${date(x.first_seen_at)}</small></td>
-        <td><b class="mono">${esc(x.ip_address)||'-'}</b><small>${esc(geo)||'위치 헤더 없음'}</small></td>
-        <td><b>${esc(env)||'-'}</b><small>${esc([display,x.language,x.timezone].filter(Boolean).join(' · '))||'-'}</small></td>
-        <td><b class="path">${esc(x.landing_page)||'/'}</b><small>${esc(source)}</small><small>최근 ${esc(last)}</small></td>
-        <td><b>세션 ${num(x.sessions)} · PV ${num(x.pageviews)} · 진단 ${num(x.diagnoses)}</b><small>세션 최근 ${date(x.session_last_seen_at)}</small></td>
-      </tr>`;
-    }).join(''):empty(6);
-
     document.getElementById('recent').innerHTML=(d.recent||[]).length?(d.recent||[]).map(x=>`<tr><td>${date(x.created_at)}</td><td><b>${esc(x.hostname)}</b></td><td><span class="pill ${x.status==='failed'?'pill-fail':''}">${esc(x.status)}</span></td><td>${seconds(x.processing_time_ms)}</td><td>${state(x)}</td><td><div class="actions"><button data-pilot="${esc(x.diagnosis_id)}" ${x.pilot?'disabled':''}>${x.pilot?'선개발 완료':'선개발'}</button><button class="contract" data-contract="${esc(x.diagnosis_id)}" ${x.contract?'disabled':''}>${x.contract?'계약 완료':'계약'}</button></div></td></tr>`).join(''):empty(6);
 
     document.getElementById('consultations').innerHTML=(d.consultations||[]).length?(d.consultations||[]).map(x=>`<tr><td>${date(x.created_at)}</td><td>${esc(x.name)||'-'}</td><td>${esc(x.email)||'-'}</td><td>${esc(x.phone)||'-'}</td><td class="message">${esc(x.message)||'-'}</td></tr>`).join(''):empty(5);
 
     document.getElementById('contractOrigins').innerHTML=(d.contractOrigins||[]).length?(d.contractOrigins||[]).map(x=>`<tr><td>${date(x.created_at)}</td><td>${esc(x.hostname)||'-'}</td><td>${esc(x.source)}</td><td>${esc(x.campaign)}</td><td class="path">${esc(x.landing)}</td></tr>`).join(''):empty(5);
 
-    document.getElementById('failed').innerHTML=(d.failed||[]).length?(d.failed||[]).map(x=>`<tr><td>${date(x.created_at)}</td><td>${esc(x.hostname)}</td><td><span class="pill pill-fail">${esc(x.error_stage)||'-'}</span></td><td class="mono">${esc(x.error_code)||'-'}</td><td class="message"><b>${esc(x.error_message)||'-'}</b>${x.error_debug?`<details class="debug"><summary>디버그 상세</summary><pre>${esc(x.error_debug)}</pre></details>`:''}</td></tr>`).join(''):empty(5);
+    document.getElementById('failed').innerHTML=(d.failed||[]).length?(d.failed||[]).map(x=>`<tr><td>${date(x.created_at)}</td><td>${esc(x.hostname)}</td><td>${esc(x.error_code)||'-'}</td><td class="message">${esc(x.error_message)||'-'}</td></tr>`).join(''):empty(4);
 
     document.querySelectorAll('[data-pilot]:not([disabled])').forEach(b=>b.addEventListener('click',()=>mark(b.dataset.pilot,'pilot')));
     document.querySelectorAll('[data-contract]:not([disabled])').forEach(b=>b.addEventListener('click',()=>mark(b.dataset.contract,'contract')));
