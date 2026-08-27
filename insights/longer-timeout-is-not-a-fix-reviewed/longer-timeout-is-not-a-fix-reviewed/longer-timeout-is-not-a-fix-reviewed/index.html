@@ -1,0 +1,83 @@
+<!doctype html>
+<!-- SUAVEFORGE_PUBLISHED_CONTENT -->
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>타임아웃을 60초로 늘리면 문제가 해결된 걸까 — 재검수본 | SuaveForge</title>
+  <meta name="description" content="3초에 실패하던 요청을 60초까지 기다리게 만들면 실패 표시가 늦어질 뿐 원인이 사라지지는 않는다. 연결·처리·재시도를 나눠 어디서 끊을지 정해야 한다.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://suaveforge.com/insights/longer-timeout-is-not-a-fix-reviewed">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="타임아웃을 60초로 늘리면 문제가 해결된 걸까 — 재검수본">
+  <meta property="og:description" content="3초에 실패하던 요청을 60초까지 기다리게 만들면 실패 표시가 늦어질 뿐 원인이 사라지지는 않는다. 연결·처리·재시도를 나눠 어디서 끊을지 정해야 한다.">
+  <meta property="og:url" content="https://suaveforge.com/insights/longer-timeout-is-not-a-fix-reviewed">
+  <meta property="og:site_name" content="SuaveForge">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="타임아웃을 60초로 늘리면 문제가 해결된 걸까 — 재검수본">
+  <meta name="twitter:description" content="3초에 실패하던 요청을 60초까지 기다리게 만들면 실패 표시가 늦어질 뿐 원인이 사라지지는 않는다. 연결·처리·재시도를 나눠 어디서 끊을지 정해야 한다.">
+  <link rel="stylesheet" href="/content/content.css?v=20260827-19">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"타임아웃을 60초로 늘리면 문제가 해결된 걸까 — 재검수본","description":"3초에 실패하던 요청을 60초까지 기다리게 만들면 실패 표시가 늦어질 뿐 원인이 사라지지는 않는다. 연결·처리·재시도를 나눠 어디서 끊을지 정해야 한다.","datePublished":"2026-08-27T00:56:00.029Z","dateModified":"2026-08-27T00:56:00.051Z","mainEntityOfPage":"https://suaveforge.com/insights/longer-timeout-is-not-a-fix-reviewed","author":{"@type":"Organization","name":"SuaveForge"},"publisher":{"@type":"Organization","name":"SuaveForge"}}</script>
+</head>
+<body>
+  <header class="sf-content-header">
+    <div class="sf-content-header__inner">
+      <a class="sf-content-brand" href="/">SuaveForge</a>
+      <nav class="sf-content-nav" aria-label="콘텐츠">
+        <a href="/insights/" aria-current="page">Insights</a>
+        <a href="/cases/">Cases</a>
+        <a href="/guides/">Guides</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <div class="content-kicker">Insights</div>
+    <h1 class="content-title">타임아웃을 60초로 늘리면 문제가 해결된 걸까 — 재검수본</h1>
+    <p class="content-lead">3초에 실패하던 요청을 60초까지 기다리게 만들면 실패 표시가 늦어질 뿐 원인이 사라지지는 않는다. 연결·처리·재시도를 나눠 어디서 끊을지 정해야 한다.</p>
+    <div class="content-meta"><span>2026년 8월 27일</span><span>Insights</span></div>
+    <div class="article-shell">
+      <article class="article-body"><p>3초에서 실패하던 요청이 있다. 설정을 60초로 바꿨다.</p>
+<p>이제 오류가 덜 보인다.</p>
+<p><strong>문제가 해결된 걸까, 실패를 57초 더 늦게 보게 된 걸까.</strong></p>
+<pre><code>기존
+요청 ─── 3초 ─── X
+
+변경
+요청 ───────────────────────── 60초 ─── X
+
+느린 원인
+????????????????????????????????????????</code></pre>
+<p>타임아웃은 느린 코드를 빠르게 만드는 설정이 아니다. <strong>얼마나 기다린 뒤 이 요청을 실패로 취급할지 정하는 선</strong>이다.</p>
+<p>AWS Well-Architected 가이드도 연결과 요청에 적절한 제한시간을 두고, 너무 높은 값은 자원을 오래 잡아두며 너무 낮은 값은 불필요한 재시도와 부하를 만들 수 있다고 설명한다.</p>
+<h2>하나의 숫자로 끝내지 않는다</h2>
+<p>먼저 어디서 시간이 쓰이는지 나눈다.</p>
+<ul>
+<li>서버에 연결 자체가 안 되는가</li>
+<li>연결은 됐는데 응답 처리가 오래 걸리는가</li>
+<li>원래 오래 걸려야 하는 작업인가</li>
+<li>실패 뒤 같은 요청을 다시 보내도 안전한가</li>
+</ul>
+<p>예를 들어 파일 변환처럼 원래 오래 걸리는 작업을 3초에 잘라버리면 정상 작업을 실패로 만든다. 반대로 즉시 끝나야 할 조회가 매번 50초를 잡아먹는데 60초로 늘리면 장애를 늦게 발견한다.</p>
+<h2>재시도는 타임아웃의 자동 짝이 아니다</h2>
+<p>“끊겼으니 한 번 더”가 항상 안전한 것도 아니다.</p>
+<p>뒤쪽 서버가 이미 느려진 상태라면 모든 클라이언트가 반복 요청을 던지면서 더 심하게 막을 수 있다. 결제나 생성 작업처럼 같은 요청이 두 번 실행되면 안 되는 작업은 중복 처리 방지도 함께 필요하다.</p>
+<pre><code>원인 확인
+   ↓
+연결 제한시간
+   ↓
+요청 제한시간
+   ↓
+재시도 가능한 오류만 선별
+   ↓
+중복 실행 방지</code></pre>
+<blockquote>타임아웃은 인내심을 키우는 숫자가 아니라, 실패를 어디서 끊고 다음 행동으로 넘길지 정하는 설계다.</blockquote>
+<p><a href="https://docs.aws.amazon.com/wellarchitected/2023-04-10/framework/rel_mitigate_interaction_failure_client_timeouts.html" target="_blank" rel="noopener noreferrer">AWS Well-Architected: Set client timeouts</a></p></article>
+      <aside class="article-aside">
+        <div>SuaveForge Insights</div>
+        <br>
+        <a href="/insights/">← Insights 전체 보기</a>
+      </aside>
+    </div>
+  </main>
+</body>
+</html>

@@ -8,7 +8,7 @@
 <meta content="반복 업무 자동화와 소스 없는 프로그램 재구축에 강한 개발팀입니다. 실제 화면과 구현 범위, 작업 방식을 투명하게 공개합니다." name="description"/>
 <meta content="#111318" name="theme-color"/>
 <meta content="strict-origin-when-cross-origin" name="referrer"/>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://api-suaveforge.suaveforge.com:18454 https://formsubmit.co; form-action 'self' https://formsubmit.co; upgrade-insecure-requests"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://api-suaveforge.suaveforge.com:18454 https://formsubmit.co; form-action 'self' https://formsubmit.co; upgrade-insecure-requests"/>
 <link href="favicon.ico" rel="icon" sizes="any"/>
 <link href="assets/favicon/favicon.svg" rel="icon" type="image/svg+xml"/>
 <link href="assets/favicon/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png"/>
@@ -19,11 +19,15 @@
 <meta content="반복 업무 자동화와 소스 없는 프로그램 재구축" property="og:description"/>
 <meta content="website" property="og:type"/>
 <link href="assets/logo-motion/suaveforge-logo-motion.css?v=20260728-85" rel="stylesheet"/>
-<link href="styles.css?v=20260728-85" rel="stylesheet"/>
+<link href="styles.css?v=20260827-22" rel="stylesheet"/>
+<link href="assets/navigation/mega-nav.css?v=20260827-22" rel="stylesheet"/>
 <link href="assets/revival/diagnosis-entry.css?v=20260826-07" rel="stylesheet"/>
 <script>if(new URLSearchParams(location.search).has("noinfo"))document.documentElement.classList.add("noinfo-mode");</script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"ProfessionalService","name":"SuaveForge","url":"https://suaveforge.com/","email":"project@suaveforge.com","telephone":"+82-10-9966-7177","description":"업무 자동화와 소프트웨어 재구축에 강한 5인 개발팀. Windows, 웹·앱, AI·데이터, 서버·장비 연동 개발."}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"소스 코드가 없어도 기존 프로그램을 다시 만들 수 있나요?","acceptedAnswer":{"@type":"Answer","text":"가능합니다. 화면과 동작, 파일과 데이터 흐름을 실제로 확인해 현재 프로그램의 핵심 기능을 정리하고, 이후 유지보수와 기능 추가가 가능한 새 코드로 재구축합니다."}},{"@type":"Question","name":"완성된 기획서가 없어도 시작할 수 있나요?","acceptedAnswer":{"@type":"Answer","text":"가능합니다. 현재 업무 방식과 불편한 지점, 실제 사용 화면부터 함께 정리해 범위와 완료 기준을 먼저 확정한 뒤 개발을 시작합니다."}},{"@type":"Question","name":"전체 재개발 말고 문제 있는 부분만 개선할 수도 있나요?","acceptedAnswer":{"@type":"Answer","text":"가능합니다. 기존 자산을 먼저 진단하고 살릴 수 있는 구조는 유지합니다. UX, 오류, 성능, 보안, 배포처럼 효과가 명확한 부분부터 단계적으로 개선합니다."}}]}
 </script>
 </head>
 <body>
@@ -34,13 +38,36 @@
 <span class="suaveforge-logo-motion brand-logo" data-static-logo="" data-svg-src="assets/logo-motion/suaveforge-logo-motion.svg"><span class="logo-shell"></span></span>
 <span class="brand-word">SuaveForge</span>
 </a>
-<nav aria-label="주요 메뉴" class="desktop-nav">
+<nav aria-label="주요 메뉴" class="desktop-nav mega-nav" data-mega-nav>
 <a data-i18n="nav.diagnosis" href="#diagnosis">무료 진단</a>
-<a data-i18n="nav.cases" href="#cases">대표 사례</a>
-<a data-i18n="nav.demos" href="#demos">라이브 데모</a>
-<a data-i18n="nav.portfolio" href="#portfolio">전체 작업</a>
-<a data-i18n="nav.process" href="#process">진행 방식</a>
-<a data-i18n="nav.team" href="#team">개발팀</a>
+<div class="mega-cluster" data-mega-item>
+<button class="mega-trigger" data-mega-trigger aria-expanded="false" aria-controls="mega-services" type="button"><span data-i18n="nav.servicesGroup">서비스</span><i class="mega-chevron" aria-hidden="true"></i></button>
+<div class="mega-panel" id="mega-services" data-mega-panel aria-hidden="true">
+<div class="mega-panel-inner"><div class="mega-panel-intro"><span>SERVICES</span><h3 data-i18n-html="mega.services.title">지금 가진 상태에서<br>가장 빠른 시작점</h3><p data-i18n="mega.services.desc">기획서가 있든 없든, 운영 중이든 소스가 없든 현재 상태에 맞춰 접근합니다.</p></div><div class="mega-panel-links">
+<a class="mega-link" href="#services"><span class="mega-link-icon">01</span><b data-i18n="nav.services">개발 서비스</b><small data-i18n="mega.services.serviceDesc">자동화 · 시스템 개선 · 재구축</small><em>↗</em></a>
+<a class="mega-link" href="#diagnosis"><span class="mega-link-icon">02</span><b data-i18n="nav.diagnosis">무료 진단</b><small data-i18n="mega.services.diagnosisDesc">URL 하나로 먼저 고칠 순서 확인</small><em>↗</em></a>
+<a class="mega-link mega-link-wide" href="#process"><span class="mega-link-icon">03</span><b data-i18n="nav.process">진행 방식</b><small data-i18n="mega.services.processDesc">범위 확정 → 검증 → 개발 → 배포와 인계</small><em>↗</em></a>
+<a class="mega-link mega-link-wide" href="#faq"><span class="mega-link-icon">04</span><b data-i18n="nav.faq">자주 묻는 질문</b><small data-i18n="mega.services.faqDesc">소스 없음 · 기획 미완성 · 부분 개선 가능 여부</small><em>↗</em></a>
+</div></div></div>
+</div>
+<div class="mega-cluster" data-mega-item>
+<button class="mega-trigger" data-mega-trigger aria-expanded="false" aria-controls="mega-work" type="button"><span data-i18n="nav.workGroup">작업 보기</span><i class="mega-chevron" aria-hidden="true"></i></button>
+<div class="mega-panel" id="mega-work" data-mega-panel aria-hidden="true">
+<div class="mega-panel-inner"><div class="mega-panel-intro"><span>WORK</span><h3 data-i18n-html="mega.work.title">말보다 실제 화면과<br>동작을 먼저</h3><p data-i18n="mega.work.desc">대표 사례, 직접 열어보는 데모, 전체 작업을 목적에 따라 나눠 봅니다.</p></div><div class="mega-panel-links">
+<a class="mega-link" href="#cases"><span class="mega-link-icon">01</span><b data-i18n="nav.cases">대표 사례</b><small data-i18n="mega.work.casesDesc">문제와 해결 범위를 빠르게 파악</small><em>↗</em></a>
+<a class="mega-link" href="#demos"><span class="mega-link-icon">02</span><b data-i18n="nav.demos">라이브 데모</b><small data-i18n="mega.work.demosDesc">브라우저에서 실제 동작 확인</small><em>↗</em></a>
+<a class="mega-link mega-link-wide" href="#portfolio"><span class="mega-link-icon">03</span><b data-i18n="nav.portfolio">전체 작업</b><small data-i18n="mega.work.portfolioDesc">프로젝트 검색과 기술 스택 기준 탐색</small><em>↗</em></a>
+</div></div></div>
+</div>
+<div class="mega-cluster" data-mega-item>
+<button class="mega-trigger" data-mega-trigger aria-expanded="false" aria-controls="mega-company" type="button"><span data-i18n="nav.companyGroup">SuaveForge</span><i class="mega-chevron" aria-hidden="true"></i></button>
+<div class="mega-panel" id="mega-company" data-mega-panel aria-hidden="true">
+<div class="mega-panel-inner"><div class="mega-panel-intro"><span>SUAVEFORGE</span><h3 data-i18n-html="mega.company.title">누가 어떻게 만들고<br>끝까지 책임하는지</h3><p data-i18n="mega.company.desc">경험, 협업 방식, 장기 파트너십과 실제 개발팀을 한 곳에 묶었습니다.</p></div><div class="mega-panel-links">
+<a class="mega-link" href="#experience"><span class="mega-link-icon">01</span><b data-i18n="nav.experience">경험</b><small data-i18n="mega.company.experienceDesc">게임 · 플랫폼 · 산업 시스템</small><em>↗</em></a>
+<a class="mega-link" href="#partnership"><span class="mega-link-icon">02</span><b data-i18n="nav.partnership">파트너십</b><small data-i18n="mega.company.partnershipDesc">프로젝트 이후까지 이어지는 맥락</small><em>↗</em></a>
+<a class="mega-link mega-link-wide" href="#team"><span class="mega-link-icon">03</span><b data-i18n="nav.team">개발팀</b><small data-i18n="mega.company.teamDesc">분야별 담당자와 팀 리더 직접 참여</small><em>↗</em></a>
+</div></div></div>
+</div>
 </nav>
 <div class="header-actions">
 <button aria-haspopup="dialog" class="header-search-trigger" data-global-search-open="" type="button"><span aria-hidden="true" class="search-glyph"></span><span data-i18n="search.header">프로젝트 검색</span><kbd data-search-shortcut="">Ctrl K</kbd></button>
@@ -60,7 +87,10 @@
 <button aria-controls="mobile-menu" aria-expanded="false" aria-label="메뉴 열기" class="menu-button" data-menu-button="" type="button"><span></span><span></span></button>
 </div>
 <nav aria-label="모바일 메뉴" class="mobile-menu" data-mobile-menu="" id="mobile-menu">
-<a data-i18n="nav.diagnosis" href="#diagnosis">무료 진단</a><a data-i18n="nav.cases" href="#cases">대표 사례</a><a data-i18n="nav.demos" href="#demos">라이브 데모</a><a data-i18n="nav.portfolio" href="#portfolio">전체 작업</a><a data-i18n="nav.process" href="#process">진행 방식</a><a data-i18n="nav.team" href="#team">개발팀</a>
+<a data-i18n="nav.diagnosis" href="#diagnosis">무료 진단</a>
+<div class="mobile-nav-group"><button class="mobile-nav-trigger" data-mobile-nav-trigger aria-expanded="false" aria-controls="mobile-services" type="button"><span data-i18n="nav.servicesGroup">서비스</span><span>＋</span></button><div class="mobile-nav-panel" id="mobile-services"><div><a data-i18n="nav.services" href="#services">개발 서비스</a><a data-i18n="nav.process" href="#process">진행 방식</a><a data-i18n="nav.faq" href="#faq">자주 묻는 질문</a></div></div></div>
+<div class="mobile-nav-group"><button class="mobile-nav-trigger" data-mobile-nav-trigger aria-expanded="false" aria-controls="mobile-work" type="button"><span data-i18n="nav.workGroup">작업 보기</span><span>＋</span></button><div class="mobile-nav-panel" id="mobile-work"><div><a data-i18n="nav.cases" href="#cases">대표 사례</a><a data-i18n="nav.demos" href="#demos">라이브 데모</a><a data-i18n="nav.portfolio" href="#portfolio">전체 작업</a></div></div></div>
+<div class="mobile-nav-group"><button class="mobile-nav-trigger" data-mobile-nav-trigger aria-expanded="false" aria-controls="mobile-company" type="button"><span data-i18n="nav.companyGroup">SuaveForge</span><span>＋</span></button><div class="mobile-nav-panel" id="mobile-company"><div><a data-i18n="nav.experience" href="#experience">경험</a><a data-i18n="nav.partnership" href="#partnership">파트너십</a><a data-i18n="nav.team" href="#team">개발팀</a></div></div></div>
 <a class="mobile-menu-cta contact-visible" data-i18n="cta.contact" href="#contact">상담 요청</a>
 </nav>
 </header>
@@ -107,7 +137,7 @@
 <div class="diagnosis-entry-copy reveal">
 <p class="eyebrow">FREE SITE DIAGNOSIS</p>
 <h2 id="diagnosis-entry-title"><span data-i18n="diagnosis.title1">URL 하나면,</span><br/><span data-i18n="diagnosis.title2">먼저 고칠 순서가 보입니다.</span></h2>
-<p data-i18n="diagnosis.lead">회원가입 없이 공개 페이지를 실제 브라우저로 검사합니다. 성능·모바일·SEO·접근성·기본 보안을 확인하고, 근거가 있는 문제만 우선순위로 정리합니다.</p>
+<p data-i18n="diagnosis.lead">회원가입 없이 공개 페이지를 실제 브라우저로 검사합니다. 성능·모바일·SEO·AEO·GEO·접근성·기본 보안을 확인하고, 근거가 있는 문제만 우선순위로 정리합니다.</p>
 <div class="diagnosis-entry-points" aria-label="진단 원칙">
 <span data-i18n="diagnosis.point1">가입 없이 URL 하나로 시작</span>
 <span data-i18n="diagnosis.point2">이메일은 결과 확인 뒤 선택</span>
@@ -132,7 +162,7 @@
 <div class="diagnosis-entry-matrix" aria-label="자동 진단 항목">
 <div class="diagnosis-entry-check"><span>01</span><strong>PERFORMANCE</strong><small data-i18n="diagnosis.check1">로딩·렌더링·Core Web Vitals</small></div>
 <div class="diagnosis-entry-check"><span>02</span><strong>MOBILE</strong><small data-i18n="diagnosis.check2">넘침·터치·첫 화면 배치</small></div>
-<div class="diagnosis-entry-check"><span>03</span><strong>SEO</strong><small data-i18n="diagnosis.check3">메타·색인·문서 구조</small></div>
+<div class="diagnosis-entry-check"><span>03</span><strong>SEO</strong><small data-i18n="diagnosis.check3">SEO·AEO·GEO · 색인·답변·엔티티 구조</small></div>
 <div class="diagnosis-entry-check"><span>04</span><strong>ACCESSIBILITY</strong><small data-i18n="diagnosis.check4">라벨·대비·ARIA·키보드</small></div>
 <div class="diagnosis-entry-check"><span>05</span><strong>SECURITY</strong><small data-i18n="diagnosis.check5">HTTPS·헤더·혼합 콘텐츠</small></div>
 </div>
@@ -334,6 +364,14 @@
 <article class="member reveal"><div class="team-avatar">J</div><span>PLANNING / OPERATION</span><h3>JANG</h3><p>요구사항과 화면 흐름을 정리하고 검수와 운영 준비를 맡습니다.</p><div class="member-links"><button data-open-project="pcroom" type="button">서비스 운영</button><button data-open-project="idhair" type="button">다지점 운영</button></div></article>
 </div>
 </section>
+<section class="faq-section" id="faq">
+<div class="container faq-heading reveal"><div><p class="eyebrow" data-i18n="faq.eyebrow">QUICK ANSWERS</p><h2><span data-i18n="faq.title1">시작 전에 많이 묻는 것만,</span><br/><span class="accent-word" data-i18n="faq.title2">짧게 답합니다.</span></h2></div><p>검색엔진과 답변형 AI가 핵심 내용을 바로 이해할 수 있도록, 실제 상담에서 반복되는 질문을 짧은 직접 답변 구조로 정리했습니다.</p></div>
+<div class="container faq-list reveal">
+<details class="faq-item" open><summary><span>01</span><h3 data-i18n="faq.q1">소스 코드가 없어도 기존 프로그램을 다시 만들 수 있나요?</h3><i aria-hidden="true"></i></summary><p data-i18n="faq.a1">가능합니다. 화면과 동작, 파일과 데이터 흐름을 실제로 확인해 현재 프로그램의 핵심 기능을 정리하고, 이후 유지보수와 기능 추가가 가능한 새 코드로 재구축합니다.</p></details>
+<details class="faq-item"><summary><span>02</span><h3 data-i18n="faq.q2">완성된 기획서가 없어도 시작할 수 있나요?</h3><i aria-hidden="true"></i></summary><p data-i18n="faq.a2">가능합니다. 현재 업무 방식과 불편한 지점, 실제 사용 화면부터 함께 정리해 범위와 완료 기준을 먼저 확정한 뒤 개발을 시작합니다.</p></details>
+<details class="faq-item"><summary><span>03</span><h3 data-i18n="faq.q3">전체 재개발 말고 문제 있는 부분만 개선할 수도 있나요?</h3><i aria-hidden="true"></i></summary><p data-i18n="faq.a3">가능합니다. 기존 자산을 먼저 진단하고 살릴 수 있는 구조는 유지합니다. UX, 오류, 성능, 보안, 배포처럼 효과가 명확한 부분부터 단계적으로 개선합니다.</p></details>
+</div>
+</section>
 <section class="contact contact-visible" id="contact">
 <div class="container contact-grid reveal">
 <div class="contact-heading">
@@ -356,12 +394,14 @@
 </div>
 </section>
 </main>
-<footer class="site-footer"><div class="container footer-grid"><a class="brand footer-brand" href="#top"><span class="suaveforge-logo-motion brand-logo" data-static-logo="" data-svg-src="assets/logo-motion/suaveforge-logo-motion.svg"><span class="logo-shell"></span></span><span class="brand-word">SuaveForge</span></a><p>반복 업무를 자동화하고, 소스 없는 프로그램을 새 코드로 재구축합니다.</p><p>© <span data-year=""></span> SuaveForge · <span class="build-version">Updated 2026.08.26 · Live Diagnostic Command 13</span></p></div></footer>
-<script src="data/projects.js?v=20260728-85"></script>
-<script src="config.js?v=20260824-02"></script>
-<script src="assets/logo-motion/suaveforge-logo-motion.js?v=20260728-85"></script>
-<script src="analytics.js?v=20260826-07"></script>
-<script src="app.js?v=20260824-02"></script><script src="motion.js?v=20260728-85"></script>
-<script src="assets/revival/diagnosis-entry.js?v=20260826-07"></script>
+<footer class="site-footer"><div class="container footer-grid"><a class="brand footer-brand" href="#top"><span class="suaveforge-logo-motion brand-logo" data-static-logo="" data-svg-src="assets/logo-motion/suaveforge-logo-motion.svg"><span class="logo-shell"></span></span><span class="brand-word">SuaveForge</span></a><p>반복 업무를 자동화하고, 소스 없는 프로그램을 새 코드로 재구축합니다.</p><p>© <span data-year=""></span> SuaveForge · <span class="build-version">Updated 2026.08.27 · Discovery Navigation 22</span></p></div></footer>
+<script defer src="data/projects.js?v=20260827-22"></script>
+<script defer src="config.js?v=20260827-22"></script>
+<script defer src="assets/logo-motion/suaveforge-logo-motion.js?v=20260827-22"></script>
+<script defer src="analytics.js?v=20260827-22"></script>
+<script defer src="app.js?v=20260827-22"></script>
+<script defer src="assets/navigation/mega-nav.js?v=20260827-22"></script>
+<script defer src="assets/revival/diagnosis-entry.js?v=20260827-22"></script>
+<script>window.addEventListener('load',()=>{const run=()=>{if(document.querySelector('script[data-sf-motion]'))return;const s=document.createElement('script');s.src='motion.js?v=20260827-22';s.defer=true;s.dataset.sfMotion='';document.body.appendChild(s)};if('requestIdleCallback'in window)requestIdleCallback(run,{timeout:1800});else setTimeout(run,450)},{once:true});</script>
 </body>
 </html>
