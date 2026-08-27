@@ -10,58 +10,85 @@
   <link rel="canonical" href="https://suaveforge.com/guides/dont-rebuild-just-because-it-is-legacy-reviewed">
   <meta property="og:type" content="article">
   <meta property="og:title" content="남이 짠 코드라고 갈아엎을 필요는 없다 — 재검수본">
-  <meta property="og:description" content="“남이 짠 코드라서 새로 만드는 게 낫다”는 말만으로 재개발을 결정하지 않는다. 네 질문으로 유지·부분개선·단계적 구조개선·재개발 검토의 순서를 먼저 가른다.">
+  <meta property="og:description" content="‘남이 짠 코드라서’라는 말 대신 네 질문으로 유지·부분개선·단계적 구조개선·재개발 검토의 순서를 가른다.">
   <meta property="og:url" content="https://suaveforge.com/guides/dont-rebuild-just-because-it-is-legacy-reviewed">
   <meta property="og:site_name" content="SuaveForge">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="남이 짠 코드라고 갈아엎을 필요는 없다 — 재검수본">
-  <meta name="twitter:description" content="“남이 짠 코드라서 새로 만드는 게 낫다”는 말만으로 재개발을 결정하지 않는다. 네 질문으로 유지·부분개선·단계적 구조개선·재개발 검토의 순서를 먼저 가른다.">
   <link rel="stylesheet" href="/content/content.css?v=20260827-19">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"남이 짠 코드라고 갈아엎을 필요는 없다 — 재검수본","description":"“남이 짠 코드라서 새로 만드는 게 낫다”는 말만으로 재개발을 결정하지 않는다. 네 질문으로 유지·부분개선·단계적 구조개선·재개발 검토의 순서를 먼저 가른다.","datePublished":"2026-08-27T00:55:00.030Z","dateModified":"2026-08-27T00:55:00.064Z","mainEntityOfPage":"https://suaveforge.com/guides/dont-rebuild-just-because-it-is-legacy-reviewed","author":{"@type":"Organization","name":"SuaveForge"},"publisher":{"@type":"Organization","name":"SuaveForge"}}</script>
+  <style>
+    .sf-rebuild-tool{margin:38px 0 50px;background:#111216;color:#f7f4ec;border-radius:28px;padding:30px;box-shadow:0 28px 70px rgba(16,17,20,.18);overflow:hidden;position:relative}
+    .sf-rebuild-tool:before{content:"";position:absolute;width:300px;height:300px;border-radius:50%;background:rgba(216,74,58,.17);right:-120px;top:-165px;pointer-events:none}
+    .sf-rebuild-tool__eyebrow{font-size:12px;font-weight:850;letter-spacing:.14em;color:#f08a7d;text-transform:uppercase;margin-bottom:10px}
+    .sf-rebuild-tool h2{font-size:clamp(28px,5vw,46px)!important;line-height:1.03!important;letter-spacing:-.045em!important;margin:0 0 12px!important;padding:0!important;border:0!important;max-width:680px}
+    .sf-rebuild-tool h2:before{display:none!important}
+    .sf-rebuild-tool__lead{margin:0 0 24px!important;color:#bfc0c4;max-width:650px;font-size:15px}
+    .sf-rebuild-tool__progress{height:5px;background:#2a2b30;border-radius:999px;overflow:hidden;margin:0 0 26px}.sf-rebuild-tool__progress span{display:block;height:100%;width:25%;background:#d84a3a;transition:width .22s ease}
+    .sf-rebuild-q{display:none}.sf-rebuild-q.is-active{display:block;animation:sfq .18s ease}@keyframes sfq{from{opacity:.35;transform:translateY(5px)}to{opacity:1;transform:none}}
+    .sf-rebuild-q__step{font-size:12px;color:#8e9096;margin-bottom:9px}.sf-rebuild-q strong{display:block;font-size:clamp(22px,4vw,32px);line-height:1.2;letter-spacing:-.035em;max-width:680px}
+    .sf-rebuild-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:24px}.sf-rebuild-actions button,.sf-rebuild-reset{border:1px solid #393b42;background:#1b1c20;color:#fff;border-radius:14px;padding:15px 18px;font:inherit;font-weight:800;cursor:pointer;transition:.16s ease}.sf-rebuild-actions button:hover,.sf-rebuild-actions button:focus-visible{background:#f6f3eb;color:#111216;transform:translateY(-1px);outline:none}
+    .sf-rebuild-result{display:none}.sf-rebuild-result.is-active{display:block;animation:sfq .2s ease}.sf-rebuild-result__label{font-size:12px;color:#8e9096;margin-bottom:8px}.sf-rebuild-result__title{font-size:clamp(34px,6vw,58px);font-weight:900;letter-spacing:-.055em;line-height:1;margin-bottom:14px}.sf-rebuild-result__copy{font-size:17px;line-height:1.7;color:#d4d5d8;max-width:650px;margin-bottom:22px!important}.sf-rebuild-reset{background:transparent;padding:11px 15px;font-size:14px}
+    .sf-rebuild-tool__caption{font-size:12px;color:#777a81;margin-top:18px}
+    @media(max-width:560px){.sf-rebuild-tool{padding:24px 20px;border-radius:20px}.sf-rebuild-actions{grid-template-columns:1fr}.sf-rebuild-actions button{padding:14px}}
+  </style>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"남이 짠 코드라고 갈아엎을 필요는 없다 — 재검수본","description":"남이 짠 코드라는 이유 대신 네 질문으로 유지·부분개선·단계적 구조개선·재개발 검토의 순서를 가른다.","datePublished":"2026-08-27T00:55:00.030Z","dateModified":"2026-08-27T01:10:00.000Z","mainEntityOfPage":"https://suaveforge.com/guides/dont-rebuild-just-because-it-is-legacy-reviewed","author":{"@type":"Organization","name":"SuaveForge"},"publisher":{"@type":"Organization","name":"SuaveForge"}}</script>
 </head>
 <body>
-  <header class="sf-content-header">
-    <div class="sf-content-header__inner">
-      <a class="sf-content-brand" href="/">SuaveForge</a>
-      <nav class="sf-content-nav" aria-label="콘텐츠">
-        <a href="/insights/">Insights</a>
-        <a href="/cases/">Cases</a>
-        <a href="/guides/" aria-current="page">Guides</a>
-      </nav>
-    </div>
-  </header>
+  <header class="sf-content-header"><div class="sf-content-header__inner"><a class="sf-content-brand" href="/">SuaveForge</a><nav class="sf-content-nav" aria-label="콘텐츠"><a href="/insights/">Insights</a><a href="/cases/">Cases</a><a href="/guides/" aria-current="page">Guides</a></nav></div></header>
   <main>
     <div class="content-kicker">Guides</div>
     <h1 class="content-title">남이 짠 코드라고 갈아엎을 필요는 없다 — 재검수본</h1>
     <p class="content-lead">“남이 짠 코드라서 새로 만드는 게 낫다”는 말만으로 재개발을 결정하지 않는다. 네 질문으로 유지·부분개선·단계적 구조개선·재개발 검토의 순서를 먼저 가른다.</p>
     <div class="content-meta"><span>2026년 8월 27일</span><span>Guides</span></div>
     <div class="article-shell">
-      <article class="article-body"><p>유지보수를 맡겼는데 첫 답이 <strong>“새로 만드는 게 빠릅니다.”</strong>라면 그 말이 맞을 수도 있다.</p>
-<p>정말 구조 전체가 위험하고, 작은 수정마다 다른 곳이 무너지며, 살릴 자산보다 다시 만드는 비용이 더 낮은 프로젝트도 있다.</p>
-<p>하지만 이유가 <strong>“남이 짠 코드라서”</strong>에서 끝난다면 아직 판단이 끝난 게 아니다.</p>
-<p>[[SF_REBUILD_DECISION_TOOL]]</p>
-<h2>재개발은 결론이 아니라 비교 대상이다</h2>
-<p>가장 먼저 볼 것은 코드 작성자의 이름이 아니다.</p>
-<pre><code>지금 실제로 돌아가는가?
+      <article class="article-body">
+        <p>유지보수를 맡겼는데 첫 답이 <strong>“새로 만드는 게 빠릅니다.”</strong>라면 그 말이 맞을 수도 있다. 정말 구조 전체가 위험한 프로젝트도 있다. 하지만 이유가 <strong>“남이 짠 코드라서”</strong>에서 끝난다면 아직 판단이 끝난 게 아니다.</p>
+
+        <section class="sf-rebuild-tool" data-sf-rebuild-tool aria-label="기존 프로젝트 재개발 판단기">
+          <div class="sf-rebuild-tool__eyebrow">30초 판단기 · reviewed</div>
+          <h2>갈아엎기 전에<br>4번만 눌러보세요.</h2>
+          <p class="sf-rebuild-tool__lead">재개발 여부를 자동 판정하는 검사가 아니다. 지금 무엇부터 확인해야 하는지 빠르게 가르는 도구다.</p>
+          <div class="sf-rebuild-tool__progress" aria-hidden="true"><span data-progress></span></div>
+          <div class="sf-rebuild-q is-active" data-question data-yes="0" data-no="2"><div class="sf-rebuild-q__step">1 / 4</div><strong>지금 서비스가 실제 사용자에게 돌아가고 있나?</strong><div class="sf-rebuild-actions"><button type="button" data-answer="yes">예</button><button type="button" data-answer="no">아니오</button></div></div>
+          <div class="sf-rebuild-q" data-question data-yes="0" data-no="2"><div class="sf-rebuild-q__step">2 / 4</div><strong>로그인·데이터·결제 같은 핵심 흐름은 대부분 살아 있나?</strong><div class="sf-rebuild-actions"><button type="button" data-answer="yes">예</button><button type="button" data-answer="no">아니오</button></div></div>
+          <div class="sf-rebuild-q" data-question data-yes="0" data-no="1"><div class="sf-rebuild-q__step">3 / 4</div><strong>문제를 몇 개 화면·기능·속도 문제로 좁힐 수 있나?</strong><div class="sf-rebuild-actions"><button type="button" data-answer="yes">예</button><button type="button" data-answer="no">아니오</button></div></div>
+          <div class="sf-rebuild-q" data-question data-yes="2" data-no="0"><div class="sf-rebuild-q__step">4 / 4</div><strong>작은 수정 하나가 관계없는 곳까지 계속 망가뜨리나?</strong><div class="sf-rebuild-actions"><button type="button" data-answer="yes">예</button><button type="button" data-answer="no">아니오</button></div></div>
+          <div class="sf-rebuild-result" data-result aria-live="polite"><div class="sf-rebuild-result__label">현재는</div><div class="sf-rebuild-result__title" data-result-title></div><p class="sf-rebuild-result__copy" data-result-copy></p><button class="sf-rebuild-reset" type="button" data-reset>다시 해보기</button></div>
+          <div class="sf-rebuild-tool__caption">네 번의 선택으로 긴 판단표를 대신한다.</div>
+        </section>
+
+        <h2>재개발은 결론이 아니라 비교 대상이다</h2>
+        <p>가장 먼저 볼 것은 코드 작성자의 이름이 아니다.</p>
+        <pre><code>지금 실제로 돌아가는가?
         ↓
 핵심 흐름은 살아 있는가?
         ↓
 문제 범위를 좁힐 수 있는가?
         ↓
 작은 수정이 관계없는 곳까지 무너뜨리는가?</code></pre>
-<p>문제가 몇 개 화면이나 기능에 모여 있으면 그 부분부터 고친다. 핵심 서비스는 살아 있지만 낡은 구조가 반복해서 발목을 잡으면 운영을 유지한 채 단계적으로 바꾼다.</p>
-<p>반대로 핵심 흐름 자체가 계속 깨지고, 작은 수정의 영향 범위를 예측하기 어렵고, 기존 구조를 유지하는 비용이 새로 만드는 비용보다 커진다면 그때 재개발을 진지하게 비교한다.</p>
-<h2>무조건 살리자는 말도 아니다</h2>
-<p>오래됐다는 이유로 버리지 않는 것과, 오래됐으니 무조건 끌고 가는 것은 다르다.</p>
-<p>살릴 것은 살리고, 위험한 것은 바꾸고, 둘을 분리하기 어려울 때만 전체 교체를 검토한다.</p>
-<blockquote>누가 만든 코드인지보다 지금 무엇이 살아 있고 무엇이 계속 사고를 만드는지가 먼저다.</blockquote>
-<p>재개발은 가장 큰 공사다. 그러니 가장 먼저 꺼낼 답이 아니라 <strong>작은 선택으로 문제를 분리해본 뒤 마지막에 비교할 답</strong>이어야 한다.</p></article>
-      <aside class="article-aside">
-        <div>SuaveForge Guides</div>
-        <br>
-        <a href="/guides/">← Guides 전체 보기</a>
-      </aside>
+        <p>문제가 몇 개 화면이나 기능에 모여 있으면 그 부분부터 고친다. 핵심 서비스는 살아 있지만 낡은 구조가 반복해서 발목을 잡으면 운영을 유지한 채 단계적으로 바꾼다.</p>
+        <p>반대로 핵심 흐름 자체가 계속 깨지고, 작은 수정의 영향 범위를 예측하기 어렵고, 기존 구조를 유지하는 비용이 새로 만드는 비용보다 커진다면 그때 재개발을 진지하게 비교한다.</p>
+        <h2>무조건 살리자는 말도 아니다</h2>
+        <p>오래됐다는 이유로 버리지 않는 것과, 오래됐으니 무조건 끌고 가는 것은 다르다.</p>
+        <p>살릴 것은 살리고, 위험한 것은 바꾸고, 둘을 분리하기 어려울 때만 전체 교체를 검토한다.</p>
+        <blockquote>누가 만든 코드인지보다 지금 무엇이 살아 있고 무엇이 계속 사고를 만드는지가 먼저다.</blockquote>
+        <p>재개발은 가장 큰 공사다. 그러니 가장 먼저 꺼낼 답이 아니라 <strong>작은 선택으로 문제를 분리해본 뒤 마지막에 비교할 답</strong>이어야 한다.</p>
+      </article>
+      <aside class="article-aside"><div>SuaveForge Guides</div><br><a href="/guides/">← Guides 전체 보기</a></aside>
     </div>
   </main>
+  <script>
+    (()=>{
+      const root=document.querySelector('[data-sf-rebuild-tool]');if(!root)return;
+      const qs=[...root.querySelectorAll('[data-question]')],result=root.querySelector('[data-result]'),bar=root.querySelector('[data-progress]'),title=root.querySelector('[data-result-title]'),copy=root.querySelector('[data-result-copy]');let step=0,risk=0;
+      const outcomes=[
+        {max:0,title:'유지',copy:'핵심은 살아 있습니다. 큰 공사보다 실제 문제 범위를 좁혀 고치는 쪽이 먼저입니다.'},
+        {max:2,title:'부분개선',copy:'전체를 버릴 이유는 아직 없습니다. 막히는 구간부터 잘라서 고치는 편이 비용과 위험을 줄이기 쉽습니다.'},
+        {max:4,title:'단계적 구조개선',copy:'서비스는 살릴 수 있지만 낡은 뼈대가 발목을 잡고 있습니다. 운영을 유지한 채 문제 구조를 순서대로 바꾸는 쪽을 먼저 봅니다.'},
+        {max:99,title:'재개발 검토',copy:'새로 만드는 선택을 진지하게 비교할 단계입니다. 그래도 기존 데이터·업무 흐름·살릴 기능을 먼저 분리한 뒤 비용과 위험을 계산해야 합니다.'}
+      ];
+      function show(i){qs.forEach((q,n)=>q.classList.toggle('is-active',n===i));bar.style.width=((Math.min(i+1,4)/4)*100)+'%'}
+      root.addEventListener('click',e=>{const btn=e.target.closest('[data-answer]');if(btn){const q=qs[step];risk+=Number(q.dataset[btn.dataset.answer]||0);q.classList.remove('is-active');step++;if(step<qs.length){show(step)}else{const o=outcomes.find(x=>risk<=x.max);title.textContent=o.title;copy.textContent=o.copy;result.classList.add('is-active');bar.style.width='100%'}}if(e.target.closest('[data-reset]')){risk=0;step=0;result.classList.remove('is-active');show(0)}});show(0);
+    })();
+  </script>
 </body>
 </html>
