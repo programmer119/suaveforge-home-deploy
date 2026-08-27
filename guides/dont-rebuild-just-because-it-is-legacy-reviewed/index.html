@@ -1,0 +1,67 @@
+<!doctype html>
+<!-- SUAVEFORGE_PUBLISHED_CONTENT -->
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>남이 짠 코드라고 갈아엎을 필요는 없다 — 재검수본 | SuaveForge</title>
+  <meta name="description" content="“남이 짠 코드라서 새로 만드는 게 낫다”는 말만으로 재개발을 결정하지 않는다. 네 질문으로 유지·부분개선·단계적 구조개선·재개발 검토의 순서를 먼저 가른다.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://suaveforge.com/guides/dont-rebuild-just-because-it-is-legacy-reviewed">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="남이 짠 코드라고 갈아엎을 필요는 없다 — 재검수본">
+  <meta property="og:description" content="“남이 짠 코드라서 새로 만드는 게 낫다”는 말만으로 재개발을 결정하지 않는다. 네 질문으로 유지·부분개선·단계적 구조개선·재개발 검토의 순서를 먼저 가른다.">
+  <meta property="og:url" content="https://suaveforge.com/guides/dont-rebuild-just-because-it-is-legacy-reviewed">
+  <meta property="og:site_name" content="SuaveForge">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="남이 짠 코드라고 갈아엎을 필요는 없다 — 재검수본">
+  <meta name="twitter:description" content="“남이 짠 코드라서 새로 만드는 게 낫다”는 말만으로 재개발을 결정하지 않는다. 네 질문으로 유지·부분개선·단계적 구조개선·재개발 검토의 순서를 먼저 가른다.">
+  <link rel="stylesheet" href="/content/content.css?v=20260827-19">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"남이 짠 코드라고 갈아엎을 필요는 없다 — 재검수본","description":"“남이 짠 코드라서 새로 만드는 게 낫다”는 말만으로 재개발을 결정하지 않는다. 네 질문으로 유지·부분개선·단계적 구조개선·재개발 검토의 순서를 먼저 가른다.","datePublished":"2026-08-27T00:55:00.030Z","dateModified":"2026-08-27T00:55:00.064Z","mainEntityOfPage":"https://suaveforge.com/guides/dont-rebuild-just-because-it-is-legacy-reviewed","author":{"@type":"Organization","name":"SuaveForge"},"publisher":{"@type":"Organization","name":"SuaveForge"}}</script>
+</head>
+<body>
+  <header class="sf-content-header">
+    <div class="sf-content-header__inner">
+      <a class="sf-content-brand" href="/">SuaveForge</a>
+      <nav class="sf-content-nav" aria-label="콘텐츠">
+        <a href="/insights/">Insights</a>
+        <a href="/cases/">Cases</a>
+        <a href="/guides/" aria-current="page">Guides</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <div class="content-kicker">Guides</div>
+    <h1 class="content-title">남이 짠 코드라고 갈아엎을 필요는 없다 — 재검수본</h1>
+    <p class="content-lead">“남이 짠 코드라서 새로 만드는 게 낫다”는 말만으로 재개발을 결정하지 않는다. 네 질문으로 유지·부분개선·단계적 구조개선·재개발 검토의 순서를 먼저 가른다.</p>
+    <div class="content-meta"><span>2026년 8월 27일</span><span>Guides</span></div>
+    <div class="article-shell">
+      <article class="article-body"><p>유지보수를 맡겼는데 첫 답이 <strong>“새로 만드는 게 빠릅니다.”</strong>라면 그 말이 맞을 수도 있다.</p>
+<p>정말 구조 전체가 위험하고, 작은 수정마다 다른 곳이 무너지며, 살릴 자산보다 다시 만드는 비용이 더 낮은 프로젝트도 있다.</p>
+<p>하지만 이유가 <strong>“남이 짠 코드라서”</strong>에서 끝난다면 아직 판단이 끝난 게 아니다.</p>
+<p>[[SF_REBUILD_DECISION_TOOL]]</p>
+<h2>재개발은 결론이 아니라 비교 대상이다</h2>
+<p>가장 먼저 볼 것은 코드 작성자의 이름이 아니다.</p>
+<pre><code>지금 실제로 돌아가는가?
+        ↓
+핵심 흐름은 살아 있는가?
+        ↓
+문제 범위를 좁힐 수 있는가?
+        ↓
+작은 수정이 관계없는 곳까지 무너뜨리는가?</code></pre>
+<p>문제가 몇 개 화면이나 기능에 모여 있으면 그 부분부터 고친다. 핵심 서비스는 살아 있지만 낡은 구조가 반복해서 발목을 잡으면 운영을 유지한 채 단계적으로 바꾼다.</p>
+<p>반대로 핵심 흐름 자체가 계속 깨지고, 작은 수정의 영향 범위를 예측하기 어렵고, 기존 구조를 유지하는 비용이 새로 만드는 비용보다 커진다면 그때 재개발을 진지하게 비교한다.</p>
+<h2>무조건 살리자는 말도 아니다</h2>
+<p>오래됐다는 이유로 버리지 않는 것과, 오래됐으니 무조건 끌고 가는 것은 다르다.</p>
+<p>살릴 것은 살리고, 위험한 것은 바꾸고, 둘을 분리하기 어려울 때만 전체 교체를 검토한다.</p>
+<blockquote>누가 만든 코드인지보다 지금 무엇이 살아 있고 무엇이 계속 사고를 만드는지가 먼저다.</blockquote>
+<p>재개발은 가장 큰 공사다. 그러니 가장 먼저 꺼낼 답이 아니라 <strong>작은 선택으로 문제를 분리해본 뒤 마지막에 비교할 답</strong>이어야 한다.</p></article>
+      <aside class="article-aside">
+        <div>SuaveForge Guides</div>
+        <br>
+        <a href="/guides/">← Guides 전체 보기</a>
+      </aside>
+    </div>
+  </main>
+</body>
+</html>
