@@ -40,18 +40,16 @@
     if (button) button.disabled = true;
 
     const analytics = window.SF_ANALYTICS;
+    const API = analytics?.API || "https://api-suaveforge.suaveforge.com:18454";
     try {
-      await analytics?.event?.("diagnosis_started", { url });
-      if (!analytics?.API) {
-        location.href = `/diagnosis/?url=${encodeURIComponent(url)}`;
-        return;
-      }
+      void analytics?.event?.("diagnosis_started", { url });
+      void window.SF_ANALYTICS_LOADER?.load?.();
 
-      const response = await fetch(`${analytics.API}/api/v1/diagnoses`, {
+      const response = await fetch(`${API}/api/v1/diagnoses`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ ...analytics.touch, url })
+        body: JSON.stringify({ ...(analytics?.touch || {}), url })
       });
       const body = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(body.error || "진단을 시작하지 못했습니다.");

@@ -231,4 +231,5 @@
 
   prepareAllWork();
   document.addEventListener("suaveforge:portfolio-rendered", prepareAllWork);
+  window.SF_MOTION_READY = true;
 })();

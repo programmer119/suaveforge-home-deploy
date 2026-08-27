@@ -12,20 +12,11 @@
   const config = window.SF_CONFIG || {};
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  const year = qs("[data-year]");
-  if (year) year.textContent = String(new Date().getFullYear());
-
   const header = qs("[data-header]");
-  const menuButton = qs("[data-menu-button]");
-  const mobileMenu = qs("[data-mobile-menu]");
   const setMenu = (open) => {
+    if (window.SF_CORE?.setMenu) return window.SF_CORE.setMenu(open);
     document.body.classList.toggle("menu-open", open);
-    menuButton?.setAttribute("aria-expanded", String(open));
-    menuButton?.setAttribute("aria-label", open ? "메뉴 닫기" : "메뉴 열기");
-    mobileMenu?.classList.toggle("is-open", open);
   };
-  menuButton?.addEventListener("click", () => setMenu(menuButton.getAttribute("aria-expanded") !== "true"));
-  qsa("a", mobileMenu).forEach((link) => link.addEventListener("click", () => setMenu(false)));
 
   const languageSwitcher = qs("[data-language-switcher]");
   const languageTrigger = qs("[data-language-trigger]", languageSwitcher);
@@ -139,20 +130,8 @@
     setLanguageMenu(false);
   });
 
-  let headerScrolled = null;
-  let headerFrame = 0;
-  const updateHeader = () => {
-    headerFrame = 0;
-    const next = window.scrollY > 16;
-    if (next === headerScrolled) return;
-    headerScrolled = next;
-    header?.classList.toggle("is-scrolled", next);
-  };
-  const requestHeaderUpdate = () => {
-    if (!headerFrame) headerFrame = requestAnimationFrame(updateHeader);
-  };
-  updateHeader();
-  window.addEventListener("scroll", requestHeaderUpdate, { passive: true });
+  // Header/mobile-menu boot behavior is owned by the tiny core runtime.
+  // Keeping it out of this feature bundle avoids a second listener/layout pass.
 
   const renderStack = (stack, className = "stack-chips", limit = 5) =>
     `<div class="${className}">${(stack || []).slice(0, limit).map((item) => `<span>${escapeHtml(item)}</span>`).join("")}</div>`;
@@ -510,21 +489,13 @@
   try { savedLanguage = localStorage.getItem("suaveforge.language") || "ko"; } catch (_) {}
   const urlLanguage = new URLSearchParams(window.location.search).get("lang");
   if (urlLanguage && languageMeta[urlLanguage]) savedLanguage = urlLanguage;
-  applyLanguage(savedLanguage);
+  // The HTML is authored in Korean already. Rewriting every translated node on the
+  // default path caused a full-page DOM/style invalidation for no visible change.
+  if (savedLanguage !== "ko") applyLanguage(savedLanguage);
+  else { currentLanguage = "ko"; document.documentElement.lang = "ko"; }
 
-  const revealItems = qsa(".reveal");
-  if ("IntersectionObserver" in window && !reduceMotion) {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add("is-visible");
-        observer.unobserve(entry.target);
-      });
-    }, { threshold: 0.06, rootMargin: "0px 0px -35px" });
-    revealItems.forEach((item) => observer.observe(item));
-  } else {
-    revealItems.forEach((item) => item.classList.add("is-visible"));
-  }
+  // Reveal-on-scroll is owned by the tiny core runtime so the full feature
+  // bundle is not required for first-screen visual behavior.
 
   const projectDialog = qs("[data-project-dialog]");
   let activeProject = null;
@@ -575,7 +546,7 @@
   const projectForm = qs("[data-project-form]");
   const formStatus = qs("[data-form-status]");
   const submitButton = qs("[data-submit-button]", projectForm);
-  const formLoadedAt = Date.now();
+  const formLoadedAt = Math.floor(performance.timeOrigin || (Date.now()-performance.now()));
 
   const buildBrief = () => {
     if (!projectForm) return "";
@@ -691,4 +662,6 @@
     setLanguageMenu(false);
     if (projectDialog?.open) projectDialog.close();
   });
+  window.SF_APP_READY = true;
+  document.dispatchEvent(new CustomEvent("suaveforge:app-ready"));
 })();
