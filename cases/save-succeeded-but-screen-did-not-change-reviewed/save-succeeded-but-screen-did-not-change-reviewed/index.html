@@ -1,0 +1,76 @@
+<!doctype html>
+<!-- SUAVEFORGE_PUBLISHED_CONTENT -->
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>저장은 됐다고 하는데, 화면은 아무 일도 없었던 것처럼 남아 있었다 — 재검수본 | SuaveForge</title>
+  <meta name="description" content="저장 메시지는 떴는데 화면이 그대로라면 사용자는 작업이 끝난 건지 다시 눌러야 하는지 판단해야 한다. 저장 성공은 서버 응답뿐 아니라 다음 상태가 화면에서 읽히는 것까지 포함한다.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://suaveforge.com/cases/save-succeeded-but-screen-did-not-change-reviewed">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="저장은 됐다고 하는데, 화면은 아무 일도 없었던 것처럼 남아 있었다 — 재검수본">
+  <meta property="og:description" content="저장 메시지는 떴는데 화면이 그대로라면 사용자는 작업이 끝난 건지 다시 눌러야 하는지 판단해야 한다. 저장 성공은 서버 응답뿐 아니라 다음 상태가 화면에서 읽히는 것까지 포함한다.">
+  <meta property="og:url" content="https://suaveforge.com/cases/save-succeeded-but-screen-did-not-change-reviewed">
+  <meta property="og:site_name" content="SuaveForge">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="저장은 됐다고 하는데, 화면은 아무 일도 없었던 것처럼 남아 있었다 — 재검수본">
+  <meta name="twitter:description" content="저장 메시지는 떴는데 화면이 그대로라면 사용자는 작업이 끝난 건지 다시 눌러야 하는지 판단해야 한다. 저장 성공은 서버 응답뿐 아니라 다음 상태가 화면에서 읽히는 것까지 포함한다.">
+  <link rel="stylesheet" href="/content/content.css?v=20260827-19">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"저장은 됐다고 하는데, 화면은 아무 일도 없었던 것처럼 남아 있었다 — 재검수본","description":"저장 메시지는 떴는데 화면이 그대로라면 사용자는 작업이 끝난 건지 다시 눌러야 하는지 판단해야 한다. 저장 성공은 서버 응답뿐 아니라 다음 상태가 화면에서 읽히는 것까지 포함한다.","datePublished":"2026-08-27T00:56:28.099Z","dateModified":"2026-08-27T00:56:28.100Z","mainEntityOfPage":"https://suaveforge.com/cases/save-succeeded-but-screen-did-not-change-reviewed","author":{"@type":"Organization","name":"SuaveForge"},"publisher":{"@type":"Organization","name":"SuaveForge"}}</script>
+</head>
+<body>
+  <header class="sf-content-header">
+    <div class="sf-content-header__inner">
+      <a class="sf-content-brand" href="/">SuaveForge</a>
+      <nav class="sf-content-nav" aria-label="콘텐츠">
+        <a href="/insights/">Insights</a>
+        <a href="/cases/" aria-current="page">Cases</a>
+        <a href="/guides/">Guides</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <div class="content-kicker">Cases</div>
+    <h1 class="content-title">저장은 됐다고 하는데, 화면은 아무 일도 없었던 것처럼 남아 있었다 — 재검수본</h1>
+    <p class="content-lead">저장 메시지는 떴는데 화면이 그대로라면 사용자는 작업이 끝난 건지 다시 눌러야 하는지 판단해야 한다. 저장 성공은 서버 응답뿐 아니라 다음 상태가 화면에서 읽히는 것까지 포함한다.</p>
+    <div class="content-meta"><span>2026년 8월 27일</span><span>Cases</span></div>
+    <div class="article-shell">
+      <article class="article-body"><p>저장 버튼을 눌렀다.</p>
+<p>“저장되었습니다.”</p>
+<p>메시지는 떴다. 그런데 폼도, 버튼도, 화면 위치도 그대로였다.</p>
+<p>사용자는 다시 저장 버튼을 본다.</p>
+<blockquote>끝난 건가? 한 번 더 눌러야 하나?</blockquote>
+<p>이 사례에서 확인된 문제는 <strong>저장이 실패했다는 것</strong>이 아니다. 성공 메시지는 나왔다. 문제는 성공 뒤 화면이 작업 완료를 충분히 보여주지 않았다는 점이다.</p>
+<pre><code>입력 수정
+   ↓
+저장 클릭
+   ↓
+&quot;저장되었습니다&quot;
+   ↓
+화면 변화 거의 없음
+   ↓
+사용자가 다시 판단해야 함</code></pre>
+<h2>같은 화면에 남는 게 문제는 아니다</h2>
+<p>저장 뒤 무조건 목록으로 보내야 하는 것은 아니다.</p>
+<p>계속 같은 항목을 편집하는 도구라면 같은 화면에 남는 편이 더 낫다. 대신 <strong>지금 보이는 값이 저장된 값이라는 사실</strong>이 눈에 보여야 한다.</p>
+<p>예를 들면 저장 직후 버튼을 잠깐 비활성화하고 “저장됨” 상태를 보여주거나, 마지막 저장 시각을 표시하거나, 변경사항이 더 없을 때 저장 버튼 상태를 달리할 수 있다.</p>
+<p>반대로 한 건을 등록하고 끝내는 업무라면 저장 후 목록이나 상세 화면으로 이동하는 편이 자연스러울 수 있다.</p>
+<p>정답은 화면의 역할에 따라 달라진다.</p>
+<h2>메시지는 결과가 아니라 증거 중 하나다</h2>
+<pre><code>나쁜 완료감
+서버 성공 → 토스트 한 줄 → 사용자가 계속 추측
+
+좋은 완료감
+서버 성공 → 화면 상태가 바뀜 → 다음 행동이 자연스럽게 보임</code></pre>
+<p>사용자가 “저장됐나?”를 다시 생각하는 순간, 시스템이 자기 상태 설명을 사용자에게 떠넘긴 셈이다.</p>
+<p><strong>성공 응답이 왔다는 것과, 작업이 끝나 보인다는 것은 다른 문제다.</strong></p></article>
+      <aside class="article-aside">
+        <div>SuaveForge Cases</div>
+        <br>
+        <a href="/cases/">← Cases 전체 보기</a>
+      </aside>
+    </div>
+  </main>
+</body>
+</html>

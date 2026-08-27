@@ -1,117 +1,14 @@
 <!doctype html>
 <!-- SUAVEFORGE_PUBLISHED_CONTENT -->
-<html lang="ko">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>남이 짠 코드라고 갈아엎을 필요는 없다 | SuaveForge</title>
-  <meta name="description" content="유지보수를 맡기자마자 ‘새로 만드는 게 빠릅니다’라는 말을 들었다면, 재개발부터 결정할 필요는 없다. 네 가지 질문을 직접 눌러 현재 프로젝트가 어디에 가까운지 확인해본다.">
-  <meta name="robots" content="index,follow,max-image-preview:large">
-  <link rel="canonical" href="https://suaveforge.com/guides/dont-rebuild-just-because-it-is-legacy">
-  <meta property="og:type" content="article">
-  <meta property="og:title" content="남이 짠 코드라고 갈아엎을 필요는 없다">
-  <meta property="og:description" content="글 대신 30초 판단기로 유지·부분개선·단계적 구조개선·재개발 검토 중 어디에 가까운지 직접 확인해본다.">
-  <meta property="og:url" content="https://suaveforge.com/guides/dont-rebuild-just-because-it-is-legacy">
-  <meta property="og:site_name" content="SuaveForge">
-  <meta name="twitter:card" content="summary_large_image">
-  <link rel="stylesheet" href="/content/content.css?v=20260827-19">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"남이 짠 코드라고 갈아엎을 필요는 없다","description":"유지보수를 맡기자마자 새로 만드는 게 빠르다는 말을 들었다면, 재개발부터 결정할 필요는 없다. 네 가지 질문을 직접 눌러 현재 프로젝트가 어디에 가까운지 확인해본다.","datePublished":"2026-08-26T18:10:59.288Z","mainEntityOfPage":"https://suaveforge.com/guides/dont-rebuild-just-because-it-is-legacy","author":{"@type":"Organization","name":"SuaveForge"},"publisher":{"@type":"Organization","name":"SuaveForge"}}</script>
-  <style>
-    .sf-rebuild-tool{margin:36px 0 48px;background:#111216;color:#f7f4ec;border-radius:28px;padding:30px;box-shadow:0 28px 70px rgba(16,17,20,.18);overflow:hidden;position:relative}
-    .sf-rebuild-tool:before{content:"";position:absolute;width:280px;height:280px;border-radius:50%;background:rgba(216,74,58,.16);right:-110px;top:-150px;pointer-events:none}
-    .sf-rebuild-tool__eyebrow{font-size:12px;font-weight:850;letter-spacing:.14em;color:#f08a7d;text-transform:uppercase;margin-bottom:10px}
-    .sf-rebuild-tool h2{font-size:clamp(28px,5vw,46px)!important;line-height:1.03!important;letter-spacing:-.045em!important;margin:0 0 12px!important;max-width:680px}
-    .sf-rebuild-tool__lead{margin:0 0 24px!important;color:#bfc0c4;max-width:650px;font-size:15px}
-    .sf-rebuild-tool__progress{height:5px;background:#2a2b30;border-radius:999px;overflow:hidden;margin:0 0 26px}.sf-rebuild-tool__progress span{display:block;height:100%;width:25%;background:#d84a3a;transition:width .22s ease}
-    .sf-rebuild-q{display:none}.sf-rebuild-q.is-active{display:block;animation:sfq .18s ease}@keyframes sfq{from{opacity:.35;transform:translateY(5px)}to{opacity:1;transform:none}}
-    .sf-rebuild-q__step{font-size:12px;color:#8e9096;margin-bottom:9px}.sf-rebuild-q strong{display:block;font-size:clamp(22px,4vw,32px);line-height:1.2;letter-spacing:-.035em;max-width:680px}
-    .sf-rebuild-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:24px}.sf-rebuild-actions button,.sf-rebuild-reset{border:1px solid #393b42;background:#1b1c20;color:#fff;border-radius:14px;padding:15px 18px;font:inherit;font-weight:800;cursor:pointer;transition:.16s ease}.sf-rebuild-actions button:hover,.sf-rebuild-actions button:focus-visible{background:#f6f3eb;color:#111216;transform:translateY(-1px);outline:none}
-    .sf-rebuild-result{display:none}.sf-rebuild-result.is-active{display:block;animation:sfq .2s ease}.sf-rebuild-result__label{font-size:12px;color:#8e9096;margin-bottom:8px}.sf-rebuild-result__title{font-size:clamp(34px,6vw,58px);font-weight:900;letter-spacing:-.055em;line-height:1;margin-bottom:14px}.sf-rebuild-result__copy{font-size:17px;line-height:1.7;color:#d4d5d8;max-width:650px;margin-bottom:22px!important}.sf-rebuild-reset{background:transparent;padding:11px 15px;font-size:14px}
-    .sf-rebuild-tool__caption{font-size:12px;color:#777a81;margin-top:18px}
-    @media(max-width:560px){.sf-rebuild-tool{padding:24px 20px;border-radius:20px}.sf-rebuild-actions{grid-template-columns:1fr}.sf-rebuild-actions button{padding:14px}}
-  </style>
-</head>
-<body>
-  <header class="sf-content-header"><div class="sf-content-header__inner"><a class="sf-content-brand" href="/">SuaveForge</a><nav class="sf-content-nav" aria-label="콘텐츠"><a href="/insights/">Insights</a><a href="/cases/">Cases</a><a href="/guides/" aria-current="page">Guides</a></nav></div></header>
-  <main>
-    <div class="content-kicker">Guides</div>
-    <h1 class="content-title">남이 짠 코드라고 갈아엎을 필요는 없다</h1>
-    <p class="content-lead">유지보수를 맡기자마자 “새로 만드는 게 빠릅니다”라는 말을 들었다면, 재개발부터 결정할 필요는 없다. 아래 네 가지를 직접 눌러보면 지금 프로젝트가 어느 선택에 가까운지 대략 보인다.</p>
-    <div class="content-meta"><span>2026년 8월 27일</span><span>Guides</span></div>
-    <div class="article-shell">
-      <article class="article-body">
-        <p>유지보수를 맡겼는데 첫 답이 <strong>“새로 만드는 게 빠릅니다.”</strong>일 때가 있다.</p>
-        <p>맞을 수도 있다. 정말 새로 만드는 편이 싸고 안전한 프로젝트도 있다.</p>
-        <p>하지만 이유가 <strong>“남이 짠 코드라서”</strong>라면 판단이 하나 빠졌다. 지금 가진 것 중 무엇을 살릴 수 있는지 아직 보지 않았기 때문이다.</p>
-
-        <section class="sf-rebuild-tool" data-sf-rebuild-tool aria-label="기존 프로젝트 재개발 판단기">
-          <div class="sf-rebuild-tool__eyebrow">30초 판단기</div>
-          <h2>갈아엎기 전에<br>4번만 눌러보세요.</h2>
-          <p class="sf-rebuild-tool__lead">정답을 내려주는 검사가 아니다. 지금 무엇부터 확인해야 하는지 빠르게 가르는 도구다.</p>
-          <div class="sf-rebuild-tool__progress" aria-hidden="true"><span data-progress></span></div>
-
-          <div class="sf-rebuild-q is-active" data-question data-yes="0" data-no="2">
-            <div class="sf-rebuild-q__step">1 / 4</div>
-            <strong>지금 서비스가 실제 사용자에게 돌아가고 있나?</strong>
-            <div class="sf-rebuild-actions"><button type="button" data-answer="yes">예</button><button type="button" data-answer="no">아니오</button></div>
-          </div>
-          <div class="sf-rebuild-q" data-question data-yes="0" data-no="2">
-            <div class="sf-rebuild-q__step">2 / 4</div>
-            <strong>로그인·데이터·결제 같은 핵심 흐름은 대부분 정상인가?</strong>
-            <div class="sf-rebuild-actions"><button type="button" data-answer="yes">예</button><button type="button" data-answer="no">아니오</button></div>
-          </div>
-          <div class="sf-rebuild-q" data-question data-yes="0" data-no="1">
-            <div class="sf-rebuild-q__step">3 / 4</div>
-            <strong>문제를 몇 개 화면·기능·속도 문제로 좁힐 수 있나?</strong>
-            <div class="sf-rebuild-actions"><button type="button" data-answer="yes">예</button><button type="button" data-answer="no">아니오</button></div>
-          </div>
-          <div class="sf-rebuild-q" data-question data-yes="2" data-no="0">
-            <div class="sf-rebuild-q__step">4 / 4</div>
-            <strong>작은 수정 하나가 관계없는 곳까지 계속 망가뜨리나?</strong>
-            <div class="sf-rebuild-actions"><button type="button" data-answer="yes">예</button><button type="button" data-answer="no">아니오</button></div>
-          </div>
-
-          <div class="sf-rebuild-result" data-result aria-live="polite">
-            <div class="sf-rebuild-result__label">현재는</div>
-            <div class="sf-rebuild-result__title" data-result-title></div>
-            <p class="sf-rebuild-result__copy" data-result-copy></p>
-            <button class="sf-rebuild-reset" type="button" data-reset>다시 해보기</button>
-          </div>
-          <div class="sf-rebuild-tool__caption">네 번의 선택으로 긴 판단표를 대신한다.</div>
-        </section>
-
-        <h2>결과보다 중요한 건 판단 순서다</h2>
-        <p>재개발은 가장 큰 선택이다. 기존 데이터, 익숙한 업무 흐름, 이미 검증된 기능까지 한꺼번에 다시 만들어야 한다.</p>
-        <p>그래서 먼저 문제의 범위를 잘라본다. 문제가 좁으면 좁게 고친다. 뼈대는 쓸 만한데 오래된 부분이 발목을 잡으면 그 부분부터 바꾼다. 고칠수록 엉뚱한 곳이 계속 무너지면 그때 새로 만드는 선택을 비교한다.</p>
-
-        <h2>무조건 살리자는 얘기도 아니다</h2>
-        <p>이미 운영 중이라는 이유만으로 낡은 구조를 끝없이 끌고 가는 것도 답은 아니다.</p>
-        <p>중요한 건 <strong>누가 만든 코드인지가 아니라, 지금 무엇이 살아 있고 무엇이 위험한지</strong>다. 그걸 확인한 뒤에야 “고친다”와 “새로 만든다”를 제대로 비교할 수 있다.</p>
-      </article>
-      <aside class="article-aside"><div>SuaveForge Guides</div><br><a href="/guides/">← Guides 전체 보기</a></aside>
-    </div>
-  </main>
-  <script>
-    (()=>{
-      const root=document.querySelector('[data-sf-rebuild-tool]'); if(!root)return;
-      const qs=[...root.querySelectorAll('[data-question]')], result=root.querySelector('[data-result]'), bar=root.querySelector('[data-progress]');
-      const title=root.querySelector('[data-result-title]'), copy=root.querySelector('[data-result-copy]'); let step=0,risk=0;
-      const outcomes=[
-        {max:0,title:'유지',copy:'핵심은 살아 있습니다. 큰 공사보다 실제 문제 범위를 좁혀 고치는 쪽이 먼저입니다.'},
-        {max:2,title:'부분개선',copy:'전체를 버릴 이유는 아직 없습니다. 막히는 구간부터 잘라서 고치는 편이 비용과 위험을 줄이기 쉽습니다.'},
-        {max:4,title:'단계적 구조개선',copy:'서비스는 살릴 수 있지만 낡은 뼈대가 발목을 잡고 있습니다. 운영을 유지한 채 문제 구조를 순서대로 바꾸는 쪽을 먼저 봅니다.'},
-        {max:99,title:'재개발 검토',copy:'새로 만드는 선택을 진지하게 비교할 단계입니다. 그래도 기존 데이터·업무 흐름·살릴 기능을 먼저 분리한 뒤 비용과 위험을 계산해야 합니다.'}
-      ];
-      function show(i){qs.forEach((q,n)=>q.classList.toggle('is-active',n===i));bar.style.width=((Math.min(i+1,4)/4)*100)+'%'}
-      root.addEventListener('click',e=>{
-        const b=e.target.closest('[data-answer]');
-        if(b){const q=qs[step];risk+=Number(q.dataset[b.dataset.answer]||0);q.classList.remove('is-active');step++;
-          if(step<qs.length){show(step)}else{const o=outcomes.find(x=>risk<=x.max);title.textContent=o.title;copy.textContent=o.copy;result.classList.add('is-active');bar.style.width='100%'}
-        }
-        if(e.target.closest('[data-reset]')){risk=0;step=0;result.classList.remove('is-active');show(0)}
-      });
-      show(0);
-    })();
-  </script>
-</body>
-</html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>남이 짠 코드라고 갈아엎을 필요는 없다 | SuaveForge</title><meta name="description" content="유지보수를 맡기자마자 “새로 만드는 게 빠릅니다”라는 말을 들었다면, 재개발부터 결정할 필요는 없다. 네 가지 질문을 직접 눌러 현재 프로젝트가 유지·부분개선·현대화·재개발 검토 중 어디에 가까운지 확인해본다."><meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://suaveforge.com/guides/dont-rebuild-just-because-it-is-legacy"><meta property="og:type" content="article"><meta property="og:title" content="남이 짠 코드라고 갈아엎을 필요는 없다"><meta property="og:description" content="유지보수를 맡기자마자 “새로 만드는 게 빠릅니다”라는 말을 들었다면, 재개발부터 결정할 필요는 없다. 네 가지 질문을 직접 눌러 현재 프로젝트가 유지·부분개선·현대화·재개발 검토 중 어디에 가까운지 확인해본다."><meta property="og:url" content="https://suaveforge.com/guides/dont-rebuild-just-because-it-is-legacy"><meta property="og:site_name" content="SuaveForge"><meta name="twitter:card" content="summary_large_image"><link rel="stylesheet" href="/content/content.css?v=20260827-19"><script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"남이 짠 코드라고 갈아엎을 필요는 없다","description":"유지보수를 맡기자마자 “새로 만드는 게 빠릅니다”라는 말을 들었다면, 재개발부터 결정할 필요는 없다. 네 가지 질문을 직접 눌러 현재 프로젝트가 유지·부분개선·현대화·재개발 검토 중 어디에 가까운지 확인해본다.","datePublished":"2026-08-26T18:10:59.288Z","dateModified":"2026-08-26T18:10:59.321Z","mainEntityOfPage":"https://suaveforge.com/guides/dont-rebuild-just-because-it-is-legacy","author":{"@type":"Organization","name":"SuaveForge"},"publisher":{"@type":"Organization","name":"SuaveForge"}}</script></head><body><header class="sf-content-header"><div class="sf-content-header__inner"><a class="sf-content-brand" href="/">SuaveForge</a><nav class="sf-content-nav" aria-label="콘텐츠"><a href="/insights/">Insights</a><a href="/cases/">Cases</a><a href="/guides/" aria-current="page">Guides</a></nav></div></header><main><div class="content-kicker">Guides</div><h1 class="content-title">남이 짠 코드라고 갈아엎을 필요는 없다</h1><p class="content-lead">유지보수를 맡기자마자 “새로 만드는 게 빠릅니다”라는 말을 들었다면, 재개발부터 결정할 필요는 없다. 네 가지 질문을 직접 눌러 현재 프로젝트가 유지·부분개선·현대화·재개발 검토 중 어디에 가까운지 확인해본다.</p><div class="content-meta"><span>2026년 8월 27일</span><span>Guides</span></div><div class="article-shell"><article class="article-body"><p>유지보수를 맡겼는데 첫 답이 <strong>“새로 만드는 게 빠릅니다.”</strong>일 때가 있다.</p>
+<p>맞을 수도 있다. 정말 새로 만드는 편이 싸고 안전한 프로젝트도 있다.</p>
+<p>하지만 이유가 <strong>“남이 짠 코드라서”</strong>라면 판단이 하나 빠졌다. 지금 가진 것 중 무엇을 살릴 수 있는지 아직 보지 않았기 때문이다.</p>
+<p>[[SF_REBUILD_DECISION_TOOL]]</p>
+<h2>결과보다 중요한 건 판단 순서다</h2>
+<p>재개발은 가장 큰 선택이다. 기존 데이터, 익숙한 업무 흐름, 이미 검증된 기능까지 한꺼번에 다시 만들어야 한다.</p>
+<p>그래서 먼저 문제의 범위를 잘라본다. 몇 개 화면이나 기능만 고치면 되는지, 핵심 구조는 쓸 만한지, 작은 수정이 계속 엉뚱한 곳까지 무너뜨리는지를 본다.</p>
+<p>문제가 좁으면 좁게 고치는 편이 낫다. 뼈대는 쓸 만한데 오래된 부분이 발목을 잡으면 그 부분부터 바꾼다. 반대로 핵심 구조 자체가 계속 문제를 만들고, 고칠수록 다른 곳이 무너지면 그때 재개발을 검토한다.</p>
+<h2>무조건 살리자는 얘기도 아니다</h2>
+<p>이미 운영 중이라는 이유만으로 낡은 구조를 끝없이 끌고 가는 것도 답은 아니다.</p>
+<p>중요한 건 <strong>누가 만든 코드인지가 아니라, 지금 무엇이 살아 있고 무엇이 위험한지</strong>다.</p>
+<p>그걸 확인한 뒤에야 “고친다”와 “새로 만든다”가 비용과 위험을 비교할 수 있는 선택지가 된다.</p></article><aside class="article-aside"><div>SuaveForge Guides</div><br><a href="/guides/">← Guides 전체 보기</a></aside></div></main></body></html>

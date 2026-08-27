@@ -1,5 +1,15 @@
 (() => {
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const svgCache = new Map();
+  const getSvg = (src) => {
+    if (!svgCache.has(src)) {
+      svgCache.set(src, fetch(src).then((response) => {
+        if (!response.ok) throw new Error(`Logo request failed: ${response.status}`);
+        return response.text();
+      }));
+    }
+    return svgCache.get(src);
+  };
 
   const namespaceSvg = (source, namespace) => {
     const ids = [...source.matchAll(/\bid=(['"])([^'"]+)\1/g)].map((match) => match[2]);
@@ -32,9 +42,7 @@
 
     try {
       if (svgSrc && !root.querySelector('.motion-logo')) {
-        const response = await fetch(svgSrc);
-        if (!response.ok) throw new Error(`Logo request failed: ${response.status}`);
-        shell.innerHTML = namespaceSvg(await response.text(), namespace);
+        shell.innerHTML = namespaceSvg(await getSvg(svgSrc), namespace);
       }
 
       root.querySelectorAll('[id$="-motionLayers"], [id$="-originalLogo"]').forEach((node) => {
