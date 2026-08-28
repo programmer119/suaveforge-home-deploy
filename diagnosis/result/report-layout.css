@@ -1,0 +1,249 @@
+/* SuaveForge diagnosis report — Layout System 29
+   Internal reference principles: strong hierarchy + progressive disclosure,
+   responsive grid, deliberate alignment. Customer-facing copy contains no benchmark names. */
+:root{
+  --report-shell:1240px;
+  --report-gutter:clamp(20px,3.2vw,40px);
+  --report-section-y:clamp(54px,6vw,76px);
+  --report-gap:clamp(14px,1.8vw,22px);
+  --report-col-gap:clamp(22px,3.4vw,46px);
+  --report-copy:720px;
+}
+
+body.result-report-page{
+  background:
+    radial-gradient(circle at 16% -4%,rgba(255,255,255,.95) 0,transparent 30%),
+    var(--report-bg);
+}
+body.result-report-page .shell{
+  width:min(var(--report-shell),100%);
+  max-width:none;
+  margin-inline:auto;
+  padding-inline:var(--report-gutter);
+}
+body.result-report-page header{
+  height:74px;
+  background:rgba(243,240,234,.9);
+  backdrop-filter:blur(14px) saturate(120%);
+}
+body.result-report-page .result-sitebar{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  gap:18px;
+}
+body.result-report-page .result-sitebar .brand{font-size:19px}
+body.result-report-page .result-sitebar .report-version{justify-self:start}
+body.result-report-page .result-sitebar .mini{margin:0;justify-self:end}
+
+/* One 12-column mental model for the whole report. */
+.result-head{
+  padding:52px 0 26px;
+  display:grid;
+  grid-template-columns:minmax(0,10fr) minmax(96px,2fr);
+  gap:var(--report-col-gap);
+  align-items:end;
+}
+.result-head>div:first-child{min-width:0}
+.result-head h1{
+  max-width:880px;
+  font-size:clamp(38px,4.2vw,60px);
+  line-height:1.01;
+  margin:10px 0 14px;
+}
+.result-head-side{min-width:96px;text-align:right;padding-bottom:4px}
+.result-head-side b{font-size:38px}
+.result-url{max-width:880px}
+
+.executive{margin:0 0 18px;border-radius:24px}
+.executive-inner{
+  display:grid;
+  grid-template-columns:minmax(0,8fr) minmax(360px,4fr);
+  min-height:310px;
+}
+.executive-copy{
+  padding:clamp(34px,4.5vw,58px);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.executive-copy h2{max-width:760px;font-size:clamp(30px,3.1vw,45px);line-height:1.08}
+.executive-copy p{max-width:700px}
+.executive-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+.executive-stat{min-height:102px;padding:20px}
+
+.report-nav-wrap{margin:14px 0 18px}
+.report-nav{padding:6px;gap:4px}
+.report-nav a{padding:8px 11px}
+
+.report-section{
+  padding:var(--report-section-y) 0;
+  border-top:1px solid var(--report-line);
+}
+.section-head{
+  display:grid;
+  grid-template-columns:minmax(280px,5fr) minmax(0,7fr);
+  gap:var(--report-col-gap);
+  align-items:end;
+  margin-bottom:26px;
+}
+.section-head>div{min-width:0}
+.section-head h2{max-width:520px;font-size:clamp(28px,3vw,39px);line-height:1.1}
+.section-head p{
+  max-width:var(--report-copy);
+  justify-self:end;
+  text-align:left;
+  font-size:14px;
+  line-height:1.72;
+}
+.section-kicker{margin-bottom:9px}
+
+/* Performance: fixed 5/7 split, shared top/bottom edges. */
+.metric-cockpit{
+  grid-template-columns:minmax(360px,5fr) minmax(0,7fr);
+  min-height:430px;
+  border-radius:22px;
+}
+.score-orbit-panel,.vitals-panel{padding:26px 28px}
+.score-orbit-chart{height:300px}
+.vitals-panel{display:grid;grid-template-rows:auto 1fr}
+.vital-stack{align-self:stretch;grid-template-rows:repeat(4,minmax(0,1fr));gap:10px}
+.vital-card{min-height:0}
+
+/* Discovery: equal-height cards with aligned headers and rows. */
+.discovery-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:var(--report-gap);
+  align-items:stretch;
+}
+.discovery-card{
+  min-width:0;
+  height:100%;
+  padding:22px;
+  display:grid;
+  grid-template-rows:auto auto 1fr;
+  border-radius:18px;
+}
+.discovery-card-head{min-height:58px}
+.discovery-card>p{min-height:42px;margin:12px 0 16px}
+.discovery-signals{align-content:start}
+.discovery-signal{grid-template-columns:minmax(0,1fr) minmax(68px,auto) 8px}
+.discovery-signal b{max-width:150px}
+
+/* Priority: dashboard grid with aligned panels. Sparse data uses a single dominant chart. */
+.insight-grid{
+  display:grid;
+  grid-template-columns:minmax(0,7fr) minmax(320px,5fr);
+  gap:var(--report-gap);
+  align-items:stretch;
+}
+.insight-card{border-radius:18px;min-width:0}
+.insight-card.dark{display:grid;grid-template-rows:auto 1fr}
+.insight-card-head{padding:20px 22px 8px}
+.impact-chart,.category-chart{height:340px;min-height:340px}
+.issue-spotlight{margin-top:var(--report-gap);border-radius:14px}
+.action-list{gap:12px;margin-top:var(--report-gap)}
+.action-card{
+  grid-template-columns:104px minmax(0,1fr);
+  border-radius:16px;
+}
+.action-score{padding:20px 14px}
+.action-body{padding:20px 22px}
+.action-body h3{font-size:19px;line-height:1.3}
+.action-evidence{gap:10px}
+.action-evidence>div{min-height:96px;padding:13px 14px}
+
+/* Sparse report mode: don't render two empty canvases side-by-side. */
+.report-section[data-density="sparse"] .insight-grid{grid-template-columns:1fr}
+.report-section[data-density="sparse"] .insight-card[data-secondary-chart]{display:none}
+.report-section[data-density="sparse"] .impact-chart{height:300px;min-height:300px}
+
+/* Category section / tables: full-width, no ad-hoc inline geometry. */
+#matrix .insight-card.dark{margin-bottom:var(--report-gap)!important}
+#matrix .chart{height:330px}
+.matrix-card{border-radius:16px}
+.matrix-table{table-layout:fixed}
+.matrix-table th,.matrix-table td{padding:15px 18px;font-size:12px}
+.matrix-table th{font-size:10.5px}
+.matrix-table th:nth-child(1),.matrix-table td:nth-child(1){width:22%}
+.matrix-table th:nth-child(2),.matrix-table td:nth-child(2){width:11%}
+.matrix-table th:nth-child(3),.matrix-table td:nth-child(3){width:34%}
+.matrix-table th:nth-child(4),.matrix-table td:nth-child(4){width:12%}
+.matrix-table th:nth-child(5),.matrix-table td:nth-child(5){width:21%}
+.matrix-bar{width:100%;min-width:0}
+
+.evidence-shell{border-radius:20px;padding:20px}
+.evidence-toolbar{margin-bottom:16px}
+.evidence-swiper .swiper-slide{height:auto}
+.evidence-shot{height:100%;display:grid;grid-template-rows:auto auto}
+.evidence-shot img{aspect-ratio:16/10}
+
+/* Progressive disclosure: one expanded issue at a time by default. */
+.detail-tools{margin-bottom:14px}
+.details{gap:10px}
+.detail{border-radius:14px}
+.detail summary{grid-template-columns:58px minmax(0,1fr) 24px;padding:17px 18px;gap:14px}
+.detail-priority{font-size:20px}
+.detail-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.detail-grid>div{padding:15px 17px;font-size:12.5px;line-height:1.72;min-width:0}
+.detail-grid>div>b{font-size:10.5px}
+
+.next-contact{margin-bottom:72px}
+.next-contact .forms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--report-gap);align-items:stretch}
+.next-contact .formbox{height:100%;padding:26px;border-radius:16px;display:flex;flex-direction:column}
+.next-contact .formbox h3{font-size:19px}
+.next-contact .formbox button{align-self:flex-start;margin-top:auto}
+.next-contact .forms:before{display:none}
+
+/* Typography floor: readable even when the long report is zoomed out. */
+.score-key small,.vitals-head p,.insight-card-head p,.action-evidence>div,.detail-grid>div,.formbox>p{font-size:12.5px}
+.discovery-signal span,.matrix-table td,.filter-chip,.detail-title small{font-size:12px}
+.discovery-signal b{font-size:11.5px}
+.tag,.difficulty-line,.locations code,.detail-locations code{font-size:11px}
+
+@media(max-width:1000px){
+  :root{--report-gutter:24px;--report-col-gap:28px}
+  .executive-inner{grid-template-columns:1fr}
+  .executive-stats{border-left:0;border-top:1px solid #27303d;grid-template-columns:repeat(3,minmax(0,1fr))}
+  .executive-stat:nth-last-child(-n+2){border-bottom:1px solid #27303d}
+  .executive-stat:nth-last-child(-n+3){border-bottom:0}
+  .metric-cockpit{grid-template-columns:1fr}
+  .score-orbit-panel{border-right:0;border-bottom:1px solid #25303c}
+  .discovery-grid{grid-template-columns:1fr}
+  .discovery-card>p{min-height:0}
+  .insight-grid{grid-template-columns:1fr}
+  .section-head{grid-template-columns:minmax(250px,5fr) minmax(0,7fr)}
+}
+
+@media(max-width:760px){
+  :root{--report-gutter:18px;--report-section-y:48px}
+  body.result-report-page header{height:66px}
+  .result-head{grid-template-columns:1fr;gap:10px;padding-top:38px}
+  .result-head-side{text-align:left}
+  .section-head{grid-template-columns:1fr;gap:10px;align-items:start}
+  .section-head p{justify-self:start;max-width:100%}
+  .executive-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .executive-stat:nth-last-child(-n+3){border-bottom:1px solid #27303d}
+  .executive-stat:nth-last-child(-n+2){border-bottom:0}
+  .score-legend{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .action-card{grid-template-columns:72px minmax(0,1fr)}
+  .action-body{padding:17px}
+  .action-evidence{grid-template-columns:1fr}
+  .matrix-table{min-width:680px;table-layout:auto}
+  .detail-grid{grid-template-columns:1fr}
+  .next-contact .forms{grid-template-columns:1fr}
+}
+
+@media(max-width:480px){
+  :root{--report-gutter:14px}
+  .result-sitebar{grid-template-columns:auto 1fr}.result-sitebar .report-version{display:none}
+  .executive-copy{padding:28px 22px}
+  .executive-stat{padding:17px 14px}
+  .score-orbit-panel,.vitals-panel{padding:20px}
+  .score-orbit-chart{height:260px}
+  .score-legend{grid-template-columns:1fr}
+  .action-card{grid-template-columns:62px minmax(0,1fr)}
+  .action-score{padding:16px 8px}
+  .detail summary{grid-template-columns:44px minmax(0,1fr) 20px;padding:15px 14px}
+}
