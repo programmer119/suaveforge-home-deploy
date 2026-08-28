@@ -3,6 +3,8 @@
 
   const form = document.querySelector("[data-home-diagnosis-form]");
   if (!form) return;
+  if (window.SF_DIAGNOSIS_ENTRY_READY) return;
+  window.SF_DIAGNOSIS_ENTRY_READY = true;
 
   const input = form.querySelector("[data-home-diagnosis-url]");
   const button = form.querySelector("[data-home-diagnosis-submit]");

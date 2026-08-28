@@ -4136,7 +4136,7 @@ body { font-size: 16px; line-height: 1.65; }
 }
 
 
-/* v32 first-paint contract: above-the-fold LCP candidates are never hidden behind JS.
+/* v33 first-paint contract: above-the-fold LCP candidates are never hidden behind JS.
    They may settle with compositor-only transform, but opacity is visible from first paint. */
 .hero-v6-title.reveal,
 .hero-v6 .hero-showcase.reveal,
@@ -4156,10 +4156,57 @@ body { font-size: 16px; line-height: 1.65; }
 }
 
 
-/* v32 accessibility-safe entrance motion: motion without low-opacity readable text. */
+/* v33 accessibility-safe entrance motion: motion without low-opacity readable text. */
 .reveal{opacity:1!important;transform:translateY(22px);transition:transform .72s cubic-bezier(.2,.75,.2,1),filter .72s cubic-bezier(.2,.75,.2,1)!important}
 .reveal.is-visible{opacity:1!important;transform:none;filter:none}
 .motion-staged-line,.motion-context-copy,.motion-context-lead{opacity:1!important}
 @keyframes sf-stage-line-in{from{opacity:1;transform:translateY(18px);filter:blur(5px)}to{opacity:1;transform:none;filter:none}}
 @keyframes sf-context-in{from{opacity:1;transform:translateY(14px);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}
 .portfolio-index-link{display:inline-flex;align-items:center;margin-right:18px;font-weight:800;text-decoration:none;color:inherit;border-bottom:1px solid currentColor;padding:8px 0}
+
+/* Updated 2026.08.28 · Search Authority + Accessibility 33 */
+/* Search-intent service links are ordinary crawlable links, not JS-only cards. */
+.service-intent-links{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;margin-top:22px;
+  border:1px solid #c8c3ba;background:#c8c3ba;
+}
+.service-intent-links a{
+  min-height:112px;display:grid;grid-template-columns:minmax(0,1fr) auto;align-content:center;gap:8px 18px;
+  padding:20px 22px;background:#f7f4ee;color:#15181e;transition:background .2s ease,color .2s ease,transform .2s ease;
+}
+.service-intent-links a:hover,.service-intent-links a:focus-visible{background:#111318;color:#fff;transform:translateY(-2px)}
+.service-intent-links b{font-size:17px;letter-spacing:-.025em}
+.service-intent-links span{grid-column:1;color:#474d56;font-size:13px;line-height:1.55}
+.service-intent-links a:hover span,.service-intent-links a:focus-visible span{color:#e4e6ea}
+.service-intent-links i{grid-column:2;grid-row:1/3;align-self:center;font-style:normal;font-size:20px}
+.external-profile-proof a{font-weight:800;text-decoration:underline;text-underline-offset:3px}
+
+/* Axe contrast fixes from the 2026-08-28 public diagnosis. */
+.case-heading h2 [data-i18n="cases.title1"]{color:#171a20}
+.case-heading h2 [data-i18n="cases.title2"]{color:#a9221e}
+.live-demos .eyebrow-light,.live-demos .accent-light{color:#fff}
+.stage-card-rebuild>span{color:#ffb9b4}
+.portfolio-meta i{color:#5b6068}
+.portfolio-meta span{color:#a9221e}
+.portfolio-figure .project-badge-product{background:#a9221e;color:#fff}
+
+/* Enforce a measurable 44px mobile hit-area for every site UI control that can
+   appear after progressive rendering. Text links inside prose are intentionally
+   excluded; navigational/action controls are explicitly covered. */
+@media(max-width:760px){
+  .header-cta,.mobile-header-cta,.mobile-search-trigger,.menu-button,.brand,
+  .mobile-menu a,.mobile-menu button,.desktop-nav a,.mega-trigger,.mega-link,
+  .hero-actions a,.button,.case-detail-button,.case-story-media,.case-more,
+  .live-demo-rail a,.portfolio-actions a,.portfolio-actions button,
+  .portfolio-card>a,.portfolio-search-clear,.global-search-head>button,
+  .global-search-quick button,.global-search-result>button,.portfolio-search-result>button,
+  .member-links button,.contact-direct a,.footer-brand,.form-actions button,
+  .form-submit,.faq-item summary,.service-intent-links a,.portfolio-index-link{
+    min-height:44px;
+  }
+  .desktop-nav a,.mobile-menu a,.mega-link,.contact-direct a,.footer-brand,.portfolio-index-link{
+    display:inline-flex;align-items:center;
+  }
+  .service-intent-links{grid-template-columns:1fr}
+  .service-intent-links a{min-height:92px}
+}

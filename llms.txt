@@ -1,14 +1,24 @@
 # SuaveForge
 
-SuaveForge는 기존 소프트웨어 개선, 업무 자동화, 소스 없는 프로그램 재구축과 필요한 AI 기능을 실제 서비스 흐름에 맞춰 수행합니다.
+SuaveForge는 웹·앱 개발, LMS 개발, 업무 자동화, 기존 소프트웨어 개선·재구축과 필요한 AI 기능을 실제 서비스 흐름에 맞춰 수행합니다.
+
+## Services
+- 웹·앱 개발: https://suaveforge.com/services/web-app-development/
+- LMS 개발: https://suaveforge.com/services/lms-development/
+- 업무 자동화 개발: https://suaveforge.com/services/automation-development/
+- 기존 소프트웨어 개선·재구축: https://suaveforge.com/services/software-rebuild/
 
 ## Main
 - https://suaveforge.com/
 - https://suaveforge.com/diagnosis/
+- https://suaveforge.com/services/
 - https://suaveforge.com/work/
 - https://suaveforge.com/cases/
 - https://suaveforge.com/guides/
 - https://suaveforge.com/insights/
+
+## External identity
+- SuaveForge on Kmong: https://kmong.com/@SUAVEFORGE
 
 ## Projects
 - 소개팅·라운지 매칭 Flutter 앱 및 관리자 플랫폼: https://suaveforge.com/work/gyeol/

@@ -2,6 +2,8 @@
   'use strict';
   const nav=document.querySelector('[data-mega-nav]');
   if(!nav)return;
+  if(window.SF_MEGA_NAV_READY)return;
+  window.SF_MEGA_NAV_READY=true;
 
   const header=document.querySelector('[data-header]');
   const groups=[...nav.querySelectorAll('[data-mega-item]')];

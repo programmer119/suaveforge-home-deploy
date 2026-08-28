@@ -210,7 +210,7 @@
       signalRow('엔티티 schema',`${Number(geo.entitySchemaCount)||0}개`,Number(geo.entitySchemaCount)>0?'pass':'warn'),
       signalRow('AI crawler 차단',Array.isArray(geo.aiCrawlerBlocks)&&geo.aiCrawlerBlocks.length?geo.aiCrawlerBlocks.join(', '):'감지 없음',Array.isArray(geo.aiCrawlerBlocks)&&geo.aiCrawlerBlocks.length?'bad':'pass'),
       signalRow('출처 / 발행 신호',geo.articleSchema?`${geo.authorSignal?'author ✓':'author —'} · ${geo.publisherSignal?'publisher ✓':'publisher —'} · ${geo.dateSignal?'date ✓':'date —'}`:'현재 페이지 유형상 비필수',geo.articleSchema?(geo.authorSignal&&geo.publisherSignal&&geo.dateSignal?'pass':'warn'):'neutral'),
-      signalRow('sameAs / 외부 근거',`${Number(geo.sameAsCount)||0} / ${Number(geo.citationLinks)||0}`,Number(geo.sameAsCount)>0||Number(geo.citationLinks)>0?'pass':'neutral'),
+      signalRow('sameAs / 제3자 근거',`${Number(geo.sameAsCount)||0} / ${Number(geo.thirdPartyEvidenceLinks)||0}`,Number(geo.sameAsCount)>0&&Number(geo.thirdPartyEvidenceLinks)>0?'pass':(Number(geo.sameAsCount)>0||Number(geo.thirdPartyEvidenceLinks)>0?'warn':'neutral')),
       signalRow('llms.txt',geo.llmsTxt?.exists?'제공됨':'선택 신호 · 없음',geo.llmsTxt?.exists?'pass':'neutral')
     ];
     const scoreLegend=(label,value,color)=>{const [state]=scoreState(value);return `<div class="score-key"><div><i style="background:${color}"></i><b>${label}</b></div><small>${value===null?'N/A':Math.round(value)} · ${state}</small></div>`};
