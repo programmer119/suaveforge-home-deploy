@@ -1,8 +1,8 @@
 (()=>{
   'use strict';
   if(window.SF_FEATURE_LOADER)return;
-  const VERSION='20260828-33';
-  let appPromise=null,motionPromise=null,megaPromise=null,diagnosisPromise=null;
+  const VERSION='20260828-34';
+  let appPromise=null,motionPromise=null,megaPromise=null,diagnosisPromise=null,corePromise=null;
   const loaded=new Set();
   const loadScript=src=>{
     if(loaded.has(src))return Promise.resolve();
@@ -17,7 +17,8 @@
   const loadMotion=()=>window.SF_MOTION_READY?Promise.resolve():motionPromise||(motionPromise=loadScript('data/projects.js').then(()=>loadScript('motion.js')).catch(e=>{motionPromise=null;throw e}));
   const loadMega=()=>window.SF_MEGA_NAV_READY?Promise.resolve():megaPromise||(megaPromise=loadScript('assets/navigation/mega-nav.js').catch(e=>{megaPromise=null;throw e}));
   const loadDiagnosis=()=>window.SF_DIAGNOSIS_ENTRY_READY?Promise.resolve():diagnosisPromise||(diagnosisPromise=loadScript('assets/revival/diagnosis-entry.js').catch(e=>{diagnosisPromise=null;throw e}));
-  window.SF_FEATURE_LOADER={loadApp,loadMotion,loadMega,loadDiagnosis};
+  const loadCore=()=>window.SF_CORE_READY?Promise.resolve():corePromise||(corePromise=loadScript('assets/runtime/core.js').catch(e=>{corePromise=null;throw e}));
+  window.SF_FEATURE_LOADER={loadApp,loadMotion,loadMega,loadDiagnosis,loadCore};
 
   document.addEventListener('pointerover',event=>{
     if(window.SF_MEGA_NAV_READY)return;
@@ -28,6 +29,8 @@
   const appIntentSelector='[data-language-trigger],[data-global-search-open],[data-open-project],[data-copy-brief],[data-case-more],[data-portfolio-more],[data-project-search-clear]';
   document.addEventListener('click',async event=>{
     const el=event.target instanceof Element?event.target:null;
+    const menu=!window.SF_CORE_READY?el?.closest('[data-menu-button]'):null;
+    if(menu){event.preventDefault();event.stopImmediatePropagation();try{await loadCore();menu.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true,view:window}))}catch{}return}
     const mega=!window.SF_MEGA_NAV_READY?el?.closest('[data-mega-trigger]'):null;
     if(mega){event.preventDefault();event.stopImmediatePropagation();try{await loadMega();mega.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true,view:window}))}catch{}return}
     if(window.SF_APP_READY)return;
@@ -57,8 +60,18 @@
 
   const observe=(selector,cb,margin='280px 0px')=>{const targets=[...document.querySelectorAll(selector)];if(!targets.length||!('IntersectionObserver'in window))return;const io=new IntersectionObserver(entries=>{if(!entries.some(e=>e.isIntersecting&&e.intersectionRatio>0))return;io.disconnect();cb()},{rootMargin:margin,threshold:0});targets.forEach(t=>io.observe(t))};
   observe('[data-home-diagnosis-form]',()=>loadDiagnosis(),'520px 0px');
-  let belowFoldArmed=false;const armBelowFold=()=>{if(belowFoldArmed)return;belowFoldArmed=true;observe('[data-featured-cases],[data-portfolio-track],.live-demo-rail',()=>loadMotion())};
+  // Rich case/portfolio DOM and the 57 KB app bundle are now below-fold work.
+  // The crawler-facing /work/ pages and sitemap remain static, while the homepage
+  // hydrates the visual cards shortly before a real user reaches them.
+  observe('[data-featured-cases],[data-portfolio-track]',()=>loadApp().then(()=>loadMotion()).catch(()=>{}),'1400px 0px');
+
+  const onFirstScroll=()=>{void loadCore();};
+  addEventListener('scroll',onFirstScroll,{passive:true,once:true});
   const deepFeatureHash=/^#(?:cases|demos|portfolio|contact|team|process|partnership)$/i.test(location.hash);
-  if(deepFeatureHash||scrollY>120)armBelowFold();else{const onFirstScroll=()=>{if(scrollY<=120)return;removeEventListener('scroll',onFirstScroll);armBelowFold()};addEventListener('scroll',onFirstScroll,{passive:true})}
-  addEventListener('hashchange',()=>{if(/^#(?:cases|demos|portfolio|contact|team|process|partnership)$/i.test(location.hash)){armBelowFold();if(/^#(?:cases|demos|portfolio)$/i.test(location.hash))loadMotion()}if(location.hash==='#diagnosis')loadDiagnosis()});
+  if(deepFeatureHash){void loadCore();void loadApp().then(()=>loadMotion()).catch(()=>{})}
+  if(location.hash==='#diagnosis')void loadDiagnosis();
+  addEventListener('hashchange',()=>{
+    if(/^#(?:cases|demos|portfolio|contact|team|process|partnership)$/i.test(location.hash)){void loadCore();void loadApp().then(()=>loadMotion()).catch(()=>{})}
+    if(location.hash==='#diagnosis')void loadDiagnosis();
+  });
 })();

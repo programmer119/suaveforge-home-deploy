@@ -4136,7 +4136,7 @@ body { font-size: 16px; line-height: 1.65; }
 }
 
 
-/* v33 first-paint contract: above-the-fold LCP candidates are never hidden behind JS.
+/* v34 first-paint contract: above-the-fold LCP candidates are never hidden behind JS.
    They may settle with compositor-only transform, but opacity is visible from first paint. */
 .hero-v6-title.reveal,
 .hero-v6 .hero-showcase.reveal,
@@ -4164,7 +4164,7 @@ body { font-size: 16px; line-height: 1.65; }
 @keyframes sf-context-in{from{opacity:1;transform:translateY(14px);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}
 .portfolio-index-link{display:inline-flex;align-items:center;margin-right:18px;font-weight:800;text-decoration:none;color:inherit;border-bottom:1px solid currentColor;padding:8px 0}
 
-/* Updated 2026.08.28 · Search Authority + Accessibility 33 */
+/* Updated 2026.08.28 · Runtime Performance + Accessibility 34 */
 /* Search-intent service links are ordinary crawlable links, not JS-only cards. */
 .service-intent-links{
   display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;margin-top:22px;
@@ -4209,4 +4209,35 @@ body { font-size: 16px; line-height: 1.65; }
   }
   .service-intent-links{grid-template-columns:1fr}
   .service-intent-links a{min-height:92px}
+}
+
+/* Updated 2026.08.28 · Runtime Performance + Accessibility 34 */
+/* Axe evaluates the element during its initial animation state. Keep text fully
+   opaque and animate only transform/filter so temporary reveal states never
+   lower the effective text contrast. */
+.sf-editorial-heading > span{
+  opacity:1!important;
+}
+@keyframes sfV2Editorial{
+  from{opacity:1;transform:translateY(.7em);filter:blur(4px)}
+  to{opacity:1;transform:translateY(0);filter:blur(0)}
+}
+.case-heading h2 [data-i18n="cases.title1"],
+.case-heading h2 [data-i18n="cases.title2"]{
+  opacity:1!important;
+}
+.delivery-system-head > div > .eyebrow,
+.process-compact > article > span{
+  color:#8f1d19!important;
+  opacity:1!important;
+}
+
+/* The full case and portfolio cards are hydrated before they enter the viewport.
+   Reserving their space prevents a late layout jump without making the browser
+   parse dozens of image/card nodes on the startup path. */
+[data-lazy-render="featured"]:empty{min-height:1080px}
+[data-lazy-render="portfolio"]:empty{min-height:760px}
+@media(max-width:760px){
+  [data-lazy-render="featured"]:empty{min-height:920px}
+  [data-lazy-render="portfolio"]:empty{min-height:620px}
 }
