@@ -4134,3 +4134,23 @@ body { font-size: 16px; line-height: 1.65; }
   content-visibility: auto;
   contain-intrinsic-size: auto 760px;
 }
+
+
+/* v31 first-paint contract: above-the-fold LCP candidates are never hidden behind JS.
+   They may settle with compositor-only transform, but opacity is visible from first paint. */
+.hero-v6-title.reveal,
+.hero-v6 .hero-showcase.reveal,
+.hero-v6-support.reveal{
+  opacity:1!important;
+  transform:none!important;
+  transition:none!important;
+}
+@media (prefers-reduced-motion:no-preference){
+  .hero-v6-title{animation:sfHeroFirstPaintSettle .48s cubic-bezier(.2,.8,.2,1) both}
+  .hero-v6 .hero-showcase{animation:sfHeroFirstPaintSettle .58s cubic-bezier(.2,.8,.2,1) .04s both}
+  .hero-v6-support{animation:sfHeroFirstPaintSettle .52s cubic-bezier(.2,.8,.2,1) .08s both}
+}
+@keyframes sfHeroFirstPaintSettle{
+  from{transform:translateY(12px)}
+  to{transform:translateY(0)}
+}

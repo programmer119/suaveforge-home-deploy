@@ -1,6 +1,15 @@
-/* SuaveForge diagnosis report — Layout System 29
+/* SuaveForge diagnosis report — Layout Stability 30
    Internal reference principles: strong hierarchy + progressive disclosure,
    responsive grid, deliberate alignment. Customer-facing copy contains no benchmark names. */
+
+/* Full-page capture stability: keep the report in normal document flow.
+   Smooth root scrolling and sticky report controls can make scroll-stitch capture
+   re-sample the same viewport and duplicate the hero/executive block. */
+html{scroll-behavior:auto!important}
+body.result-report-page{overflow-anchor:none}
+body.result-report-page .report-nav-wrap{position:relative!important;top:auto!important}
+.result-head,.executive,.report-section{position:relative;inset:auto;transform-origin:center top}
+
 :root{
   --report-shell:1240px;
   --report-gutter:clamp(20px,3.2vw,40px);

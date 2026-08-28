@@ -1,7 +1,7 @@
 (() => {
   'use strict';
   if (window.SF_FEATURE_LOADER) return;
-  const VERSION = '20260827-27';
+  const VERSION = '20260828-31';
   let appPromise = null;
   let motionPromise = null;
   const loaded = new Set();

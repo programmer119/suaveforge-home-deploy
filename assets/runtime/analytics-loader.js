@@ -1,7 +1,7 @@
 (() => {
   'use strict';
   if (window.SF_ANALYTICS_LOADER) return;
-  const VERSION = '20260827-27';
+  const VERSION = '20260828-31';
   let promise = null;
   let timer = 0;
   const load = () => {
