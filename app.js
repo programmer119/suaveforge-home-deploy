@@ -139,7 +139,7 @@
   const categoryClass = (category = "") => (category.includes("제품") && !category.includes("사전")) ? "project-badge-product" : "project-badge-prototype";
 
   const featuredRoot = qs("[data-featured-cases]");
-  let featuredReady = !("IntersectionObserver" in window);
+  let featuredReady = !!featuredRoot?.children.length || !("IntersectionObserver" in window);
   const renderFeaturedCases = () => {
     if (!featuredRoot || !featuredReady) return;
     const featured = projects.filter((project) => project.featured).sort((a, b) => a.featured - b.featured);
@@ -183,7 +183,7 @@
   });
 
   const portfolioTrack = qs("[data-portfolio-track]");
-  let portfolioReady = !("IntersectionObserver" in window);
+  let portfolioReady = !!portfolioTrack?.children.length || !("IntersectionObserver" in window);
   const renderPortfolioCards = () => {
     if (!portfolioTrack) return;
     if (!portfolioReady) {

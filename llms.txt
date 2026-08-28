@@ -1,0 +1,34 @@
+# SuaveForge
+
+SuaveForge는 기존 소프트웨어 개선, 업무 자동화, 소스 없는 프로그램 재구축과 필요한 AI 기능을 실제 서비스 흐름에 맞춰 수행합니다.
+
+## Main
+- https://suaveforge.com/
+- https://suaveforge.com/diagnosis/
+- https://suaveforge.com/work/
+- https://suaveforge.com/cases/
+- https://suaveforge.com/guides/
+- https://suaveforge.com/insights/
+
+## Projects
+- 소개팅·라운지 매칭 Flutter 앱 및 관리자 플랫폼: https://suaveforge.com/work/gyeol/
+- PC방 유휴 좌석 자동 배정·원격 이용 플랫폼: https://suaveforge.com/work/pcroom/
+- 온톡 Asterisk 기반 실시간 웹 상담·CTI 운영 플랫폼: https://suaveforge.com/work/ontalk/
+- 영유아 검사 협력사 API 연동 및 상태관리 웹 시스템: https://suaveforge.com/work/u2link/
+- 미용실 100개 지점 고객 설문 디지털화 및 데이터 관리 시스템: https://suaveforge.com/work/idhair/
+- ACS 사고 콘텐츠 스튜디오: https://suaveforge.com/work/acs/
+- MediView CT DICOM 뷰어: https://suaveforge.com/work/dicom/
+- AI 학습 이미지 수집·정제 도구: https://suaveforge.com/work/imgfind/
+- Visual FoxPro ERP PDF 병합 모듈: https://suaveforge.com/work/foxpro/
+- 유아동 기질검사 채점·PDF 자동화: https://suaveforge.com/work/temperament/
+- AI 맞춤 추천 키오스크: https://suaveforge.com/work/kiosk/
+- 농장 방역 우선순위 시뮬레이터: https://suaveforge.com/work/farm/
+- MCX 현장 단말 UI/UX: https://suaveforge.com/work/mcx/
+- 모아페스타 후원 기능 고도화: https://suaveforge.com/work/moafesta/
+- 특허 행정 업무 SaaS: https://suaveforge.com/work/patent/
+- 콜센터 TTS·MRCP 테스트 콘솔: https://suaveforge.com/work/tts/
+- 공공 교육서비스 LMS 대시보드: https://suaveforge.com/work/lms/
+- 악궁확장 치료 기록 앱: https://suaveforge.com/work/palate/
+- 광고·CRM 통합 대시보드: https://suaveforge.com/work/crm/
+- 모바일 데이팅 앱: https://suaveforge.com/work/dating/
+- 의료기기 재고·발주 관리: https://suaveforge.com/work/inventory/

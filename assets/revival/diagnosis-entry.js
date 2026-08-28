@@ -39,11 +39,10 @@
     status.textContent = "주소를 확인하고 진단 작업을 준비하고 있습니다.";
     if (button) button.disabled = true;
 
-    const analytics = window.SF_ANALYTICS;
-    const API = analytics?.API || "https://api-suaveforge.suaveforge.com:18454";
+    let analytics = window.SF_ANALYTICS;
     try {
-      void analytics?.event?.("diagnosis_started", { url });
-      void window.SF_ANALYTICS_LOADER?.load?.();
+      if (!analytics && window.SF_ANALYTICS_LOADER?.load) analytics = await window.SF_ANALYTICS_LOADER.load();
+      const API = analytics?.API || "https://api-suaveforge.suaveforge.com:18454";
 
       const response = await fetch(`${API}/api/v1/diagnoses`, {
         method: "POST",

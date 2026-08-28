@@ -25,7 +25,5 @@
     }catch{}
   }
   window.SF_ANALYTICS={API,touch,event};
-  const sendPageView=()=>event('page_view');
-  if('requestIdleCallback' in window) requestIdleCallback(sendPageView,{timeout:2400});
-  else setTimeout(sendPageView,650);
+  if(!window.__SF_PAGE_VIEW_SENT){window.__SF_PAGE_VIEW_SENT=true;void event('page_view');}
 })();

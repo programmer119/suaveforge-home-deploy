@@ -7,7 +7,7 @@
   --muted: #666b75;
   --line: #d8d4cd;
   --line-dark: rgba(255,255,255,.17);
-  --accent: #ef3f39;
+  --accent: #c52621;
   --accent-soft: #ffd4cf;
   --yellow: #ffd84d;
   --container: 1320px;
@@ -4094,7 +4094,7 @@ body { font-size: 16px; line-height: 1.65; }
 .faq-item summary{min-height:104px;display:grid;grid-template-columns:46px minmax(0,1fr) 32px;align-items:center;gap:20px;padding:20px 22px;cursor:pointer;list-style:none;transition:background .22s ease,color .22s ease}
 .faq-item summary::-webkit-details-marker{display:none}
 .faq-item summary:hover,.faq-item[open] summary{background:#111318;color:#fff}
-.faq-item summary>span{color:#ef3f39;font:900 11px/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.1em}
+.faq-item summary>span{color:#c52621;font:900 11px/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.1em}
 .faq-item summary h3{margin:0;font-size:clamp(20px,2vw,28px);line-height:1.22;letter-spacing:-.035em}
 .faq-item summary i{position:relative;width:28px;height:28px;border:1px solid currentColor;border-radius:50%;opacity:.6}
 .faq-item summary i::before,.faq-item summary i::after{content:"";position:absolute;left:7px;right:7px;top:13px;height:1px;background:currentColor;transition:transform .2s ease}
@@ -4136,7 +4136,7 @@ body { font-size: 16px; line-height: 1.65; }
 }
 
 
-/* v31 first-paint contract: above-the-fold LCP candidates are never hidden behind JS.
+/* v32 first-paint contract: above-the-fold LCP candidates are never hidden behind JS.
    They may settle with compositor-only transform, but opacity is visible from first paint. */
 .hero-v6-title.reveal,
 .hero-v6 .hero-showcase.reveal,
@@ -4154,3 +4154,12 @@ body { font-size: 16px; line-height: 1.65; }
   from{transform:translateY(12px)}
   to{transform:translateY(0)}
 }
+
+
+/* v32 accessibility-safe entrance motion: motion without low-opacity readable text. */
+.reveal{opacity:1!important;transform:translateY(22px);transition:transform .72s cubic-bezier(.2,.75,.2,1),filter .72s cubic-bezier(.2,.75,.2,1)!important}
+.reveal.is-visible{opacity:1!important;transform:none;filter:none}
+.motion-staged-line,.motion-context-copy,.motion-context-lead{opacity:1!important}
+@keyframes sf-stage-line-in{from{opacity:1;transform:translateY(18px);filter:blur(5px)}to{opacity:1;transform:none;filter:none}}
+@keyframes sf-context-in{from{opacity:1;transform:translateY(14px);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}
+.portfolio-index-link{display:inline-flex;align-items:center;margin-right:18px;font-weight:800;text-decoration:none;color:inherit;border-bottom:1px solid currentColor;padding:8px 0}

@@ -77,11 +77,11 @@
   function render(d){
     const m=d.topMetrics||{};
     const metricDefs=[
-      ['방문자','visitors'],['페이지뷰','pageviews'],['진단 시작','diagnosis_started'],['진단 완료','diagnosis_completed'],['결과 조회','result_viewed'],['이메일','email_report_submitted'],['상담','consultation_submitted'],['선개발','pilot_started'],['계약','contract']
+      ['방문자','visitors'],['페이지뷰','pageviews'],['진단 시작자','diagnosis_started'],['진단 완료자','diagnosis_completed'],['결과 확인자','result_viewed'],['이메일','email_report_submitted'],['상담','consultation_submitted'],['선개발','pilot_started'],['계약','contract']
     ];
     document.getElementById('topMetrics').innerHTML=metricDefs.map(([label,key])=>`<article><span>${label}</span><b>${num(m[key])}</b></article>`).join('');
 
-    const labels={visitor:'방문',diagnosis_started:'진단 시작',diagnosis_completed:'진단 완료',result_viewed:'결과 확인',email_report_submitted:'이메일',consultation_submitted:'상담',pilot_started:'선개발',contract:'계약'};
+    const labels={visitor:'방문자',diagnosis_started:'진단 시작자',diagnosis_completed:'진단 완료자',result_viewed:'결과 확인자',email_report_submitted:'이메일',consultation_submitted:'상담',pilot_started:'선개발',contract:'계약'};
     document.getElementById('funnel').innerHTML=(d.stages||[]).map((x,i)=>`<div class="stage"><div class="stage-index">${String(i+1).padStart(2,'0')}</div><label>${labels[x.name]||esc(x.name)}</label><b>${num(x.count)}</b><small>${i===0?'기준 방문자':`이전 단계 ${x.fromPrevious}%`}<br>방문 대비 ${x.fromVisit}%</small></div>`).join('');
 
     document.getElementById('channels').innerHTML=(d.channels||[]).length?(d.channels||[]).map(x=>`<div class="data-row"><b>${esc(x.source)}</b><span>진단 ${num(x.diagnoses)}</span><span>완료 ${num(x.completed)}</span><span>상담 ${num(x.consultations)}</span><span>계약 ${num(x.contracts)}</span></div>`).join(''):'<p class="empty-block">데이터 없음</p>';
