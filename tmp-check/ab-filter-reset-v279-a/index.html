@@ -1,0 +1,19 @@
+<!doctype html>
+<!-- SUAVEFORGE_AB_TEST_NEW_FILTER_RESET_A -->
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>필터 초기화 버튼이 있어도 검색 조건이 남으면 초기화가 아니다 | SuaveForge A/B</title>
+<meta name="robots" content="noindex,nofollow,noarchive">
+<link rel="stylesheet" href="/content/content.css?v=20260830-27"></head>
+<body><header class="sf-content-header"><div class="sf-content-header__inner"><a class="sf-content-brand" href="/">SuaveForge</a></div></header>
+<main><div class="content-kicker">A/B TEST · A · v2.7.9</div><h1 class="content-title">필터 초기화 버튼이 있어도 검색 조건이 남으면 초기화가 아니다</h1>
+<p class="content-lead">화면에서 입력값이 사라져도 URL이나 다음 검색 요청에 이전 조건이 남아 있으면 초기화가 끝난 것이 아니다. 검색 필터는 입력칸뿐 아니라 실제 요청 조건과 목록 결과도 기본 상태로 돌아왔는지 확인해야 한다.</p><div class="article-shell"><article class="article-body"><p>관리자 목록에는 기간, 상태, 담당자처럼 여러 필터가 붙는다. 초기화 버튼을 누르면 입력칸이 비어 보이기 때문에 기능이 제대로 동작한 것처럼 보이기 쉽다.</p><p>예를 들어 상태를 ‘처리 중’으로 고르고 검색한 뒤 초기화를 눌렀다고 하자. 화면의 선택값은 없어졌는데 URL이나 다음 검색 요청에 <code>status=pending</code>이 남아 있으면 목록에는 계속 처리 중인 항목만 나올 수 있다. 사용자는 필터가 비어 있는데 결과가 왜 그대로인지 알기 어렵다.</p><pre><code>필터 선택
+   ↓
+검색
+   ↓
+초기화 버튼 클릭
+   ↓
+화면 입력값 제거
+   ↓
+URL·검색 요청의 조건도 제거
+   ↓
+기본 목록 다시 조회</code></pre><p>초기화할 때 어느 값을 기본 상태로 돌릴지도 정해야 한다. 검색어와 기간은 지우면서 페이지 번호나 정렬 기준은 유지할지, 아니면 모두 처음 상태로 돌릴지 서비스 안에서 기준이 같아야 한다.</p><p>검수할 때는 버튼과 입력칸만 보면 부족하다. 네트워크 요청에서 이전 조건이 빠졌는지 확인하고 목록이 기본 조건으로 다시 조회됐는지도 봐야 한다. 페이지 번호와 정렬 기준까지 초기화 대상이라면 함께 확인한다.</p><p>초기화는 화면을 비우는 데서 끝나지 않는다. 버튼을 누른 뒤 사용자가 새 조건으로 검색을 시작할 수 있는 상태가 되어야 한다.</p></article><aside class="article-aside"><div>temporary noindex comparison</div></aside></div></main></body></html>
