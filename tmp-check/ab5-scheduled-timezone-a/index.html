@@ -1,0 +1,7 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow,noarchive"><title>예약 발송 시간은 서버 시각이 아니라 사용자가 고른 시각대로 동작해야 한다 | A/B A</title><link rel="stylesheet" href="/content/content.css?v=20260830-27"></head><body><header class="sf-content-header"><div class="sf-content-header__inner"><a class="sf-content-brand" href="/">SuaveForge</a></div></header><main><div class="content-kicker">A/B TEST · A · v2.7.9</div><h1 class="content-title">예약 발송 시간은 서버 시각이 아니라 사용자가 고른 시각대로 동작해야 한다</h1><p class="content-lead">한국에서 오후 3시로 예약한 알림이 서버의 UTC 시간을 그대로 쓰면 엉뚱한 시각에 발송될 수 있다. 예약 기능은 사용자가 선택한 시간대와 서버가 저장하는 기준 시간을 구분해야 한다.</p><div class="article-shell"><article class="article-body"><p>예약 메일이나 알림은 화면에서 시각 하나를 고르는 것처럼 보이지만 실제로는 시간대까지 함께 다뤄야 한다. 같은 오후 3시라도 서울과 뉴욕의 실제 시각은 서로 다르다.</p><pre><code>사용자가 15:00 선택
+   ↓
+사용자 시간대 확인
+   ↓
+서버 기준 시각으로 변환해 저장
+   ↓
+예약 시각이 되면 발송</code></pre><p>문제는 화면에서 받은 15:00을 서버가 자기 시간으로 그대로 저장할 때 생긴다. 서버가 UTC를 쓰는데 한국 사용자의 15:00을 UTC 15:00으로 저장하면 실제 발송은 한국 시각 자정에 가까워질 수 있다.</p><p>사용자가 여행하거나 계정의 시간대를 바꾸는 경우도 기준을 정해야 한다. 예약을 만든 당시의 시간대를 유지할지, 현재 계정 시간대에 맞춰 바꿀지 기능의 의미에 따라 달라진다.</p><p>검수할 때는 화면에 보이는 예약 시각만 확인하면 부족하다. 저장된 기준 시각과 실제 발송 시각을 비교하고, 시간대가 다른 계정에서도 같은 규칙으로 동작하는지 봐야 한다.</p><p>예약 발송은 숫자 하나를 저장하는 기능이 아니라 사용자가 의도한 시각을 지키는 기능이어야 한다.</p></article></div></main></body></html>
