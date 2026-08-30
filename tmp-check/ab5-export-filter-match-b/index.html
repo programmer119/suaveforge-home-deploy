@@ -1,0 +1,9 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow,noarchive"><title>화면에서 걸어 둔 검색 조건은 내려받은 파일에도 그대로 적용돼야 한다 | A/B B</title><link rel="stylesheet" href="/content/content.css?v=20260830-27"></head><body><header class="sf-content-header"><div class="sf-content-header__inner"><a class="sf-content-brand" href="/">SuaveForge</a></div></header><main><div class="content-kicker">A/B TEST · B · v2.7.10</div><h1 class="content-title">화면에서 걸어 둔 검색 조건은 내려받은 파일에도 그대로 적용돼야 한다</h1><p class="content-lead">목록에서 날짜와 상태를 좁혀 20건만 보고 있는데 내려받은 파일에 전체 300건이 들어가면 사용자는 다시 걸러야 한다. 내보내기 기능은 현재 검색 조건을 파일에도 같은 방식으로 적용해야 한다.</p><div class="article-shell"><article class="article-body"><p>관리자 목록에서 검색한 뒤 엑셀이나 CSV를 내려받는 기능은 자주 쓰인다. 내보내기 버튼이 목록 화면에 있으면 사용자는 지금 보고 있는 조건이 파일에도 적용된다고 기대한다.</p><pre><code>화면에서 검색 조건 설정
+   ↓
+목록 20건 조회
+   ↓
+파일 다운로드 요청
+   ↓
+서버가 현재 검색 조건으로 파일에 넣을 데이터를 조회
+   ↓
+조회된 데이터로 파일 생성</code></pre><p>화면과 파일에 서로 다른 검색 조건이 적용되면 문제가 생긴다. 화면에서는 이번 달의 완료 주문만 20건 보이는데 파일에는 전체 주문 300건이 들어갈 수 있다.</p><p>정렬 기준도 미리 정해야 한다. 화면이 최신순이라면 파일도 같은 순서를 따를지, 파일만 다른 순서로 만들지 사용자가 알 수 있어야 한다.</p><p>검수할 때는 파일이 만들어졌다는 사실만 보지 않는다. 화면에 표시된 전체 건수와 파일의 행 개수를 비교한다. 날짜·상태 조건이 파일에도 적용됐는지 몇 개의 대표 항목을 골라 확인하면 조건이 빠졌는지 찾기 쉽다.</p><p>사용자가 내려받은 뒤 다시 같은 필터를 적용하지 않아도 되도록 화면과 파일의 검색 범위를 맞춰야 한다.</p></article></div></main></body></html>
