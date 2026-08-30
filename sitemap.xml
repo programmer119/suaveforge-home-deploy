@@ -8,7 +8,7 @@
   <url><loc>https://suaveforge.com/services/automation-development/</loc><lastmod>2026-08-28</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc>https://suaveforge.com/services/software-rebuild/</loc><lastmod>2026-08-28</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc>https://suaveforge.com/work/</loc><lastmod>2026-08-28</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://suaveforge.com/insights/</loc><lastmod>2026-08-28</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://suaveforge.com/insights/</loc><lastmod>2026-08-30</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://suaveforge.com/cases/</loc><lastmod>2026-08-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://suaveforge.com/guides/</loc><lastmod>2026-08-28</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://suaveforge.com/work/gyeol/</loc><lastmod>2026-08-28</lastmod><changefreq>monthly</changefreq><priority>0.75</priority></url>
@@ -42,6 +42,11 @@
   <url><loc>https://suaveforge.com/insights/longer-timeout-is-not-a-fix-reviewed/</loc><lastmod>2026-08-28</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://suaveforge.com/insights/operations-are-part-of-product/</loc><lastmod>2026-08-28</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://suaveforge.com/insights/operations-are-part-of-product-reviewed/</loc><lastmod>2026-08-28</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://suaveforge.com/insights/admin-work-should-not-require-developer/</loc><lastmod>2026-08-30</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://suaveforge.com/insights/permissions-are-actions-not-login/</loc><lastmod>2026-08-30</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://suaveforge.com/insights/automation-needs-failure-state/</loc><lastmod>2026-08-30</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://suaveforge.com/insights/migration-needs-reference-check/</loc><lastmod>2026-08-30</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://suaveforge.com/insights/mobile-usable-not-visible/</loc><lastmod>2026-08-30</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://suaveforge.com/cases/after-school-cancel-blocks-next-class/</loc><lastmod>2026-08-28</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://suaveforge.com/cases/after-school-cancel-blocks-next-class-reviewed/</loc><lastmod>2026-08-28</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://suaveforge.com/cases/deploy-failed-before-dns/</loc><lastmod>2026-08-28</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
