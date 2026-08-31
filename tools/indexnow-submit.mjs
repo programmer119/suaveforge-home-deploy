@@ -14,10 +14,24 @@ for(const file of files){
 const urlList=[...new Set(urls)];
 if(!urlList.length)throw new Error('INDEXNOW_URLS_EMPTY');
 const body={host:HOST,key,keyLocation:`https://${HOST}/${KEY_FILE}`,urlList};
-const res=await fetch('https://api.indexnow.org/indexnow',{method:'POST',headers:{'Content-Type':'application/json; charset=utf-8'},body:JSON.stringify(body)});
-console.log(`INDEXNOW_STATUS=${res.status}`);
-console.log(`INDEXNOW_URLS=${urlList.length}`);
-if(![200,202].includes(res.status)){
-  const text=(await res.text()).slice(0,500);
-  throw new Error(`INDEXNOW_FAILED_${res.status}:${text}`);
+const endpoints=[
+  ['INDEXNOW','https://api.indexnow.org/indexnow'],
+  ['NAVER_INDEXNOW','https://searchadvisor.naver.com/indexnow']
+];
+let failed=false;
+for(const [name,endpoint] of endpoints){
+  try{
+    const res=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json; charset=utf-8'},body:JSON.stringify(body)});
+    console.log(`${name}_STATUS=${res.status}`);
+    if(![200,202].includes(res.status)){
+      const text=(await res.text()).slice(0,500);
+      console.error(`${name}_FAILED_${res.status}:${text}`);
+      failed=true;
+    }
+  }catch(e){
+    console.error(`${name}_ERROR=${String(e?.message||e).slice(0,500)}`);
+    failed=true;
+  }
 }
+console.log(`INDEXNOW_URLS=${urlList.length}`);
+if(failed)throw new Error('INDEXNOW_MULTI_ENGINE_SUBMIT_FAILED');
