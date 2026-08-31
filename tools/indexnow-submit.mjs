@@ -3,6 +3,14 @@ import fs from 'node:fs';
 const HOST='suaveforge.com';
 const KEY_FILE='4e73be19cbf60457fd6816a200d4aa2c.txt';
 const key=fs.readFileSync(new URL(`../${KEY_FILE}`,import.meta.url),'utf8').trim();
+const keyUrl=`https://${HOST}/${KEY_FILE}`;
+const keyRes=await fetch(keyUrl,{redirect:'follow',headers:{'Cache-Control':'no-cache'}});
+const publicKey=(await keyRes.text()).trim();
+console.log(`INDEXNOW_KEY_STATUS=${keyRes.status}`);
+console.log(`INDEXNOW_KEY_FINAL_HOST=${new URL(keyRes.url).host}`);
+console.log(`INDEXNOW_KEY_MATCH=${publicKey===key?'yes':'no'}`);
+if(!keyRes.ok||publicKey!==key)throw new Error('INDEXNOW_PUBLIC_KEY_NOT_READY');
+
 const files=['sitemap.xml','sitemap-services.xml'];
 const urls=[];
 for(const file of files){
@@ -13,7 +21,7 @@ for(const file of files){
 }
 const urlList=[...new Set(urls)];
 if(!urlList.length)throw new Error('INDEXNOW_URLS_EMPTY');
-const body={host:HOST,key,keyLocation:`https://${HOST}/${KEY_FILE}`,urlList};
+const body={host:HOST,key,urlList};
 const endpoints=[
   ['BING_INDEXNOW','https://www.bing.com/indexnow'],
   ['NAVER_INDEXNOW','https://searchadvisor.naver.com/indexnow']
