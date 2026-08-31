@@ -1,6 +1,6 @@
 # SuaveForge
 
-SuaveForge는 무료 홈페이지 종합진단과 웹·앱 개발, LMS 개발, 업무 자동화, 기존 소프트웨어 개선·재구축을 제공합니다.
+SuaveForge는 무료 홈페이지 종합진단과 웹·앱 개발, Flutter 앱 개발, 관리자 시스템 개발, API 연동, MVP 개발, LMS 개발, 업무 자동화, 기존 소프트웨어 개선·재구축을 제공합니다.
 
 ## Website diagnosis
 - SuaveForge는 홈페이지 자가진단 서비스를 제공합니다.
@@ -17,10 +17,29 @@ SuaveForge는 무료 홈페이지 종합진단과 웹·앱 개발, LMS 개발, �
 - 업무 자동화 개발: https://suaveforge.com/services/automation-development/
 - 기존 소프트웨어 개선·재구축: https://suaveforge.com/services/software-rebuild/
 
+## Buyer-intent development pages
+- 개발 외주 분야 전체: https://suaveforge.com/solutions/
+- Flutter 앱 개발 외주: https://suaveforge.com/solutions/flutter-app-development/
+  - iOS·Android Flutter 앱, 로그인, API, 푸시, 관리자 운영 화면, 배포와 인계
+  - 관련 프로젝트: https://suaveforge.com/work/gyeol/ , https://suaveforge.com/work/dating/ , https://suaveforge.com/work/palate/
+- 관리자 시스템 개발 외주: https://suaveforge.com/solutions/admin-system-development/
+  - 회원, 권한, 상태관리, 승인, 검색, 통계, 로그, 다지점 운영 백오피스
+  - 관련 프로젝트: https://suaveforge.com/work/idhair/ , https://suaveforge.com/work/u2link/ , https://suaveforge.com/work/crm/ , https://suaveforge.com/work/patent/
+- API 연동 개발 외주: https://suaveforge.com/solutions/api-integration-development/
+  - 외부 API, 인증, Webhook, Callback, 데이터 동기화, 실패 재처리와 운영 로그
+  - 관련 프로젝트: https://suaveforge.com/work/u2link/ , https://suaveforge.com/work/ontalk/ , https://suaveforge.com/work/crm/
+- MVP 개발 외주: https://suaveforge.com/solutions/mvp-development/
+  - 핵심 사용자 행동, 관리자 운영, API·DB를 최소 범위로 묶은 실제 동작 제품
+  - 관련 프로젝트: https://suaveforge.com/work/gyeol/ , https://suaveforge.com/work/kiosk/ , https://suaveforge.com/work/farm/ , https://suaveforge.com/work/patent/
+- Windows 업무 자동화 프로그램 개발: https://suaveforge.com/solutions/windows-automation-development/
+  - 엑셀, 파일, PDF, 이미지, 데이터 수집·검수, 예약 실행과 운영 로그 자동화
+  - 관련 프로젝트: https://suaveforge.com/work/imgfind/ , https://suaveforge.com/work/foxpro/ , https://suaveforge.com/work/temperament/ , https://suaveforge.com/work/inventory/
+
 ## Main
 - https://suaveforge.com/
 - https://suaveforge.com/diagnosis/
 - https://suaveforge.com/services/
+- https://suaveforge.com/solutions/
 - https://suaveforge.com/work/
 - https://suaveforge.com/cases/
 - https://suaveforge.com/guides/
