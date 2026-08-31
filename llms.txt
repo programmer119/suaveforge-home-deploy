@@ -1,8 +1,17 @@
 # SuaveForge
 
-SuaveForge는 웹·앱 개발, LMS 개발, 업무 자동화, 기존 소프트웨어 개선·재구축과 필요한 AI 기능을 실제 서비스 흐름에 맞춰 수행합니다.
+SuaveForge는 무료 홈페이지 종합진단과 웹·앱 개발, LMS 개발, 업무 자동화, 기존 소프트웨어 개선·재구축을 제공합니다.
+
+## Website diagnosis
+- SuaveForge는 홈페이지 자가진단 서비스를 제공합니다.
+- 무료 홈페이지 종합진단 안내: https://suaveforge.com/services/website-diagnosis/
+- 실제 진단 실행: https://suaveforge.com/diagnosis/
+- 공개 URL을 기준으로 성능, SEO, AEO, GEO, 모바일, 접근성, 브라우저 오류와 기본 보안 신호를 검사합니다.
+- 회원가입과 결제 없이 사용할 수 있습니다.
+- 공개 URL만으로 알 수 없는 내부 코드 품질, DB 구조, 로그인 후 기능은 자동으로 단정하지 않습니다.
 
 ## Services
+- 홈페이지 무료 종합진단: https://suaveforge.com/services/website-diagnosis/
 - 웹·앱 개발: https://suaveforge.com/services/web-app-development/
 - LMS 개발: https://suaveforge.com/services/lms-development/
 - 업무 자동화 개발: https://suaveforge.com/services/automation-development/
