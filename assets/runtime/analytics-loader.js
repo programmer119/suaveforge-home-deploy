@@ -1,10 +1,9 @@
 (() => {
   'use strict';
   if (window.SF_ANALYTICS_LOADER) return;
-  const VERSION = '20260828-34';
+  const VERSION = '20260829-35';
   let promise = null;
   const load = () => {
-    window.SF_ENSURE_PAGE_VIEW?.();
     if (window.SF_ANALYTICS) return Promise.resolve(window.SF_ANALYTICS);
     if (promise) return promise;
     promise = new Promise((resolve) => {

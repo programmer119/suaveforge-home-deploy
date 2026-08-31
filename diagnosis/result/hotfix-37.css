@@ -1,0 +1,11 @@
+/* Front-only compatibility layer while backend v35 classification waits for server recovery. */
+.sf-hotfix-severity{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:6px 0 2px}
+.sf-hotfix-severity article{border:1px solid #2b3442;border-radius:14px;padding:18px;background:#121820;color:#fff}
+.sf-hotfix-severity b{display:block;font-size:28px;line-height:1;margin-bottom:8px}
+.sf-hotfix-severity span{font-size:11px;color:#aab4c2;font-weight:800}
+.sf-hotfix-note{margin:0;padding:17px 18px;border:1px solid #2b3442;border-radius:12px;background:#121820;color:#aab4c2;font-size:12px;line-height:1.6}
+.action-card.is-constraint:before{background:#7d8998!important}.tag.constraint{background:#edf0f4!important;color:#536171!important}
+.action-score strong{max-width:96px;font-size:15px!important;line-height:1.2!important;letter-spacing:-.025em!important;text-align:center;word-break:keep-all}.action-score span{font-size:9px!important;text-align:center}
+.detail-priority{display:inline-flex!important;align-items:center;justify-content:center;width:max-content!important;max-width:86px;padding:6px 8px;border-radius:999px;font-size:10px!important;line-height:1.2;background:#eef4ff;color:#275aa9}
+.detail-priority.constraint{background:#edf0f4;color:#536171}.matrix-bar{display:none!important}
+@media(max-width:760px){.sf-hotfix-severity{grid-template-columns:repeat(2,minmax(0,1fr))}.action-score strong{font-size:12px!important;max-width:72px}}

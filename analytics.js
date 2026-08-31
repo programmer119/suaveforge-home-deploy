@@ -15,5 +15,5 @@
   const touch={visitorId,sessionId,...first,deviceType:seed.deviceType|| (innerWidth<768?'mobile':innerWidth<1100?'tablet':'desktop'),browser,os,language:(navigator.language||'').slice(0,80),timezone,screenWidth:Math.round(screen?.width||innerWidth||0),screenHeight:Math.round(screen?.height||innerHeight||0)};
   const event=(eventType,extra={})=>fetch(API+'/api/v1/analytics/events',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',keepalive:true,body:JSON.stringify({...touch,eventType,page:location.pathname,...extra})}).catch(()=>{});
   window.SF_ANALYTICS={API,touch,event};
-  if(!window.__SF_PAGE_VIEW_SENT){window.__SF_PAGE_VIEW_SENT=true;void event('page_view');}
+  if(!window.__SF_PAGE_VIEW_MANAGED&&!window.__SF_PAGE_VIEW_SENT){window.__SF_PAGE_VIEW_SENT=true;void event('page_view');}
 })();
