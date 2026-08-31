@@ -25,96 +25,28 @@
     ['FCP','FCP · 첫 콘텐츠 표시 시간']
   ]);
   const navLabels=new Map([
-    ['핵심 지표','성능 지표'],
-    ['영향도 지도','수정 우선순위'],
-    ['분야별 상태','분야별 문제'],
-    ['화면 증거','화면 캡처'],
-    ['상세 진단','상세 결과'],
-    ['다음 단계','결과 저장']
+    ['핵심 지표','성능 지표'],['영향도 지도','수정 우선순위'],['분야별 상태','분야별 문제'],['화면 증거','화면 캡처'],['상세 진단','상세 결과'],['다음 단계','결과 저장']
   ]);
   const rowLabels=new Map([
-    ['Title','페이지 제목'],
-    ['Description','검색 설명'],
-    ['Canonical','대표 URL'],
-    ['Indexability','검색 색인 허용'],
-    ['Sitemap','사이트맵'],
-    ['H1 / lang','대표 제목 / 언어'],
-    ['질문 → 직접답변','질문과 직접 답변'],
-    ['FAQ / QA / HowTo schema','구조화 답변 스키마'],
-    ['간결 답변 문단','간결한 답변 문단'],
-    ['엔티티 schema','엔티티 구조화 데이터'],
-    ['AI crawler 차단','AI 크롤러 접근'],
-    ['출처 / 발행 신호','작성자·발행·날짜'],
-    ['sameAs / 제3자 근거','외부 동일성 / 제3자 근거']
+    ['Title','페이지 제목'],['Description','검색 설명'],['Canonical','대표 URL'],['Indexability','검색 색인 허용'],['Sitemap','사이트맵'],['H1 / lang','대표 제목 / 언어'],['질문 → 직접답변','질문과 직접 답변'],['FAQ / QA / HowTo schema','구조화 답변 스키마'],['간결 답변 문단','간결한 답변 문단'],['엔티티 schema','엔티티 구조화 데이터'],['AI crawler 차단','AI 크롤러 접근'],['출처 / 발행 신호','작성자·발행·날짜'],['sameAs / 제3자 근거','외부 동일성 / 제3자 근거']
   ]);
   const setText=(el,text)=>{if(el&&el.textContent!==text)el.textContent=text};
-  const badge=(card,text,state)=>{
-    const el=card?.querySelector('.discovery-card-head strong');
-    if(!el)return;
-    setText(el,text);
-    el.classList.add('sf-status-badge');
-    el.classList.remove('sf-good','sf-warn','sf-bad','sf-neutral');
-    el.classList.add(`sf-${state}`);
-  };
+  const stateLabel=n=>n>=90?'우수':n>=50?'개선 필요':'우선 개선';
+  const priorityState=n=>n>=85?['즉시 수정','bad']:n>=65?['권장 수정','warn']:['참고','neutral'];
+  const badge=(card,text,state)=>{const el=card?.querySelector('.discovery-card-head strong');if(!el)return;setText(el,text);el.classList.add('sf-status-badge');el.classList.remove('sf-good','sf-warn','sf-bad','sf-neutral');el.classList.add(`sf-${state}`);card.classList.remove('sf-card-good','sf-card-warn','sf-card-bad','sf-card-neutral');card.classList.add(`sf-card-${state}`)};
   const signal=(card,label)=>[...card.querySelectorAll('.discovery-signal')].find(row=>(row.querySelector('span')?.textContent||'').trim()===label);
   const signalValue=(card,label)=>(signal(card,label)?.querySelector('b')?.textContent||'').trim();
   const relabelSignals=card=>card?.querySelectorAll('.discovery-signal span').forEach(el=>{const t=(el.textContent||'').trim();if(rowLabels.has(t))setText(el,rowLabels.get(t))});
-
+  const rowCounts=card=>({pass:card.querySelectorAll('.discovery-signal.pass').length,warn:card.querySelectorAll('.discovery-signal.warn').length,bad:card.querySelectorAll('.discovery-signal.bad').length,total:card.querySelectorAll('.discovery-signal').length});
   function discovery(){
-    const seo=document.querySelector('#discovery .discovery-seo');
-    const aeo=document.querySelector('#discovery .discovery-aeo');
-    const geo=document.querySelector('#discovery .discovery-geo');
-    if(seo){
-      setText(seo.querySelector('h3'),'기술 SEO');
-      setText(seo.querySelector(':scope > p'),'검색엔진이 페이지를 수집·색인하고 검색 결과에 표시하는 기본 기술 상태입니다.');
-      const raw=(seo.querySelector('.discovery-card-head strong')?.textContent||'').trim();
-      const m=raw.match(/(\d+)\s*\/\s*100/);
-      const n=m?Number(m[1]):null;
-      badge(seo,n===null?'기술 SEO · 측정 없음':`기술 SEO ${n}/100`,n===null?'neutral':n>=90?'good':n>=50?'warn':'bad');
-      relabelSignals(seo);
-    }
-    if(aeo){
-      setText(aeo.querySelector('h3'),'AEO · 답변 구조');
-      setText(aeo.querySelector(':scope > p'),'검색엔진과 AI가 질문에 대한 답을 바로 추출할 수 있는 구조인지 확인합니다.');
-      const raw=(aeo.querySelector('.discovery-card-head strong')?.textContent||'').trim();
-      const m=raw.match(/(\d+)\s*\/\s*(\d+)/);
-      if(m){
-        const yes=Number(m[1]),total=Number(m[2]);
-        if(total>0&&yes===total)badge(aeo,`직접답변 구조 양호 · ${yes}/${total}`,'good');
-        else if(yes>0)badge(aeo,`직접답변 일부 준비 · ${yes}/${total}`,'warn');
-        else badge(aeo,`직접답변 구조 부족 · ${yes}/${total}`,'bad');
-      }else badge(aeo,'답변 구조 확인 필요','neutral');
-      relabelSignals(aeo);
-    }
-    if(geo){
-      const evidence=signalValue(geo,'sameAs / 제3자 근거')||signalValue(geo,'외부 동일성 / 제3자 근거');
-      const ai=signalValue(geo,'AI crawler 차단')||signalValue(geo,'AI 크롤러 접근');
-      const pair=evidence.match(/(\d+)\s*\/\s*(\d+)/);
-      const sameAs=pair?Number(pair[1]):0,thirdParty=pair?Number(pair[2]):0;
-      const aiAllowed=/감지 없음|허용|차단 없음/i.test(ai);
-      setText(geo.querySelector('h3'),'GEO · 생성형 검색 신뢰 신호');
-      setText(geo.querySelector(':scope > p'),'생성형 검색이 사이트의 주체·출처·외부 근거를 신뢰할 수 있는지 확인합니다.');
-      if(sameAs>0&&thirdParty>0&&aiAllowed)badge(geo,'기본 GEO 신호 확보','good');
-      else if(sameAs>0||thirdParty>0||aiAllowed)badge(geo,'외부 권위 보강 필요','warn');
-      else badge(geo,'외부 근거 부족','bad');
-      relabelSignals(geo);
-    }
+    const seo=document.querySelector('#discovery .discovery-seo'),aeo=document.querySelector('#discovery .discovery-aeo'),geo=document.querySelector('#discovery .discovery-geo');
+    if(seo){setText(seo.querySelector('h3'),'기술 SEO');const raw=(seo.querySelector('.discovery-card-head strong')?.textContent||'').trim(),m=raw.match(/(\d+)\s*\/\s*100/),n=m?Number(m[1]):null,c=rowCounts(seo),status=n===null?'측정 없음':stateLabel(n),detail=c.bad?`문제 ${c.bad}개가 확인됐습니다.`:c.warn?`주의 신호 ${c.warn}개를 보강하면 됩니다.`:`확인한 기본 검색 신호 ${c.total}개가 모두 정상입니다.`;setText(seo.querySelector(':scope > p'),n===null?'기술 SEO 점수를 확인하지 못했습니다.':`기술 SEO ${n}/100으로 ${status}합니다. ${detail}`);badge(seo,n===null?'측정 없음':`${status} · ${n}/100`,n===null?'neutral':n>=90?'good':n>=50?'warn':'bad');relabelSignals(seo)}
+    if(aeo){setText(aeo.querySelector('h3'),'AEO · 답변 구조');const raw=(aeo.querySelector('.discovery-card-head strong')?.textContent||'').trim(),m=raw.match(/(\d+)\s*\/\s*(\d+)/);if(m){const yes=Number(m[1]),total=Number(m[2]),missing=Math.max(0,total-yes);if(total>0&&yes===total){badge(aeo,`양호 · ${yes}/${total} 직접답변`,'good');setText(aeo.querySelector(':scope > p'),`확인한 질문 ${total}개 모두 바로 답을 추출할 수 있는 구조입니다.`)}else if(yes>0){badge(aeo,`보강 필요 · ${yes}/${total} 직접답변`,'warn');setText(aeo.querySelector(':scope > p'),`질문 ${total}개 중 ${yes}개는 직접답변 구조가 있고, ${missing}개는 보강이 필요합니다.`)}else{badge(aeo,'직접답변 구조 부족','bad');setText(aeo.querySelector(':scope > p'),`질문 ${total}개에서 바로 추출 가능한 직접답변 구조가 확인되지 않았습니다.`)}}else{badge(aeo,'확인 필요','neutral');setText(aeo.querySelector(':scope > p'),'직접답변 구조 상태를 확정하지 못했습니다.')}relabelSignals(aeo)}
+    if(geo){const evidence=signalValue(geo,'sameAs / 제3자 근거')||signalValue(geo,'외부 동일성 / 제3자 근거'),ai=signalValue(geo,'AI crawler 차단')||signalValue(geo,'AI 크롤러 접근'),pair=evidence.match(/(\d+)\s*\/\s*(\d+)/),sameAs=pair?Number(pair[1]):0,thirdParty=pair?Number(pair[2]):0,aiAllowed=/감지 없음|허용|차단 없음/i.test(ai);setText(geo.querySelector('h3'),'GEO · 생성형 검색 신뢰 신호');if(sameAs>0&&thirdParty>0&&aiAllowed){badge(geo,'기본 신호 확보','good');setText(geo.querySelector(':scope > p'),`AI 크롤러 접근이 가능하고, 외부 동일성 ${sameAs}개와 제3자 근거 ${thirdParty}개가 확인됐습니다.`)}else if(sameAs>0||thirdParty>0||aiAllowed){badge(geo,'외부 권위 보강 필요','warn');setText(geo.querySelector(':scope > p'),`AI 접근은 ${aiAllowed?'가능':'제한 신호 있음'}하며, 외부 동일성 ${sameAs}개·제3자 근거 ${thirdParty}개입니다. 외부 권위 신호를 더 확보하는 편이 좋습니다.`)}else{badge(geo,'외부 근거 부족','bad');setText(geo.querySelector(':scope > p'),'AI 접근성과 외부 동일성·제3자 근거가 부족해 생성형 검색 신뢰 신호가 약합니다.')}relabelSignals(geo)}
   }
-  function styles(){
-    if(document.getElementById('sf-copy-status-style'))return;
-    const style=document.createElement('style');style.id='sf-copy-status-style';
-    style.textContent=`.discovery-card-head strong.sf-status-badge{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}.discovery-card-head strong.sf-status-badge:before{content:'';width:7px;height:7px;border-radius:50%;background:currentColor}.discovery-card-head strong.sf-good{color:#148255}.discovery-card-head strong.sf-warn{color:#9a6500}.discovery-card-head strong.sf-bad{color:#c13d35}.discovery-card-head strong.sf-neutral{color:#667180}`;
-    document.head.appendChild(style);
-  }
-  function apply(){
-    styles();
-    document.querySelectorAll('#main h2,#main h3').forEach(el=>{const t=(el.textContent||'').trim();if(replacements.has(t))setText(el,replacements.get(t))});
-    document.querySelectorAll('#main .vital-name').forEach(el=>{const t=(el.textContent||'').trim();if(vitalLabels.has(t))setText(el,vitalLabels.get(t))});
-    document.querySelectorAll('#main .report-nav a').forEach(el=>{const t=(el.textContent||'').trim();if(navLabels.has(t))setText(el,navLabels.get(t))});
-    discovery();
-  }
-  const root=document.getElementById('main');
-  if(!root)return;
-  apply();
-  new MutationObserver(()=>requestAnimationFrame(apply)).observe(root,{childList:true,subtree:true});
+  function performanceSummary(){const section=document.getElementById('scores');if(!section)return;const states=[...section.querySelectorAll('.vital-state')].map(x=>(x.textContent||'').trim()),good=states.filter(x=>x==='좋음').length,needs=states.filter(x=>x==='개선 필요').length,poor=states.filter(x=>x==='나쁨').length,total=states.length;if(!total)return;let el=section.querySelector('.sf-current-summary');if(!el){el=document.createElement('div');el.className='sf-current-summary';section.querySelector('.section-head')?.insertAdjacentElement('afterend',el)}const tone=poor?'bad':needs?'warn':'good';el.className=`sf-current-summary sf-current-${tone}`;el.innerHTML=`<strong>현재 상태</strong><span>웹 성능 지표 ${total}개 중 <b>${good}개 좋음</b>${needs?` · <b>${needs}개 개선 필요</b>`:''}${poor?` · <b>${poor}개 나쁨</b>`:''}</span>`}
+  function priorityUX(){const section=document.getElementById('priority');if(!section)return;const cards=[...section.querySelectorAll('.action-list .action-card')];cards.forEach(card=>{const box=card.querySelector('.action-score'),numEl=box?.querySelector('strong'),n=Number((numEl?.textContent||'').replace('/100','').trim());if(!box||!Number.isFinite(n))return;const [label,tone]=priorityState(n);box.classList.add('sf-priority-score',`sf-priority-${tone}`);setText(numEl,`${Math.round(n)}/100`);setText(box.querySelector('span'),`수정 우선순위 · ${label}`);card.dataset.sfSeverity=tone==='bad'?'immediate':tone==='warn'?'recommended':'reference';card.setAttribute('aria-label',`수정 우선순위 ${Math.round(n)}점, ${label}`)});document.querySelectorAll('#details .detail-priority').forEach(el=>{const n=Number((el.textContent||'').replace(/[^0-9.]/g,''));if(Number.isFinite(n)){const [label]=priorityState(n);el.setAttribute('title',`수정 우선순위 ${Math.round(n)}/100 · ${label}`);setText(el,`P${Math.round(n)}`)}});const spotlight=section.querySelector('.issue-spotlight');if(spotlight){const n=Number((spotlight.querySelector(':scope > b')?.textContent||'').replace(/[^0-9.]/g,''));if(Number.isFinite(n)){const b=spotlight.querySelector(':scope > b');setText(b,`P${Math.round(n)}`);b.setAttribute('title',`수정 우선순위 ${Math.round(n)}/100`)}}if(!section.querySelector('.sf-priority-help')){const help=document.createElement('div');help.className='sf-priority-help';help.innerHTML='<strong>수정 우선순위 점수</strong><span><b class="sf-dot bad"></b>85–100 즉시 수정</span><span><b class="sf-dot warn"></b>65–84 권장 수정</span><span><b class="sf-dot neutral"></b>0–64 참고</span><em>성능 점수가 아니라 문제를 먼저 고칠 순서입니다.</em>';section.querySelector('.section-head')?.insertAdjacentElement('afterend',help)}if(!section.querySelector('.sf-severity-tabs')){const counts={immediate:cards.filter(x=>x.dataset.sfSeverity==='immediate').length,recommended:cards.filter(x=>x.dataset.sfSeverity==='recommended').length,reference:cards.filter(x=>x.dataset.sfSeverity==='reference').length};const tabs=document.createElement('div');tabs.className='sf-severity-tabs';tabs.innerHTML=`<button class="active" data-sf-filter="all">전체 ${cards.length}</button><button data-sf-filter="immediate">즉시 ${counts.immediate}</button><button data-sf-filter="recommended">권장 ${counts.recommended}</button><button data-sf-filter="reference">참고 ${counts.reference}</button>`;section.querySelector('.action-list')?.insertAdjacentElement('beforebegin',tabs);tabs.addEventListener('click',e=>{const btn=e.target.closest('button');if(!btn)return;tabs.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===btn));const f=btn.dataset.sfFilter;cards.forEach(card=>card.hidden=f!=='all'&&card.dataset.sfSeverity!==f)})}}
+  function styles(){if(document.getElementById('sf-copy-status-style'))return;const style=document.createElement('style');style.id='sf-copy-status-style';style.textContent=`.discovery-card{transition:border-color .2s ease,box-shadow .2s ease,transform .2s ease}.discovery-card.sf-card-good{box-shadow:inset 0 4px 0 #24ad78}.discovery-card.sf-card-warn{box-shadow:inset 0 4px 0 #d39424}.discovery-card.sf-card-bad{box-shadow:inset 0 4px 0 #d9534f}.discovery-card.sf-card-neutral{box-shadow:inset 0 4px 0 #7b8491}.discovery-card-head strong.sf-status-badge{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;padding:7px 10px;border-radius:999px;background:#f4f2ed}.discovery-card-head strong.sf-status-badge:before{content:'';width:8px;height:8px;border-radius:50%;background:currentColor}.discovery-card-head strong.sf-good{color:#148255;background:#eaf7f1}.discovery-card-head strong.sf-warn{color:#946000;background:#fff4dc}.discovery-card-head strong.sf-bad{color:#b83c36;background:#fff0ef}.discovery-card-head strong.sf-neutral{color:#667180;background:#eef1f4}.discovery-signal.pass{background:#edf8f3!important;border-color:#d6eee3!important}.discovery-signal.warn{background:#fff7e7!important;border-color:#f2dfb7!important}.discovery-signal.bad{background:#fff0ef!important;border-color:#f2d0cd!important}.discovery-signal.neutral{background:#f5f4f1!important}.discovery-card>p{font-weight:700!important;color:#303742!important;line-height:1.65!important}.sf-current-summary{margin:0 0 18px;padding:15px 18px;border-radius:14px;display:flex;gap:14px;align-items:center;border:1px solid}.sf-current-summary strong{font-size:12px;letter-spacing:.06em}.sf-current-summary span{font-size:14px}.sf-current-good{background:#edf8f3;border-color:#cfeada;color:#176b4d}.sf-current-warn{background:#fff7e7;border-color:#efdba9;color:#7f5707}.sf-current-bad{background:#fff0ef;border-color:#efceca;color:#993c36}.sf-priority-help{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:0 0 18px;padding:13px 16px;border:1px solid #ddd7ce;border-radius:14px;background:#fff}.sf-priority-help strong{font-size:13px}.sf-priority-help span{font-size:12px;display:flex;align-items:center;gap:6px}.sf-priority-help em{font-size:12px;color:#6a6f78;font-style:normal;margin-left:auto}.sf-dot{width:8px;height:8px;border-radius:50%;display:inline-block}.sf-dot.bad{background:#d9534f}.sf-dot.warn{background:#d39424}.sf-dot.neutral{background:#6c7a90}.action-score.sf-priority-score{min-width:112px!important}.action-score.sf-priority-score strong{font-size:25px!important;white-space:nowrap}.action-score.sf-priority-score span{line-height:1.25!important;text-align:center!important}.action-score.sf-priority-bad{background:#fff0ef!important}.action-score.sf-priority-warn{background:#fff7e7!important}.action-score.sf-priority-neutral{background:#f1f4f7!important}.sf-severity-tabs{display:flex;gap:8px;margin:0 0 14px;flex-wrap:wrap}.sf-severity-tabs button{border:1px solid #dcd7cf;background:#fff;border-radius:999px;padding:8px 12px;font-weight:800;cursor:pointer}.sf-severity-tabs button.active{background:#111722;color:#fff;border-color:#111722}@media(max-width:800px){.sf-current-summary{align-items:flex-start;flex-direction:column;gap:6px}.sf-priority-help{align-items:flex-start}.sf-priority-help em{width:100%;margin-left:0}.action-score.sf-priority-score{min-width:96px!important}}`;document.head.appendChild(style)}
+  function apply(){styles();document.querySelectorAll('#main h2,#main h3').forEach(el=>{const t=(el.textContent||'').trim();if(replacements.has(t))setText(el,replacements.get(t))});document.querySelectorAll('#main .vital-name').forEach(el=>{const t=(el.textContent||'').trim();if(vitalLabels.has(t))setText(el,vitalLabels.get(t))});document.querySelectorAll('#main .report-nav a').forEach(el=>{const t=(el.textContent||'').trim();if(navLabels.has(t))setText(el,navLabels.get(t))});discovery();performanceSummary();priorityUX()}
+  const root=document.getElementById('main');if(!root)return;apply();new MutationObserver(()=>requestAnimationFrame(apply)).observe(root,{childList:true,subtree:true});
 })();
