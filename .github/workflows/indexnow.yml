@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: indexnow-main
@@ -18,8 +18,24 @@ jobs:
     timeout-minutes: 3
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - name: Ensure Naver verification meta
+        run: node tools/patch-naver-verification.mjs
+      - name: Commit Naver verification meta if needed
+        shell: bash
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "NAVER_VERIFICATION_COMMIT=not-needed"
+          else
+            git config user.name "programmer119"
+            git config user.email "53187583+programmer119@users.noreply.github.com"
+            git add index.html
+            git commit -m "Add Naver site verification meta"
+            git push
+          fi
       - name: Submit current discovery URLs
         run: node tools/indexnow-submit.mjs
