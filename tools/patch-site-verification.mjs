@@ -11,7 +11,8 @@ const metas = [
 for (const meta of metas) {
   const name = meta.match(/name="([^"]+)"/)?.[1];
   if (!name) continue;
-  const re = new RegExp(`<meta[^>]+name=["']${name.replace('.', '\\.') }["'][^>]*>`, 'i');
+  const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const re = new RegExp(`<meta[^>]+name=["']${escapedName}["'][^>]*>`, 'i');
   if (re.test(html)) html = html.replace(re, meta);
   else html = html.replace('<head>', `<head>\n${meta}`);
 }
