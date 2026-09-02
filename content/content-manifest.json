@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-02-canonical-2",
+  "version": "2026-09-02-canonical-3",
   "insights": [
     {
       "slug": "accidental-delete-must-be-recoverable",
