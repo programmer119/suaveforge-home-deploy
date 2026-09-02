@@ -20,7 +20,8 @@
     document.getElementById('setupPassword').focus();
   }
   function showLogin(){
-    auth.hidden=false;dash.hidden=true;bootStatus.hidden=true;setupPanel.hidden=true;loginPanel.hidden=false;
+    auth.hidden=false;dash.hidden=true;bootStatus.hidden=true;setupPanel.hidden=false;loginPanel.hidden=false;
+    setupPanel.hidden=true;
   }
   function showDashboard(){auth.hidden=true;dash.hidden=false;}
 
@@ -74,25 +75,44 @@
     }
   }
 
+  function conversionRows(rows,labelKey){
+    const list=(rows||[]).slice(0,10);
+    if(!list.length)return '<p class="empty-block">데이터 없음</p>';
+    const max=Math.max(1,...list.map(x=>Number(x.diagnoses||0)));
+    return `<div class="conversion-chart">${list.map(x=>{
+      const diagnoses=Number(x.diagnoses||0);
+      const width=Math.max(diagnoses?5:0,diagnoses/max*100);
+      return `<div class="conversion-row">
+        <div class="conversion-meta"><b title="${esc(x[labelKey])}">${esc(x[labelKey])}</b><span>진단 <strong>${num(diagnoses)}</strong> · 완료 ${num(x.completed)} · 상담 ${num(x.consultations)} · 계약 ${num(x.contracts)}</span></div>
+        <div class="bar-track"><i style="width:${width}%"></i></div>
+      </div>`;
+    }).join('')}</div>`;
+  }
+
   function render(d){
     const m=d.topMetrics||{};
-    const metricDefs=[
-      ['방문자','visitors'],['페이지뷰','pageviews'],['진단 시작자','diagnosis_started'],['진단 완료자','diagnosis_completed'],['결과 확인자','result_viewed'],['이메일','email_report_submitted'],['상담','consultation_submitted'],['선개발','pilot_started'],['계약','contract']
+    const primary=[
+      ['방문자','visitors','고유 방문자'],
+      ['진단 시작','diagnosis_started',`${pct(m.diagnosis_started,m.visitors)}% 방문→진단`],
+      ['상담','consultation_submitted',`${pct(m.consultation_submitted,m.visitors)}% 방문→상담`],
+      ['계약','contract',`${pct(m.contract,m.visitors)}% 방문→계약`]
     ];
-    document.getElementById('topMetrics').innerHTML=metricDefs.map(([label,key])=>`<article><span>${label}</span><b>${num(m[key])}</b></article>`).join('');
+    const secondary=[
+      ['페이지뷰','pageviews'],['진단 완료','diagnosis_completed'],['결과 확인','result_viewed'],['이메일','email_report_submitted'],['선개발','pilot_started']
+    ];
+    document.getElementById('topMetrics').innerHTML=
+      primary.map(([label,key,note])=>`<article class="metric-primary"><span>${label}</span><b>${num(m[key])}</b><small>${note}</small></article>`).join('')+
+      secondary.map(([label,key])=>`<article class="metric-secondary"><span>${label}</span><b>${num(m[key])}</b></article>`).join('');
 
-    const labels={visitor:'방문자',diagnosis_started:'진단 시작자',diagnosis_completed:'진단 완료자',result_viewed:'결과 확인자',email_report_submitted:'이메일',consultation_submitted:'상담',pilot_started:'선개발',contract:'계약'};
-    document.getElementById('funnel').innerHTML=(d.stages||[]).map((x,i)=>`<div class="stage"><div class="stage-index">${String(i+1).padStart(2,'0')}</div><label>${labels[x.name]||esc(x.name)}</label><b>${num(x.count)}</b><small>${i===0?'기준 방문자':`이전 단계 ${x.fromPrevious}%`}<br>방문 대비 ${x.fromVisit}%</small></div>`).join('');
+    const labels={visitor:'방문자',diagnosis_started:'진단 시작',diagnosis_completed:'진단 완료',result_viewed:'결과 확인',email_report_submitted:'이메일',consultation_submitted:'상담',pilot_started:'선개발',contract:'계약'};
+    const visual=window.SF_ADMIN_VISUALS;
+    document.getElementById('funnel').innerHTML=visual?visual.funnel(d.stages||[],labels):'<p class="empty-block">차트 로더 없음</p>';
+    document.getElementById('channels').innerHTML=conversionRows(d.channels||[],'source');
+    document.getElementById('campaigns').innerHTML=conversionRows(d.campaigns||[],'campaign');
+    document.getElementById('devices').innerHTML=visual?visual.bars((d.devices||[]).map(x=>({...x,label:x.device,value:x.sessions})),'label','value'):'<p class="empty-block">차트 로더 없음</p>';
+    document.getElementById('timing').innerHTML=`<article><span>평균</span><b>${seconds(d.timing?.avg_ms)}</b></article><article><span>P95</span><b>${seconds(d.timing?.p95_ms)}</b></article>`;
 
-    document.getElementById('channels').innerHTML=(d.channels||[]).length?(d.channels||[]).map(x=>`<div class="data-row"><b>${esc(x.source)}</b><span>진단 ${num(x.diagnoses)}</span><span>완료 ${num(x.completed)}</span><span>상담 ${num(x.consultations)}</span><span>계약 ${num(x.contracts)}</span></div>`).join(''):'<p class="empty-block">데이터 없음</p>';
-
-    document.getElementById('campaigns').innerHTML=(d.campaigns||[]).length?(d.campaigns||[]).map(x=>`<div class="data-row"><b>${esc(x.campaign)}</b><span>진단 ${num(x.diagnoses)}</span><span>상담 ${num(x.consultations)}</span><span>계약 ${num(x.contracts)}</span></div>`).join(''):'<p class="empty-block">데이터 없음</p>';
-
-    document.getElementById('devices').innerHTML=(d.devices||[]).length?(d.devices||[]).map(x=>`<div class="device-row"><b>${esc(x.device)}</b><span>${num(x.sessions)} sessions</span></div>`).join(''):'<p class="empty-block">데이터 없음</p>';
-
-    document.getElementById('timing').innerHTML=`<article><b>${seconds(d.timing?.avg_ms)}</b><span>평균</span></article><article><b>${seconds(d.timing?.p95_ms)}</b><span>P95</span></article>`;
-
-    document.getElementById('landings').innerHTML=(d.landingPages||[]).length?(d.landingPages||[]).map(x=>`<tr><td class="path">${esc(x.landing)}</td><td>${num(x.diagnoses)}</td><td>${num(x.completed)}</td><td>${pct(x.completed,x.diagnoses)}%</td></tr>`).join(''):empty(4);
+    document.getElementById('landings').innerHTML=(d.landingPages||[]).length?(d.landingPages||[]).map(x=>`<tr><td class="path">${esc(x.landing)}</td><td>${num(x.diagnoses)}</td><td>${num(x.completed)}</td><td><b>${pct(x.completed,x.diagnoses)}%</b></td></tr>`).join(''):empty(4);
 
     const adminIp=String(d.adminClientIp||'');
     document.getElementById('visitors').innerHTML=(d.recentVisitors||[]).length?(d.recentVisitors||[]).map(x=>{
