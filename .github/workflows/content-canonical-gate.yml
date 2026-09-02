@@ -1,0 +1,85 @@
+name: Content canonical gate
+
+on:
+  push:
+    paths:
+      - 'content/content-manifest.json'
+      - 'content/content.js'
+      - 'insights/**'
+      - 'cases/**'
+      - 'guides/**'
+      - 'sitemap.xml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify one canonical public content set
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, pathlib, re, sys
+
+          root=pathlib.Path('.')
+          manifest=json.loads((root/'content/content-manifest.json').read_text(encoding='utf-8'))
+          sitemap=(root/'sitemap.xml').read_text(encoding='utf-8')
+          runtime=(root/'content/content.js').read_text(encoding='utf-8')
+          types=('insights','cases','guides')
+          qa_title=re.compile(r'(재검수본|개선본|검수본|수정본)')
+          errors=[]
+
+          if 'api-suaveforge.suaveforge.com' in runtime:
+              errors.append('public board runtime must not use legacy content API as a second source of truth')
+
+          for t in types:
+              items=manifest.get(t)
+              if not isinstance(items,list):
+                  errors.append(f'manifest {t} must be a list')
+                  continue
+              expected=set()
+              for item in items:
+                  if not isinstance(item,dict):
+                      errors.append(f'{t}: manifest item must be an object')
+                      continue
+                  missing=[k for k in ('slug','title','summary','published_at') if not item.get(k)]
+                  if missing:
+                      errors.append(f'{t}: missing {missing} in manifest item')
+                      continue
+                  slug=str(item['slug'])
+                  title=str(item['title'])
+                  if 'reviewed' in slug.lower() or qa_title.search(title):
+                      errors.append(f'{t}/{slug}: public QA/review label is forbidden')
+                  expected.add(slug)
+                  html_path=root/t/slug/'index.html'
+                  if not html_path.exists():
+                      errors.append(f'{t}/{slug}: missing static artifact')
+                      continue
+                  html=html_path.read_text(encoding='utf-8')
+                  canonical=f'https://suaveforge.com/{t}/{slug}/'
+                  if f'<link rel="canonical" href="{canonical}">' not in html:
+                      errors.append(f'{t}/{slug}: canonical mismatch')
+                  if f'<h1 class="content-title">{title}</h1>' not in html:
+                      errors.append(f'{t}/{slug}: title mismatch between manifest and artifact')
+                  if f'<loc>{canonical}</loc>' not in sitemap:
+                      errors.append(f'{t}/{slug}: missing from sitemap')
+
+              base=root/t
+              actual={p.name for p in base.iterdir() if p.is_dir()} if base.exists() else set()
+              extra=actual-expected
+              missing=expected-actual
+              if extra: errors.append(f'{t}: extra article directories not in manifest: {sorted(extra)}')
+              if missing: errors.append(f'{t}: manifest article directories missing: {sorted(missing)}')
+
+          if errors:
+              print('CONTENT_CANONICAL_GATE=FAIL')
+              for e in errors: print(' -',e)
+              sys.exit(1)
+          counts={t:len(manifest[t]) for t in types}
+          print('CONTENT_CANONICAL_GATE=PASS')
+          print('COUNTS',counts,'TOTAL',sum(counts.values()))
+          PY
