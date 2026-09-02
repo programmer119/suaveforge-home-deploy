@@ -1,31 +1,26 @@
 (()=>{
-  const API='https://api-suaveforge.suaveforge.com:18454';
   const BOARD={
     insights:{label:'Insights',title:'여러 서비스에서 반복되는 문제',lead:'서로 다른 사용자 문의와 장애 사례를 묶어, 반복해서 나타나는 문제와 그 원인을 정리합니다.'},
     cases:{label:'Cases',title:'실제 문제를 끝까지 따라간 기록',lead:'한 서비스에서 실제로 막힌 흐름을 따라가며, 어디서 문제가 생겼고 무엇을 확인해야 하는지 정리합니다.'},
     guides:{label:'Guides',title:'반복 사례에서 뽑은 실무 가이드',lead:'여러 실제 사례에서 반복된 문제를 바탕으로, 설계·운영·검수 때 바로 확인할 기준을 정리합니다.'}
   };
+  const MANIFEST='/content/content-manifest.json?v=20260902-2';
   const root=document.querySelector('[data-content-root]');if(!root)return;
-  const path=location.pathname.replace(/\/+$/,'')||'/';const parts=path.split('/').filter(Boolean);const type=parts[0];
-  const decode=(v)=>{try{return decodeURIComponent(v)}catch{return v}};const slug=decode(parts[1]||'');const valid=Object.prototype.hasOwnProperty.call(BOARD,type);
+  const path=location.pathname.replace(/\/+$/,'')||'/';
+  const parts=path.split('/').filter(Boolean);
+  const type=parts[0];
+  if(!Object.prototype.hasOwnProperty.call(BOARD,type))return;
   const fmt=(v)=>{if(!v)return '';const d=new Date(v);return Number.isFinite(d.getTime())?new Intl.DateTimeFormat('ko-KR',{year:'numeric',month:'long',day:'numeric'}).format(d):''};
-  const clear=()=>{while(root.firstChild)root.removeChild(root.firstChild)};const el=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n};
-  const setMeta=(item)=>{document.title=`${item.title} | SuaveForge`;let desc=document.querySelector('meta[name="description"]');if(!desc){desc=document.createElement('meta');desc.name='description';document.head.appendChild(desc)}desc.content=item.summary||item.title;let canon=document.querySelector('link[rel="canonical"]');if(!canon){canon=document.createElement('link');canon.rel='canonical';document.head.appendChild(canon)}canon.href=`https://suaveforge.com/${type}/${encodeURIComponent(item.slug)}/`;};
-  const flow=(lines,host)=>{const box=el('div','article-flow');lines.filter(x=>x.trim()).forEach(line=>{const s=el('div','article-flow__step',line.trim());if(/실패|불가|종료|막힘/.test(line))s.classList.add('is-fail');box.appendChild(s)});host.appendChild(box)};
-  const compare=(lines,host)=>{const box=el('div','article-compare');lines.filter(x=>x.trim()).forEach(line=>{const [label,...rest]=line.split('|');const item=el('div','article-compare__item');item.append(el('div','article-compare__label',(label||'').trim()),el('div','',rest.join('|').trim()));box.appendChild(item)});host.appendChild(box)};
-  const bars=(lines,host)=>{const rows=lines.map(line=>{const [label,val]=line.split('|');return {label:(label||'').trim(),value:Number((val||'').trim())}}).filter(r=>r.label&&Number.isFinite(r.value));if(!rows.length)return;const max=Math.max(...rows.map(r=>r.value),1);const box=el('div','article-bars');rows.forEach(r=>{const row=el('div','article-bar');row.appendChild(el('div','',r.label));const track=el('div','article-bar__track');const fill=el('div','article-bar__fill');fill.style.width=`${Math.max(0,Math.min(100,r.value/max*100))}%`;track.appendChild(fill);row.append(track,el('div','article-bar__value',String(r.value)));box.appendChild(row)});host.appendChild(box)};
-  const table=(lines,host)=>{const rows=lines.map(x=>x.trim()).filter(Boolean).map(x=>x.replace(/^\||\|$/g,'').split('|').map(c=>c.trim()));if(rows.length<2)return false;const sep=rows[1];if(!sep.every(c=>/^:?-{3,}:?$/.test(c)))return false;const wrap=el('div','article-table-wrap'),t=el('table'),thead=el('thead'),trh=el('tr');rows[0].forEach(c=>trh.appendChild(el('th','',c)));thead.appendChild(trh);t.appendChild(thead);const tb=el('tbody');rows.slice(2).forEach(r=>{const tr=el('tr');r.forEach(c=>tr.appendChild(el('td','',c)));tb.appendChild(tr)});t.appendChild(tb);wrap.appendChild(t);host.appendChild(wrap);return true};
-  const renderMarkdown=(text,host)=>{const lines=String(text||'').replace(/\r/g,'').split('\n');let i=0,list=null,listType='';const flush=()=>{list=null;listType=''};while(i<lines.length){let line=lines[i];
-    if(line.startsWith('```')){flush();const lang=line.slice(3).trim().toLowerCase();const buf=[];i++;while(i<lines.length&&!lines[i].startsWith('```'))buf.push(lines[i++]);i++;if(lang==='flow'){flow(buf,host);continue}if(lang==='compare'){compare(buf,host);continue}if(lang==='chart'){bars(buf,host);continue}const pre=el('pre'),code=el('code','',buf.join('\n'));pre.appendChild(code);host.appendChild(pre);continue}
-    const img=/^!\[([^\]]*)\]\(([^\s)]+)(?:\s+"([^"]*)")?\)$/.exec(line.trim());if(img){flush();const fig=el('figure','article-figure'),im=document.createElement('img');im.src=img[2];im.alt=img[1]||'';im.loading='lazy';fig.appendChild(im);if(img[1]||img[3])fig.appendChild(el('figcaption','',img[3]||img[1]));host.appendChild(fig);i++;continue}
-    if(line.includes('|')&&i+1<lines.length&&/^\s*\|?\s*:?-{3,}/.test(lines[i+1])){flush();const buf=[];while(i<lines.length&&lines[i].includes('|')&&lines[i].trim())buf.push(lines[i++]);if(table(buf,host))continue}
-    const h=/^(#{2,3})\s+(.+)$/.exec(line);if(h){flush();host.appendChild(el(h[1].length===2?'h2':'h3','',h[2]));i++;continue}
-    const quote=/^>\s?(.*)$/.exec(line);if(quote){flush();const q=[];while(i<lines.length&&/^>\s?/.test(lines[i]))q.push(lines[i++].replace(/^>\s?/,''));host.appendChild(el('blockquote','',q.join('\n')));continue}
-    const ul=/^[-*]\s+(.+)$/.exec(line),ol=/^\d+\.\s+(.+)$/.exec(line);if(ul||ol){const t=ul?'ul':'ol';if(!list||listType!==t){flush();list=el(t);listType=t;host.appendChild(list)}list.appendChild(el('li','',(ul||ol)[1]));i++;continue}
-    if(!line.trim()){flush();i++;continue}flush();const p=[];while(i<lines.length&&lines[i].trim()&&!/^(#{2,3})\s+/.test(lines[i])&&!/^[-*]\s+/.test(lines[i])&&!/^\d+\.\s+/.test(lines[i])&&!/^>\s?/.test(lines[i])&&!lines[i].startsWith('```')&&!/^!\[/.test(lines[i]))p.push(lines[i++]);host.appendChild(el('p','',p.join('\n')));
-  }};
-  const renderList=(items)=>{clear();const b=BOARD[type];root.append(el('div','content-kicker',b.label),el('h1','content-title',b.title),el('p','content-lead',b.lead));if(!items.length){root.append(el('div','content-empty',type==='guides'?'현재 공개 기준을 통과한 가이드가 없습니다.':'아직 공개된 글이 없습니다.'));return}const grid=el('div','content-list');items.forEach(item=>{const a=el('a','content-card');a.href=`/${type}/${encodeURIComponent(item.slug)}/`;a.append(el('div','content-card__meta',fmt(item.published_at||item.created_at)),el('h2','',item.title),el('p','',item.summary||''));grid.appendChild(a)});root.appendChild(grid)};
-  const renderArticle=(item)=>{clear();setMeta(item);const b=BOARD[type],k=el('div','content-kicker',b.label),title=el('h1','content-title',item.title),lead=item.summary?el('p','content-lead',item.summary):null,meta=el('div','content-meta');meta.append(el('span','',fmt(item.published_at||item.created_at)),el('span','',b.label));root.append(k,title);if(lead)root.appendChild(lead);root.appendChild(meta);const shell=el('div','article-shell'),body=el('article','article-body'),aside=el('aside','article-aside');renderMarkdown(item.body,body);aside.append(el('div','',`SuaveForge ${b.label}`),document.createElement('br'));const back=el('a','',`← ${b.label} 전체 보기`);back.href=`/${type}/`;aside.appendChild(back);shell.append(body,aside);root.appendChild(shell)};
-  const fail=(status)=>{clear();const box=el('section','content-error');box.append(el('h1','',status===404?'글을 찾을 수 없습니다.':'콘텐츠를 불러오지 못했습니다.'),el('p','',status===404?'주소가 바뀌었거나 현재 공개 기준에서 내려간 글입니다.':'잠시 후 다시 시도해주세요.'));const a=el('a','','SuaveForge 홈으로');a.href='/';box.appendChild(a);root.appendChild(box)};
-  const run=async()=>{if(!valid){fail(404);return}try{const url=slug?`${API}/api/v1/content/${type}/${encodeURIComponent(slug)}`:`${API}/api/v1/content/${type}?limit=60`;const r=await fetch(url,{headers:{Accept:'application/json'}});if(!r.ok){fail(r.status);return}const j=await r.json();slug?renderArticle(j.item):renderList(j.items||[])}catch{fail(503)}};run();
+  const clear=()=>{while(root.firstChild)root.removeChild(root.firstChild)};
+  const el=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n};
+  const fail=()=>{clear();const box=el('section','content-error');box.append(el('h1','','콘텐츠 목록을 불러오지 못했습니다.'),el('p','','잠시 후 다시 시도해주세요.'));root.appendChild(box)};
+  const render=(items)=>{
+    clear();const b=BOARD[type];
+    root.append(el('div','content-kicker',b.label),el('h1','content-title',b.title),el('p','content-lead',b.lead));
+    if(!items.length){root.append(el('div','content-empty',type==='guides'?'현재 공개 기준을 통과한 가이드가 없습니다.':'아직 공개된 글이 없습니다.'));return}
+    const grid=el('div','content-list');
+    items.forEach(item=>{const a=el('a','content-card');a.href=`/${type}/${encodeURIComponent(item.slug)}/`;a.append(el('div','content-card__meta',fmt(item.published_at)),el('h2','',item.title),el('p','',item.summary||''));grid.appendChild(a)});
+    root.appendChild(grid);
+  };
+  fetch(MANIFEST,{headers:{Accept:'application/json'}}).then(r=>{if(!r.ok)throw new Error('manifest');return r.json()}).then(j=>render(Array.isArray(j[type])?j[type]:[])).catch(fail);
 })();
