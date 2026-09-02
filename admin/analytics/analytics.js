@@ -20,8 +20,7 @@
     document.getElementById('setupPassword').focus();
   }
   function showLogin(){
-    auth.hidden=false;dash.hidden=true;bootStatus.hidden=true;setupPanel.hidden=false;loginPanel.hidden=false;
-    setupPanel.hidden=true;
+    auth.hidden=false;dash.hidden=true;bootStatus.hidden=true;setupPanel.hidden=true;loginPanel.hidden=false;
   }
   function showDashboard(){auth.hidden=true;dash.hidden=false;}
 
