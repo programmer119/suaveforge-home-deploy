@@ -5,6 +5,7 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Exposure-normalization resubmit: 2026-09-04
 permissions:
   contents: write
 
