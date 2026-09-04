@@ -7,6 +7,7 @@
   const bootStatus=document.getElementById('bootStatus');
   const dash=document.getElementById('dashboard');
   const range=document.getElementById('range');
+  const searchRefresh=document.getElementById('refreshSearchIndex');
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const num=v=>Number(v||0).toLocaleString();
   const pct=(a,b)=>b?Math.round(Number(a||0)/Number(b)*1000)/10:0;
@@ -50,6 +51,7 @@
   });
 
   range.addEventListener('change',()=>load().catch(showLogin));
+  searchRefresh.addEventListener('click',()=>refreshSearchIndex());
 
   async function load(){
     const r=await fetch(API+'/api/v1/admin/analytics?days='+encodeURIComponent(range.value),{credentials:'include'});
@@ -57,6 +59,7 @@
     if(!r.ok)throw new Error('analytics request failed');
     const d=await r.json();
     showDashboard();render(d);
+    loadSearchIndex().catch(()=>setSearchStatus('검색 색인 상태를 불러오지 못했습니다.','error'));
   }
 
   async function boot(){
@@ -134,13 +137,76 @@
     document.getElementById('recent').innerHTML=(d.recent||[]).length?(d.recent||[]).map(x=>`<tr><td>${date(x.created_at)}</td><td><b>${esc(x.hostname)}</b></td><td><span class="pill ${x.status==='failed'?'pill-fail':''}">${esc(x.status)}</span></td><td>${seconds(x.processing_time_ms)}</td><td>${state(x)}</td><td><div class="actions"><button data-pilot="${esc(x.diagnosis_id)}" ${x.pilot?'disabled':''}>${x.pilot?'선개발 완료':'선개발'}</button><button class="contract" data-contract="${esc(x.diagnosis_id)}" ${x.contract?'disabled':''}>${x.contract?'계약 완료':'계약'}</button></div></td></tr>`).join(''):empty(6);
 
     document.getElementById('consultations').innerHTML=(d.consultations||[]).length?(d.consultations||[]).map(x=>`<tr><td>${date(x.created_at)}</td><td>${esc(x.name)||'-'}</td><td>${esc(x.email)||'-'}</td><td>${esc(x.phone)||'-'}</td><td class="message">${esc(x.message)||'-'}</td></tr>`).join(''):empty(5);
-
     document.getElementById('contractOrigins').innerHTML=(d.contractOrigins||[]).length?(d.contractOrigins||[]).map(x=>`<tr><td>${date(x.created_at)}</td><td>${esc(x.hostname)||'-'}</td><td>${esc(x.source)}</td><td>${esc(x.campaign)}</td><td class="path">${esc(x.landing)}</td></tr>`).join(''):empty(5);
-
     document.getElementById('failed').innerHTML=(d.failed||[]).length?(d.failed||[]).map(x=>`<tr><td>${date(x.created_at)}</td><td>${esc(x.hostname)}</td><td><span class="pill pill-fail">${esc(x.error_stage)||'-'}</span></td><td class="mono">${esc(x.error_code)||'-'}</td><td class="message"><b>${esc(x.error_message)||'-'}</b>${x.error_debug?`<details class="debug"><summary>디버그 상세</summary><pre>${esc(x.error_debug)}</pre></details>`:''}</td></tr>`).join(''):empty(5);
 
     document.querySelectorAll('[data-pilot]:not([disabled])').forEach(b=>b.addEventListener('click',()=>mark(b.dataset.pilot,'pilot')));
     document.querySelectorAll('[data-contract]:not([disabled])').forEach(b=>b.addEventListener('click',()=>mark(b.dataset.contract,'contract')));
+  }
+
+  function setSearchStatus(text,type=''){
+    const el=document.getElementById('searchIndexStatus');
+    el.textContent=text||'';el.className='search-index-status'+(type?' '+type:'');
+  }
+
+  function indexBadge(x){
+    const labels={indexed:'색인됨',discovered:'발견됨 · 미색인',unknown:'Google 미인지',other:x.coverageState||'기타'};
+    return `<span class="index-badge index-${esc(x.state)}">${esc(labels[x.state]||labels.other)}</span>`;
+  }
+
+  function renderSearchIndex(snapshot){
+    const s=snapshot?.summary||{};
+    const p=snapshot?.performance||{};
+    document.getElementById('searchIndexUpdated').textContent=`최근 갱신 ${date(snapshot?.generatedAt)}`;
+    document.getElementById('searchIndexMetrics').innerHTML=[
+      ['색인',s.indexed||0,`/ ${s.total||25}`,'good'],
+      ['미크롤링',s.neverCrawled||0,'URL','warn'],
+      ['발견 · 미색인',s.discovered||0,'URL',''],
+      ['Google 미인지',s.unknown||0,'URL','bad'],
+      ['28일 노출',p.impressions||0,'회',''],
+      ['28일 클릭',p.clicks||0,'회','']
+    ].map(([label,value,note,kind])=>`<article class="${kind}"><span>${label}</span><b>${num(value)}</b><small>${note}</small></article>`).join('');
+
+    const rows=snapshot?.pages||[];
+    document.getElementById('searchIndexRows').innerHTML=rows.length?rows.map(x=>`<tr>
+      <td><b>${esc(x.slug)}</b><small>${x.group==='buyer-intent'?'신규 의도':'핵심 랜딩'}</small></td>
+      <td>${indexBadge(x)}${x.neverCrawled?'<small class="crawl-none">아직 크롤링 없음</small>':''}</td>
+      <td>${date(x.lastCrawlTime)}</td>
+      <td>${num(x.referrerCount)}</td>
+      <td>${num(x.impressions)}</td>
+      <td>${num(x.clicks)}</td>
+      <td>${(Number(x.ctr||0)*100).toFixed(1)}%</td>
+      <td>${x.position==null?'-':Number(x.position).toFixed(1)}</td>
+    </tr>`).join(''):empty(8,'아직 저장된 GSC 스냅샷이 없습니다.');
+    const w=snapshot?.performanceWindow;
+    setSearchStatus(w?`검색 성과 기간: ${w.startDate} ~ ${w.endDate} · 색인 상태는 위 최근 갱신 시각 기준입니다.`:'');
+  }
+
+  async function loadSearchIndex(){
+    const r=await fetch(API+'/api/v1/admin/search-index-status',{credentials:'include'});
+    if(r.status===401){showLogin();return;}
+    if(!r.ok)throw new Error('search index request failed');
+    const d=await r.json();
+    if(!d.configured){setSearchStatus('GSC 서버 인증이 아직 연결되지 않았습니다.','error');return;}
+    if(d.snapshot)renderSearchIndex(d.snapshot);
+    else setSearchStatus('첫 GSC 자동 수집 전입니다. 지금 갱신을 누르면 즉시 조회합니다.');
+  }
+
+  async function refreshSearchIndex(){
+    searchRefresh.disabled=true;searchRefresh.textContent='Google 조회 중…';
+    setSearchStatus('25개 검색 랜딩을 Google Search Console에서 다시 확인하는 중입니다.');
+    try{
+      const r=await fetch(API+'/api/v1/admin/search-index-status/refresh',{method:'POST',credentials:'include'});
+      if(r.status===401){showLogin();return;}
+      const d=await r.json().catch(()=>({}));
+      if(!r.ok)throw new Error(d.error||'refresh failed');
+      renderSearchIndex(d.snapshot);
+      setSearchStatus(`갱신 완료 · 색인 ${d.snapshot?.summary?.indexed||0}/${d.snapshot?.summary?.total||25} · 미크롤링 ${d.snapshot?.summary?.neverCrawled||0}`,'success');
+    }catch{
+      setSearchStatus('Google Search Console 갱신에 실패했습니다. 서버 로그에서 원인을 확인해야 합니다.','error');
+    }finally{
+      searchRefresh.disabled=false;searchRefresh.textContent='지금 갱신';
+    }
   }
 
   async function mark(id,type){

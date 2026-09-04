@@ -6,7 +6,8 @@
   <meta name="robots" content="noindex,nofollow">
   <title>Analytics | SuaveForge Admin</title>
   <link rel="icon" href="../../favicon.ico">
-  <link rel="stylesheet" href="analytics.css?v=20260902-01">
+  <link rel="stylesheet" href="analytics.css?v=20260904-02">
+  <link rel="stylesheet" href="search-index.css?v=20260904-02">
 </head>
 <body>
 <header>
@@ -49,6 +50,16 @@
     </div>
 
     <section class="metric-strip" id="topMetrics" aria-label="핵심 전환 지표"></section>
+
+    <section class="panel search-index-panel" id="searchIndexPanel">
+      <div class="panel-head search-index-head">
+        <div><span>GOOGLE SEARCH INDEX</span><h2>검색 랜딩 크롤링 · 색인 상태</h2><p>검색용 25개 랜딩의 Google URL Inspection 상태와 최근 검색 성과입니다.</p></div>
+        <div class="search-index-actions"><span id="searchIndexUpdated" class="muted">불러오는 중...</span><button id="refreshSearchIndex" type="button">지금 갱신</button></div>
+      </div>
+      <div id="searchIndexMetrics" class="search-index-metrics"></div>
+      <p id="searchIndexStatus" class="search-index-status"></p>
+      <div class="tablewrap"><table class="search-index-table"><thead><tr><th>랜딩</th><th>상태</th><th>마지막 크롤링</th><th>참조</th><th>노출</th><th>클릭</th><th>CTR</th><th>평균순위</th></tr></thead><tbody id="searchIndexRows"></tbody></table></div>
+    </section>
 
     <div class="visual-grid visual-grid-main">
       <section class="panel chart-panel">
@@ -101,6 +112,6 @@
   </section>
 </main>
 <script src="visuals.js?v=20260902-01"></script>
-<script src="analytics.js?v=20260902-01"></script>
+<script src="analytics.js?v=20260904-02"></script>
 </body>
 </html>
