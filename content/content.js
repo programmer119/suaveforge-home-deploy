@@ -4,7 +4,7 @@
     cases:{label:'Cases',title:'실제 문제를 끝까지 따라간 기록',lead:'한 서비스에서 실제로 막힌 흐름을 따라가며, 어디서 문제가 생겼고 무엇을 확인해야 하는지 정리합니다.'},
     guides:{label:'Guides',title:'반복 사례에서 뽑은 실무 가이드',lead:'여러 실제 사례에서 반복된 문제를 바탕으로, 설계·운영·검수 때 바로 확인할 기준을 정리합니다.'}
   };
-  const MANIFEST='/content/content-manifest.json?v=2026-09-04-canonical-21-r2';
+  const MANIFEST='/content/content-manifest.json?v=2026-09-05-remediation-372';
   const root=document.querySelector('[data-content-root]');if(!root)return;
   const path=location.pathname.replace(/\/+$/,'')||'/';
   const parts=path.split('/').filter(Boolean);
