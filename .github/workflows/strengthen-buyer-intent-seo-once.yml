@@ -1,0 +1,65 @@
+name: Strengthen buyer-intent SEO once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/strengthen-buyer-intent-seo-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Patch public buyer-intent copy
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs=require('fs');
+          const reps=[
+            ['웹·앱 개발 업체 | 신규 웹서비스·모바일 앱·관리자 시스템 | SuaveForge','웹·앱 개발 외주 업체 | 웹서비스·모바일 앱·관리자 시스템 | SuaveForge'],
+            ['웹사이트, 웹서비스, 모바일 앱, 관리자 시스템을 기획·개발·테스트·배포까지 연결합니다. 실제 프로젝트 화면과 기술 스택을 공개합니다.','웹·앱 개발 외주가 필요할 때 웹서비스, 모바일 앱, 관리자 시스템의 범위·기술·배포·인계를 실제 프로젝트와 함께 확인할 수 있습니다.'],
+            ['웹·앱 개발 업체를 찾는다면,<br>결과와 운영까지 같이 보세요.','웹·앱 개발 외주 업체를 찾는다면,<br>실제 구현 범위부터 확인하세요.'],
+            ['SuaveForge는 신규 웹서비스·모바일 앱·관리자 시스템 개발을 맡을 수 있습니다. 요구사항 분석부터 화면 흐름, API·DB, 테스트, 배포와 인계까지 하나의 제품 흐름으로 진행하며 실제 프로젝트 구현 화면과 기술 스택을 공개합니다.','SuaveForge는 웹·앱 개발 외주를 요구사항 분석부터 화면 흐름, API·DB, 테스트, 배포와 인계까지 연결합니다. 견적과 범위는 필요한 사용자 흐름, 관리자 기능, 외부 연동과 배포 조건을 먼저 확인해 정하며 실제 프로젝트 구현 화면과 기술 스택을 공개합니다.'],
+            ['LMS 개발 업체 | 교육·수강·진도·관리 시스템 구축 | SuaveForge','LMS 개발 외주 업체 | 수강·진도·관리자·교육 시스템 구축 | SuaveForge'],
+            ['과정, 수강생, 진도, 운영 통계와 관리자 업무를 연결하는 LMS·교육서비스 개발. 공개 LMS 프로젝트와 자동화 사례를 기반으로 맞춤 구축합니다.','맞춤 LMS 개발 외주가 필요할 때 과정, 수강생, 진도, 권한, 운영 통계와 관리자 업무를 연결해 구축합니다. 공개 LMS 프로젝트와 자동화 사례를 확인할 수 있습니다.'],
+            ['LMS는 강의 화면보다<br>운영 흐름이 먼저입니다.','LMS 개발 외주라면,<br>수강과 운영 흐름부터 봅니다.'],
+            ['업무 자동화 개발 | 반복 업무·문서·데이터·운영 자동화 | SuaveForge','업무 자동화 프로그램 개발 외주 | 엑셀·문서·데이터·Windows 자동화 | SuaveForge'],
+            ['반복 입력, 문서 생성, 이미지 수집·검수, 예약 실행, 데이터 처리와 운영 업무를 Windows·웹·API 기반 프로그램으로 자동화합니다.','업무 자동화 프로그램 개발 외주가 필요할 때 엑셀·문서·파일·데이터 수집·검수·예약 실행을 Windows·웹·API 기반으로 자동화합니다.'],
+            ['사람이 반복하는 순서를<br>실행 가능한 프로그램으로.','반복 업무 자동화 외주를<br>실행 가능한 프로그램으로.'],
+            ['기존 소프트웨어 개선·재구축 | 레거시 현대화·소스 없는 프로그램 | SuaveForge','레거시 시스템 현대화·재개발 업체 | 소스 없는 프로그램 재구축 | SuaveForge'],
+            ['낡거나 중단된 기존 소프트웨어를 실제 사용 흐름과 기술 구조로 진단하고, 살릴 부분은 유지하면서 필요한 개선·재구축·기능 추가를 진행합니다.','레거시 시스템 현대화·기존 프로그램 재개발이 필요할 때 실제 사용 흐름과 기술 구조를 진단하고, 살릴 부분은 유지하면서 개선·재구축·기능 추가를 진행합니다.'],
+            ['다시 만들기 전에,<br>무엇을 살릴지 먼저 봅니다.','레거시 시스템 재개발 전에,<br>무엇을 살릴지 먼저 봅니다.']
+          ];
+          const files=['services/web-app-development/index.html','services/lms-development/index.html','services/automation-development/index.html','services/software-rebuild/index.html'];
+          let changed=0;
+          for(const file of files){let s=fs.readFileSync(file,'utf8'),b=s;for(const [a,z] of reps)s=s.split(a).join(z);if(s!==b){fs.writeFileSync(file,s);changed++;console.log('UPDATED='+file)}}
+          if(changed!==4)throw new Error('Expected all four public service pages to change; changed='+changed);
+          NODE
+      - name: Validate public copy
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -F '웹·앱 개발 외주 업체' services/web-app-development/index.html
+          grep -F 'LMS 개발 외주 업체' services/lms-development/index.html
+          grep -F '업무 자동화 프로그램 개발 외주' services/automation-development/index.html
+          grep -F '레거시 시스템 현대화·재개발 업체' services/software-rebuild/index.html
+      - name: Commit public pages and remove one-time workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/strengthen-buyer-intent-seo-once.yml
+          git config user.name "programmer119"
+          git config user.email "53187583+programmer119@users.noreply.github.com"
+          git add services .github/workflows/strengthen-buyer-intent-seo-once.yml
+          git commit -m 'Strengthen buyer-intent SEO for core services'
+          git push
