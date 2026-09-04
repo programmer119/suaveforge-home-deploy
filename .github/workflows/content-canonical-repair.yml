@@ -1,0 +1,67 @@
+name: Content canonical one-time repair
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/content-canonical-repair.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Repair generated marker classification and restore missing canonical artifact
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+
+          marker='<!-- SUAVEFORGE_PUBLISHED_CONTENT -->'
+          standalone=[
+            'guides/app-development-guide/index.html',
+            'guides/excel-automation-guide/index.html',
+            'guides/homepage-production-guide/index.html',
+            'guides/software-development-guide/index.html',
+            'guides/web-development-guide/index.html',
+          ]
+          for rel in standalone:
+            p=Path(rel)
+            text=p.read_text(encoding='utf-8')
+            if marker in text:
+              text=text.replace('\n'+marker+'\n','\n',1)
+              p.write_text(text,encoding='utf-8')
+
+          rel='insights/accidental-delete-must-be-recoverable/index.html'
+          p=Path(rel)
+          if not p.exists():
+            old=subprocess.check_output([
+              'git','show',
+              'd3af26950bdfe03dce362a5f44b210d60e947e47:'+rel
+            ], text=True)
+            if marker not in old:
+              old=old.replace('<!doctype html>','<!doctype html>\n'+marker,1)
+            p.parent.mkdir(parents=True,exist_ok=True)
+            p.write_text(old,encoding='utf-8')
+          PY
+          git config user.name 'suaveforge-canonical-repair'
+          git config user.email 'project@suaveforge.com'
+          git add guides/app-development-guide/index.html \
+                  guides/excel-automation-guide/index.html \
+                  guides/homepage-production-guide/index.html \
+                  guides/software-development-guide/index.html \
+                  guides/web-development-guide/index.html \
+                  insights/accidental-delete-must-be-recoverable/index.html
+          if git diff --cached --quiet; then
+            echo 'CONTENT_CANONICAL_REPAIR=no_changes'
+            exit 0
+          fi
+          git commit -m 'Fix canonical corpus marker and restore missing insight'
+          git push origin HEAD:main
