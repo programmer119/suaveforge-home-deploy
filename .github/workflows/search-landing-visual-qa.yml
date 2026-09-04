@@ -18,70 +18,108 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
-      - name: Install CJK font
+      - name: Install CJK font and browser driver package
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq fonts-noto-cjk
           fc-cache -f
-      - name: Capture all 25 search landing pages on desktop and mobile
+          mkdir -p /tmp/sf-visual
+          cd /tmp/sf-visual
+          npm init -y >/dev/null 2>&1
+          npm install --no-save puppeteer-core@24 >/dev/null
+      - name: Validate and full-page capture all 25 search landing pages
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p qa/desktop qa/mobile qa/html
-          CHROME="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser)"
+          export CHROME="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser)"
           test -n "$CHROME"
-          STAMP="$(date +%s)"
-          SLUGS=(
-            flutter-app-development
-            admin-system-development
-            api-integration-development
-            mvp-development
-            windows-automation-development
-            web-service-development
-            crm-system-development
-            reservation-system-development
-            multi-branch-management-system
-            survey-system-development
-            data-dashboard-development
-            webhook-callback-development
-            payment-api-integration
-            social-login-integration
-            windows-program-development
-            python-automation-program
-            excel-automation-program
-            pdf-document-automation
-            web-scraping-data-collection
-            image-processing-automation
-            cross-platform-app-development
-            existing-software-feature-addition
-            software-bugfix-maintenance
-            database-migration-integration
-            cti-pbx-integration
-          )
-          test "${#SLUGS[@]}" = "25"
-          for SLUG in "${SLUGS[@]}"; do
-            BASE="https://suaveforge.com/solutions/$SLUG/"
-            URL="${BASE}?_sfvisual=${STAMP}"
-            STATUS="$(curl -L -sS --retry 2 -o "qa/html/$SLUG.html" -w '%{http_code}' "$URL")"
-            test "$STATUS" = "200"
-            grep -qi '<h1' "qa/html/$SLUG.html"
-            grep -Fq "<link rel=\"canonical\" href=\"$BASE\">" "qa/html/$SLUG.html"
-            ! grep -Eqi 'name="robots"[^>]*content="[^"]*noindex|content="[^"]*noindex[^"]*"[^>]*name="robots"' "qa/html/$SLUG.html"
-            grep -q '/work/' "qa/html/$SLUG.html"
-            "$CHROME" --headless=new --no-sandbox --disable-gpu --hide-scrollbars --window-size=1440,1800 --screenshot="qa/desktop/$SLUG.png" "$URL"
-            "$CHROME" --headless=new --no-sandbox --disable-gpu --hide-scrollbars --window-size=390,844 --force-device-scale-factor=1 --screenshot="qa/mobile/$SLUG.png" "$URL"
-          done
+          export QA_ROOT="$PWD/qa"
+          cat > /tmp/sf-visual/run.mjs <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import puppeteer from 'puppeteer-core';
+
+          const chrome=process.env.CHROME;
+          const out=process.env.QA_ROOT;
+          const stamp=Date.now();
+          const slugs=[
+            'flutter-app-development','admin-system-development','api-integration-development','mvp-development','windows-automation-development',
+            'web-service-development','crm-system-development','reservation-system-development','multi-branch-management-system','survey-system-development',
+            'data-dashboard-development','webhook-callback-development','payment-api-integration','social-login-integration','windows-program-development',
+            'python-automation-program','excel-automation-program','pdf-document-automation','web-scraping-data-collection','image-processing-automation',
+            'cross-platform-app-development','existing-software-feature-addition','software-bugfix-maintenance','database-migration-integration','cti-pbx-integration'
+          ];
+          if(slugs.length!==25) throw new Error(`slug count ${slugs.length}`);
+          const browser=await puppeteer.launch({executablePath:chrome,headless:true,args:['--no-sandbox','--disable-dev-shm-usage','--disable-gpu']});
+          const results=[];
+          try{
+            for(const slug of slugs){
+              const base=`https://suaveforge.com/solutions/${slug}/`;
+              const url=`${base}?_sfvisual=${stamp}`;
+              for(const mode of ['desktop','mobile']){
+                const page=await browser.newPage();
+                const errors=[];
+                page.on('pageerror',e=>errors.push(String(e.message||e)));
+                page.on('console',m=>{if(m.type()==='error')errors.push(`console:${m.text()}`)});
+                if(mode==='desktop') await page.setViewport({width:1440,height:1100,deviceScaleFactor:1});
+                else await page.setViewport({width:390,height:844,deviceScaleFactor:1,isMobile:true,hasTouch:true});
+                const response=await page.goto(url,{waitUntil:'networkidle2',timeout:60000});
+                const status=response?.status()||0;
+                if(status!==200) throw new Error(`${slug}/${mode} HTTP ${status}`);
+                const info=await page.evaluate((expected)=>{
+                  const canonical=document.querySelector('link[rel="canonical"]')?.href||null;
+                  const robots=document.querySelector('meta[name="robots"]')?.content||'';
+                  const root=document.documentElement;
+                  const body=document.body;
+                  return {
+                    canonical,robots,
+                    h1:Boolean(document.querySelector('h1')),
+                    proof:Boolean(document.querySelector('a[href*="/work/"]')),
+                    faq:[...document.scripts].some(s=>s.textContent.includes('FAQPage')),
+                    scrollWidth:Math.max(root.scrollWidth,body?.scrollWidth||0),
+                    clientWidth:root.clientWidth,
+                    scrollHeight:Math.max(root.scrollHeight,body?.scrollHeight||0),
+                    title:document.title,
+                    expected
+                  };
+                },base);
+                if(info.canonical!==base) throw new Error(`${slug}/${mode} canonical ${info.canonical}`);
+                if(/noindex/i.test(info.robots)) throw new Error(`${slug}/${mode} noindex`);
+                if(!info.h1||!info.proof||!info.faq) throw new Error(`${slug}/${mode} content contract h1=${info.h1} proof=${info.proof} faq=${info.faq}`);
+                if(info.scrollWidth>info.clientWidth+2) throw new Error(`${slug}/${mode} horizontal overflow ${info.scrollWidth}>${info.clientWidth}`);
+                if(errors.length) throw new Error(`${slug}/${mode} JS errors ${errors.join(' | ')}`);
+                await page.screenshot({path:path.join(out,mode,`${slug}.png`),fullPage:true});
+                if(mode==='desktop') fs.writeFileSync(path.join(out,'html',`${slug}.html`),await page.content());
+                results.push({slug,mode,status,...info,jsErrors:errors});
+                await page.close();
+              }
+            }
+          } finally { await browser.close(); }
+          fs.writeFileSync(path.join(out,'visual-results.json'),JSON.stringify({generatedAt:new Date().toISOString(),count:results.length,results},null,2)+'\n');
+          console.log(`FULLPAGE_VISUAL_RESULTS=${results.length}`);
+          console.log(`DESKTOP=${results.filter(x=>x.mode==='desktop').length}`);
+          console.log(`MOBILE=${results.filter(x=>x.mode==='mobile').length}`);
+          console.log(`MAX_SCROLL_HEIGHT=${Math.max(...results.map(x=>x.scrollHeight))}`);
+          console.log('HORIZONTAL_OVERFLOW=0');
+          console.log('JS_ERRORS=0');
+          NODE
+          node /tmp/sf-visual/run.mjs
           test "$(find qa/desktop -name '*.png' | wc -l)" = "25"
           test "$(find qa/mobile -name '*.png' | wc -l)" = "25"
           test "$(find qa/html -name '*.html' | wc -l)" = "25"
+          STAMP="$(date +%s)"
           curl -fsS "https://suaveforge.com/sitemap.xml?_sfvisual=$STAMP" -o qa/sitemap.xml
           curl -fsS "https://suaveforge.com/sitemap-services.xml?_sfvisual=$STAMP" -o qa/sitemap-services.xml
-          for SLUG in "${SLUGS[@]}"; do
-            grep -Fq "https://suaveforge.com/solutions/$SLUG/" qa/sitemap.xml qa/sitemap-services.xml
-          done
-          file qa/desktop/*.png qa/mobile/*.png
+          node <<'NODE'
+          const fs=require('fs');
+          const slugs=['flutter-app-development','admin-system-development','api-integration-development','mvp-development','windows-automation-development','web-service-development','crm-system-development','reservation-system-development','multi-branch-management-system','survey-system-development','data-dashboard-development','webhook-callback-development','payment-api-integration','social-login-integration','windows-program-development','python-automation-program','excel-automation-program','pdf-document-automation','web-scraping-data-collection','image-processing-automation','cross-platform-app-development','existing-software-feature-addition','software-bugfix-maintenance','database-migration-integration','cti-pbx-integration'];
+          const xml=fs.readFileSync('qa/sitemap.xml','utf8')+fs.readFileSync('qa/sitemap-services.xml','utf8');
+          for(const slug of slugs)if(!xml.includes(`https://suaveforge.com/solutions/${slug}/`))throw new Error(`sitemap missing ${slug}`);
+          NODE
+          file qa/desktop/*.png qa/mobile/*.png >/dev/null
       - uses: actions/upload-artifact@v4
         if: always()
         with:
