@@ -1,4 +1,5 @@
 name: Content canonical gate
+# Explicit verification trigger after canonical corpus repair.
 
 on:
   push:
