@@ -6,6 +6,10 @@ on:
     paths:
       - 'tools/seo-repair-20260904.mjs'
       - '.github/workflows/seo-repair-20260904.yml'
+  workflow_run:
+    workflows: ['Content canonical gate']
+    types: [completed]
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -16,11 +20,13 @@ concurrency:
 
 jobs:
   repair:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
