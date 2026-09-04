@@ -70,3 +70,31 @@ SuaveForge는 무료 홈페이지 종합진단과 웹·앱 개발, Flutter 앱 �
 - 광고·CRM 통합 대시보드: https://suaveforge.com/work/crm/
 - 모바일 데이팅 앱: https://suaveforge.com/work/dating/
 - 의료기기 재고·발주 관리: https://suaveforge.com/work/inventory/
+
+
+## Buyer intent index
+- Flutter 앱 개발 외주: https://suaveforge.com/solutions/flutter-app-development/
+- 관리자 시스템 개발: https://suaveforge.com/solutions/admin-system-development/
+- API 연동 개발: https://suaveforge.com/solutions/api-integration-development/
+- MVP 개발 외주: https://suaveforge.com/solutions/mvp-development/
+- Windows 업무 자동화: https://suaveforge.com/solutions/windows-automation-development/
+- 웹서비스 개발: https://suaveforge.com/solutions/web-service-development/
+- CRM 시스템 개발: https://suaveforge.com/solutions/crm-system-development/
+- 예약 시스템 개발: https://suaveforge.com/solutions/reservation-system-development/
+- 다지점 관리 시스템 개발: https://suaveforge.com/solutions/multi-branch-management-system/
+- 설문 시스템 개발: https://suaveforge.com/solutions/survey-system-development/
+- 데이터 대시보드 개발: https://suaveforge.com/solutions/data-dashboard-development/
+- Webhook·Callback 연동 개발: https://suaveforge.com/solutions/webhook-callback-development/
+- 결제 API 연동 개발: https://suaveforge.com/solutions/payment-api-integration/
+- 소셜 로그인 연동 개발: https://suaveforge.com/solutions/social-login-integration/
+- Windows 프로그램 개발: https://suaveforge.com/solutions/windows-program-development/
+- Python 자동화 프로그램 개발: https://suaveforge.com/solutions/python-automation-program/
+- 엑셀 자동화 프로그램 개발: https://suaveforge.com/solutions/excel-automation-program/
+- PDF·문서 자동화 개발: https://suaveforge.com/solutions/pdf-document-automation/
+- 웹 데이터 수집·크롤링 개발: https://suaveforge.com/solutions/web-scraping-data-collection/
+- 이미지 처리 자동화 개발: https://suaveforge.com/solutions/image-processing-automation/
+- 크로스플랫폼 앱 개발: https://suaveforge.com/solutions/cross-platform-app-development/
+- 기존 프로그램 기능 추가: https://suaveforge.com/solutions/existing-software-feature-addition/
+- 프로그램 오류 수정·유지보수: https://suaveforge.com/solutions/software-bugfix-maintenance/
+- DB 이전·통합 개발: https://suaveforge.com/solutions/database-migration-integration/
+- CTI·PBX 연동 개발: https://suaveforge.com/solutions/cti-pbx-integration/
