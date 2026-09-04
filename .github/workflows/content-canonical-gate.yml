@@ -9,6 +9,7 @@ on:
       - 'cases/**'
       - 'guides/**'
       - 'sitemap.xml'
+      - '.github/workflows/content-canonical-gate.yml'
   workflow_dispatch:
 
 permissions:
@@ -31,6 +32,7 @@ jobs:
           runtime=(root/'content/content.js').read_text(encoding='utf-8')
           types=('insights','cases','guides')
           qa_title=re.compile(r'(재검수본|개선본|검수본|수정본)')
+          marker='SUAVEFORGE_PUBLISHED_CONTENT'
           errors=[]
 
           if 'api-suaveforge.suaveforge.com' in runtime:
@@ -68,12 +70,23 @@ jobs:
                   if f'<loc>{canonical}</loc>' not in sitemap:
                       errors.append(f'{t}/{slug}: missing from sitemap')
 
+              # Only marker-tagged generated corpus artifacts belong to the manifest.
+              # Standalone evergreen/search guides intentionally coexist under /guides.
               base=root/t
-              actual={p.name for p in base.iterdir() if p.is_dir()} if base.exists() else set()
+              actual=set()
+              if base.exists():
+                  for p in base.iterdir():
+                      html_path=p/'index.html'
+                      if p.is_dir() and html_path.exists():
+                          try:
+                              if marker in html_path.read_text(encoding='utf-8'):
+                                  actual.add(p.name)
+                          except UnicodeDecodeError:
+                              pass
               extra=actual-expected
               missing=expected-actual
-              if extra: errors.append(f'{t}: extra article directories not in manifest: {sorted(extra)}')
-              if missing: errors.append(f'{t}: manifest article directories missing: {sorted(missing)}')
+              if extra: errors.append(f'{t}: extra generated article directories not in manifest: {sorted(extra)}')
+              if missing: errors.append(f'{t}: manifest generated article directories missing: {sorted(missing)}')
 
           if errors:
               print('CONTENT_CANONICAL_GATE=FAIL')
