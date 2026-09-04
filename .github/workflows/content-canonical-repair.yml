@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Repair generated marker classification and restore missing canonical artifact
+      - name: Repair generated marker classification and canonical artifact marker
         shell: bash
         run: |
           set -Eeuo pipefail
@@ -41,15 +41,17 @@ jobs:
 
           rel='insights/accidental-delete-must-be-recoverable/index.html'
           p=Path(rel)
-          if not p.exists():
-            old=subprocess.check_output([
+          if p.exists():
+            text=p.read_text(encoding='utf-8')
+          else:
+            text=subprocess.check_output([
               'git','show',
               'd3af26950bdfe03dce362a5f44b210d60e947e47:'+rel
             ], text=True)
-            if marker not in old:
-              old=old.replace('<!doctype html>','<!doctype html>\n'+marker,1)
             p.parent.mkdir(parents=True,exist_ok=True)
-            p.write_text(old,encoding='utf-8')
+          if marker not in text:
+            text=text.replace('<!doctype html>','<!doctype html>\n'+marker,1)
+          p.write_text(text,encoding='utf-8')
           PY
           git config user.name 'suaveforge-canonical-repair'
           git config user.email 'project@suaveforge.com'
@@ -63,5 +65,5 @@ jobs:
             echo 'CONTENT_CANONICAL_REPAIR=no_changes'
             exit 0
           fi
-          git commit -m 'Fix canonical corpus marker and restore missing insight'
+          git commit -m 'Fix canonical corpus marker classification'
           git push origin HEAD:main
