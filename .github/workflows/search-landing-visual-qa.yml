@@ -68,7 +68,7 @@ jobs:
             test "$STATUS" = "200"
             grep -qi '<h1' "qa/html/$SLUG.html"
             grep -Fq "<link rel=\"canonical\" href=\"$BASE\">" "qa/html/$SLUG.html"
-            ! grep -Eqi '<meta[^>]+name=["'"']robots["'"'][^>]+content=["'"'][^"'"']*noindex' "qa/html/$SLUG.html"
+            ! grep -Eqi 'name="robots"[^>]*content="[^"]*noindex|content="[^"]*noindex[^"]*"[^>]*name="robots"' "qa/html/$SLUG.html"
             grep -q '/work/' "qa/html/$SLUG.html"
             "$CHROME" --headless=new --no-sandbox --disable-gpu --hide-scrollbars --window-size=1440,1800 --screenshot="qa/desktop/$SLUG.png" "$URL"
             "$CHROME" --headless=new --no-sandbox --disable-gpu --hide-scrollbars --window-size=390,844 --force-device-scale-factor=1 --screenshot="qa/mobile/$SLUG.png" "$URL"
