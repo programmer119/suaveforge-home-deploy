@@ -1,0 +1,91 @@
+name: Search landing visual QA
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'solutions/**'
+      - 'services/**'
+      - 'sitemap.xml'
+      - 'sitemap-services.xml'
+      - 'robots.txt'
+      - '.github/workflows/search-landing-visual-qa.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Install CJK font
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          fc-cache -f
+      - name: Capture all 25 search landing pages on desktop and mobile
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p qa/desktop qa/mobile qa/html
+          CHROME="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser)"
+          test -n "$CHROME"
+          STAMP="$(date +%s)"
+          SLUGS=(
+            flutter-app-development
+            admin-system-development
+            api-integration-development
+            mvp-development
+            windows-automation-development
+            web-service-development
+            crm-system-development
+            reservation-system-development
+            multi-branch-management-system
+            survey-system-development
+            data-dashboard-development
+            webhook-callback-development
+            payment-api-integration
+            social-login-integration
+            windows-program-development
+            python-automation-program
+            excel-automation-program
+            pdf-document-automation
+            web-scraping-data-collection
+            image-processing-automation
+            cross-platform-app-development
+            existing-software-feature-addition
+            software-bugfix-maintenance
+            database-migration-integration
+            cti-pbx-integration
+          )
+          test "${#SLUGS[@]}" = "25"
+          for SLUG in "${SLUGS[@]}"; do
+            BASE="https://suaveforge.com/solutions/$SLUG/"
+            URL="${BASE}?_sfvisual=${STAMP}"
+            STATUS="$(curl -L -sS --retry 2 -o "qa/html/$SLUG.html" -w '%{http_code}' "$URL")"
+            test "$STATUS" = "200"
+            grep -qi '<h1' "qa/html/$SLUG.html"
+            grep -Fq "<link rel=\"canonical\" href=\"$BASE\">" "qa/html/$SLUG.html"
+            ! grep -Eqi '<meta[^>]+name=["'"']robots["'"'][^>]+content=["'"'][^"'"']*noindex' "qa/html/$SLUG.html"
+            grep -q '/work/' "qa/html/$SLUG.html"
+            "$CHROME" --headless=new --no-sandbox --disable-gpu --hide-scrollbars --window-size=1440,1800 --screenshot="qa/desktop/$SLUG.png" "$URL"
+            "$CHROME" --headless=new --no-sandbox --disable-gpu --hide-scrollbars --window-size=390,844 --force-device-scale-factor=1 --screenshot="qa/mobile/$SLUG.png" "$URL"
+          done
+          test "$(find qa/desktop -name '*.png' | wc -l)" = "25"
+          test "$(find qa/mobile -name '*.png' | wc -l)" = "25"
+          test "$(find qa/html -name '*.html' | wc -l)" = "25"
+          curl -fsS "https://suaveforge.com/sitemap.xml?_sfvisual=$STAMP" -o qa/sitemap.xml
+          curl -fsS "https://suaveforge.com/sitemap-services.xml?_sfvisual=$STAMP" -o qa/sitemap-services.xml
+          for SLUG in "${SLUGS[@]}"; do
+            grep -Fq "https://suaveforge.com/solutions/$SLUG/" qa/sitemap.xml qa/sitemap-services.xml
+          done
+          file qa/desktop/*.png qa/mobile/*.png
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: search-landing-visual-qa
+          path: qa/
+          if-no-files-found: error
+          retention-days: 14
