@@ -1,0 +1,34 @@
+name: Apply global language SEO once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/apply-global-language-seo-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Apply language SEO
+        run: node tools/apply-global-language-seo.mjs
+      - name: Commit and remove one-time workflow
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html services/software-rebuild/index.html sitemap.xml sitemap-services.xml
+          git rm .github/workflows/apply-global-language-seo-once.yml
+          git commit -m "Apply hreflang and multilingual sitemap entries"
+          git pull --rebase origin main
+          git push origin HEAD:main
