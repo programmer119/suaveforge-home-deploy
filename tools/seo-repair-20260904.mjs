@@ -3,7 +3,9 @@ import path from 'node:path';
 
 const ROOT = process.cwd();
 const TRACKING_VERSION = '20260904-01';
+const CONTENT_VERSION = '20260904-1';
 const TODAY = '2026-09-04';
+const MODIFIED_AT = '2026-09-04T02:49:00Z';
 const manifestPath = path.join(ROOT, 'content', 'content-manifest.json');
 const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 
@@ -74,12 +76,17 @@ let changed = 0;
 for (const file of walk(ROOT)) {
   let html = fs.readFileSync(file, 'utf8');
   const rel = path.relative(ROOT, file).replaceAll('\\', '/');
-  let next = html.replace(/pageview\.js\?v=[^"'\s>]+/g, `pageview.js?v=${TRACKING_VERSION}`);
+  let next = html
+    .replace(/pageview\.js\?v=[^"'\s>]+/g, `pageview.js?v=${TRACKING_VERSION}`)
+    .replace(/content\.js\?v=[^"'\s>]+/g, `content.js?v=${CONTENT_VERSION}`);
 
-  if (/^(insights|cases|guides)\/[^/]+\/index\.html$/.test(rel) && !next.includes('data-related-services')) {
-    const links = relatedServicesFor(rel).map(([href, label]) => `<a href="${href}">${htmlEscape(label)}</a>`).join(' · ');
-    const section = `<section data-related-services><h2>관련 개발 범위</h2><p>${links}</p></section>`;
-    next = next.replace('</article>', `${section}</article>`);
+  if (/^(insights|cases|guides)\/[^/]+\/index\.html$/.test(rel)) {
+    if (!next.includes('data-related-services')) {
+      const links = relatedServicesFor(rel).map(([href, label]) => `<a href="${href}">${htmlEscape(label)}</a>`).join(' · ');
+      const section = `<section data-related-services><h2>관련 개발 범위</h2><p>${links}</p></section>`;
+      next = next.replace('</article>', `${section}</article>`);
+    }
+    next = next.replace(/"dateModified":"[^"]+"/, `"dateModified":"${MODIFIED_AT}"`);
   }
 
   if (next !== html) {
@@ -117,14 +124,16 @@ for (const type of Object.keys(BOARD)) {
   const schemaTag = `<script id="content-collection-schema" type="application/ld+json">${JSON.stringify(schema)}</script>`;
   if (/<script id="content-collection-schema"[\s\S]*?<\/script>/.test(html)) html = html.replace(/<script id="content-collection-schema"[\s\S]*?<\/script>/, schemaTag);
   else html = html.replace('</head>', `${schemaTag}</head>`);
-  html = html.replace(/pageview\.js\?v=[^"'\s>]+/g, `pageview.js?v=${TRACKING_VERSION}`);
+  html = html
+    .replace(/pageview\.js\?v=[^"'\s>]+/g, `pageview.js?v=${TRACKING_VERSION}`)
+    .replace(/content\.js\?v=[^"'\s>]+/g, `content.js?v=${CONTENT_VERSION}`);
   if (writeIfChanged(file, html)) changed++;
 }
 
 const contentJs = path.join(ROOT, 'content', 'content.js');
 if (fs.existsSync(contentJs)) {
   let js = fs.readFileSync(contentJs, 'utf8');
-  js = js.replace(/const MANIFEST='[^']+';/, "const MANIFEST='/content/content-manifest.json?v=20260904-1';");
+  js = js.replace(/const MANIFEST='[^']+';/, `const MANIFEST='/content/content-manifest.json?v=${CONTENT_VERSION}';`);
   js = js.replace('const fail=()=>{clear();', "const fail=()=>{if(root.querySelector('.content-list'))return;clear();");
   if (writeIfChanged(contentJs, js)) changed++;
 }
