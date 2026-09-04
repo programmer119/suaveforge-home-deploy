@@ -21,6 +21,17 @@ for(const file of files){
 }
 const urlList=[...new Set(urls)];
 if(!urlList.length)throw new Error('INDEXNOW_URLS_EMPTY');
+const required=[
+  'https://suaveforge.com/en/',
+  'https://suaveforge.com/ja/',
+  'https://suaveforge.com/es/',
+  'https://suaveforge.com/en/services/software-rebuild/',
+  'https://suaveforge.com/ja/services/software-rebuild/',
+  'https://suaveforge.com/es/services/software-rebuild/'
+];
+const missing=required.filter(url=>!urlList.includes(url));
+console.log(`INDEXNOW_MULTILINGUAL_URLS=${required.length-missing.length}/${required.length}`);
+if(missing.length)throw new Error(`INDEXNOW_MULTILINGUAL_URLS_MISSING:${missing.join(',')}`);
 const body={host:HOST,key,urlList};
 const endpoints=[
   ['BING_INDEXNOW','https://www.bing.com/indexnow'],
