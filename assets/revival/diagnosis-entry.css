@@ -247,3 +247,71 @@
 @media (prefers-reduced-motion: reduce) {
   .diagnosis-entry-form.is-loading .diagnosis-entry-progress i { animation: none; transform: none; width: 100%; }
 }
+
+/* ================================================================
+   SuaveForge header refinement — layout delta only.
+   This block intentionally scopes itself to the desktop header.
+   Existing DOM, assets, copy, links, JS behavior, mobile rules and
+   every section below the header remain authoritative and untouched.
+   ================================================================ */
+@media (min-width: 1181px) {
+  .header-inner {
+    width: min(1500px, calc(100% - 96px));
+    min-height: 88px;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: clamp(22px, 1.8vw, 32px);
+  }
+
+  .desktop-nav {
+    min-width: 0;
+    justify-content: center;
+    gap: clamp(18px, 1.35vw, 24px);
+  }
+
+  .desktop-nav a { white-space: nowrap; }
+
+  .header-actions {
+    gap: 10px;
+    white-space: nowrap;
+  }
+
+  .header-search-trigger {
+    width: 46px;
+    min-width: 46px;
+    height: 46px;
+    min-height: 46px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .header-search-trigger > span:not(.search-glyph) {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+
+  .header-search-trigger kbd { display: none; }
+  .language-trigger { min-height: 46px; }
+
+  .header-cta {
+    min-height: 46px;
+    padding: 0 17px;
+    gap: 10px;
+    white-space: nowrap;
+  }
+}
+
+@media (min-width: 1181px) and (max-width: 1320px) {
+  .header-inner {
+    width: min(1276px, calc(100% - 44px));
+    gap: 18px;
+  }
+
+  .desktop-nav { gap: 14px; }
+}
